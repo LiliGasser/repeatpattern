@@ -8,6 +8,9 @@ let exportButton;
 
 // initialize data structure
 // TODO might need to be the whole array
+let data = [];
+let selectedData = [];
+let countries = [];
 let gccsValues;
 
 // define postcard size (A5 postcard: 210mm x 148mm)
@@ -18,8 +21,9 @@ let pcHeightMM = 148; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
-// TODO use to set good size for export (ask Webvisu guy)
+// QUESTION set appropriate size for export (ask Webvisu guy)
 //console.log('aspect ratio: ', pcWidth / pcHeight);
+// TODO 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
 
 // define cell
 let cellWidth = 40;
@@ -34,35 +38,44 @@ function setup() {
   canvas.parent(document.querySelector('.canvas-container'));
             
   // Get references to HTML elements
-  countrySelect = document.getElementById('country');
+  // QUESTION Where to define button, html or p5?
+  countrySelectHTML = document.getElementById('country');
+  countrySelect = select('#country');
+  //console.log('countrySelect:', countrySelect);
   motifSelect = document.getElementById('motif');
   symmetrySelect = document.getElementById('symmetry');
   colorsSelect = document.getElementById('colors');
   exportButton = document.getElementById('exportButton');
             
   // Add event listeners
+  countrySelectHTML.addEventListener('change', updatePostcard);
   exportButton.addEventListener('click', exportCanvas);
             
-  // Set initial drawing properties
-  strokeCap(ROUND);
-  strokeJoin(ROUND);
-
   // Load data
-  d3.dsv(";", "data/gccs_country_with_temperature_and_gdp.csv", d3.autoType).then(function(data) {
+  d3.dsv(";", "data/gccs_country_with_temperature_and_gdp.csv", d3.autoType).then(function(csv) {
+    data = csv;
     console.log("Data loaded:", data);
 
-    dataCountry = data.filter(d => d.country === 'Switzerland');
-    console.log("Filtered data for a country:", dataCountry);
-    gccsValues = {
-      temperature: dataCountry[0].temperature,
-      gdp: dataCountry[0].gdp,
-      wtp: dataCountry[0].gccs_wtp,
-      wtp_belief: dataCountry[0].gccs_wtp_belief,
-      norm: dataCountry[0].gccs_norm,
-      government: dataCountry[0].gccs_government,
+    // Get unique countries and add to select
+    countries = data.map(d=>d.country);
+    countries = [...new Set(countries)]; // remove duplicates
+    let firstCountries = ['Switzerland', 'Germany'];
+    for (let i = firstCountries.length - 1; i >= 0; i--) {
+      let country = firstCountries[i];
+      let index = countries.indexOf(country);
+      if (index > -1) {
+        countries.splice(index, 1);
+        countries.unshift(country);
+      }
     }
-    console.log(gccsValues);
-    
+    for (let i = 0; i < countries.length; i++) {
+      let country = countries[i];
+      countrySelect.option(country);
+    }
+
+    // Draw initial postcard
+    updatePostcard();
+
   });
   
   // TODO test for cell sizes where multiplication with width and height does not result in integer values
@@ -70,6 +83,22 @@ function setup() {
   console.log('nCells: ' + nCells, 'pcWidth: ' + width + ', pcHeight: ' + height);
 
   rScale.domain([0, 100]).range([1, Math.min(cellWidth, cellHeight) * 0.8]);
+}
+
+function updatePostcard() {
+  selectedCountry = countrySelect.value();
+  selectedData = data.filter(d => d.country === selectedCountry);
+  console.log("Filtered data for", selectedCountry, selectedData);
+  gccsValues = {
+    temperature: selectedData[0].temperature,
+    gdp: selectedData[0].gdp,
+    wtp: selectedData[0].gccs_wtp,
+    wtp_belief: selectedData[0].gccs_wtp_belief,
+    norm: selectedData[0].gccs_norm,
+    government: selectedData[0].gccs_government,
+  }
+
+  redraw();
 }
         
 function draw() {
