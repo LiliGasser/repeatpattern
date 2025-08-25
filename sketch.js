@@ -27,13 +27,22 @@ let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
 let cellWidth;
 let cellHeight;
 let nCells;
+
+// motif size within cell
 // TODO proper motif with corresponding scales
 let rScale = d3.scaleSqrt();
 let r;
+
+// motif and cell position
+let x;
+let y;
+let nRows;
+let rowIndent;
         
 function setup() {
   canvas = createCanvas(800, 560, SVG);
   canvas.parent(document.querySelector('.canvas-container'));
+  noLoop();
             
   // Get references to HTML elements
   // QUESTION Where to define button, html or p5?
@@ -108,6 +117,8 @@ function updateGrid() {
     .domain([0, 100])
     .range([1, Math.min(cellWidth, cellHeight) * motifRatio]);
 
+  redraw();
+
 }
 
 function updatePostcard() {
@@ -125,9 +136,9 @@ function draw() {
 
   // initialize
   rectMode(TOP, LEFT);
-  let x = 0;
-  let y = 0;
-  let nRows = 1;
+  x = 0;
+  y = 0;
+  nRows = 1;
 
   // draw pattern
   for (let i = 0; i < nCells; i++) {
@@ -141,16 +152,7 @@ function draw() {
 
     // move to next cell: planar symmetry with translation
     // TODO other symmetriy operations
-    x = x + cellWidth;
-    let decimalPart;
-    if (x >= width) {
-      let number = nRows * rowIndent;
-      decimalPart = number % 1;
-      //console.log(number.toString().split("."), decimalPart);
-      x = 0 + decimalPart*cellWidth;
-      y += cellHeight;
-      nRows +=1;
-    }
+    doTranslation();
 
   }
 
@@ -197,6 +199,17 @@ function drawMotif(x, y) {
     arc(x + cellWidth/2, y + cellHeight/2, r, r, PI, -PI/2);
   }
 
+}
+
+function doTranslation() {
+
+  // planar Symmetry operation: 3.1 translation
+    x = x + cellWidth;
+    if (x >= width) {
+      x = 0 + ((nRows*rowIndent) % 1)*cellWidth;
+      y += cellHeight;
+      nRows +=1;
+    }
 }
 
 function exportCanvas() {
