@@ -11,7 +11,6 @@ let exportButton;
 let data = [];
 let selectedData = [];
 let countries = [];
-let gccsValues;
 
 // define postcard size (A5 postcard: 210mm x 148mm)
 // calculation: https://imageonline.co/mm-to-px.php
@@ -89,14 +88,6 @@ function updatePostcard() {
   selectedCountry = countrySelect.value();
   selectedData = data.filter(d => d.country === selectedCountry);
   console.log("Filtered data for", selectedCountry, selectedData);
-  gccsValues = {
-    temperature: selectedData[0].temperature,
-    gdp: selectedData[0].gdp,
-    wtp: selectedData[0].gccs_wtp,
-    wtp_belief: selectedData[0].gccs_wtp_belief,
-    norm: selectedData[0].gccs_norm,
-    government: selectedData[0].gccs_government,
-  }
 
   redraw();
 }
@@ -145,24 +136,32 @@ function drawMotif(x, y) {
   noStroke();
 
   // wtp
-  r = rScale(gccsValues.wtp);
-  fill(100, 150, 0);
-  arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
+  if (selectedData[0].gccs_wtp) {
+    r = rScale(selectedData[0].gccs_wtp);
+    fill(100, 150, 0);
+    arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
+  }
 
   // wtp_belief
-  r = rScale(gccsValues.wtp_belief);
-  fill(100, 0, 0);
-  arc(x + cellWidth/2, y + cellHeight/2, r, r, 0, PI/2);
+  if (selectedData[0].gccs_wtp_belief) {
+    r = rScale(selectedData[0].gccs_wtp_belief);
+    fill(100, 0, 0);
+    arc(x + cellWidth/2, y + cellHeight/2, r, r, 0, PI/2);
+  }
 
   // norm
-  r = rScale(gccsValues.norm);
-  fill(0, 100, 150);
-  arc(x + cellWidth/2, y + cellHeight/2, r, r, PI/2, PI);
+  if (selectedData[0].gccs_norm) {
+    r = rScale(selectedData[0].gccs_norm);
+    fill(0, 100, 150);
+    arc(x + cellWidth/2, y + cellHeight/2, r, r, PI/2, PI);
+  }
 
   // government
-  r = rScale(gccsValues.government);
-  fill(100, 0, 200);
-  arc(x + cellWidth/2, y + cellHeight/2, r, r, PI, -PI/2);
+  if (selectedData[0].gccs_government) {
+    r = rScale(selectedData[0].gccs_government);
+    fill(100, 0, 200);
+    arc(x + cellWidth/2, y + cellHeight/2, r, r, PI, -PI/2);
+  }
 
 }
 
