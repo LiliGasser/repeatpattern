@@ -7,7 +7,6 @@ let colorsSelect
 let exportButton;
 
 // initialize data structure
-// TODO might need to be the whole array
 let data = [];
 let selectedData = [];
 let countries = [];
@@ -25,8 +24,8 @@ let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
 // TODO 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
 
 // define cell
-let cellWidth = 40;
-let cellHeight = 40;
+let cellWidth;
+let cellHeight;
 let nCells;
 // TODO proper motif with corresponding scales
 let rScale = d3.scaleSqrt();
@@ -41,14 +40,30 @@ function setup() {
   countrySelectHTML = document.getElementById('country');
   countrySelect = select('#country');
   //console.log('countrySelect:', countrySelect);
-  motifSelect = document.getElementById('motif');
+  cellWidthInputHTML = document.getElementById('cellwidth');
+  cellWidthInput = select('#cellwidth');
+  cellHeightInputHTML = document.getElementById('cellheight');
+  cellHeightInput = select('#cellheight');
+  motifRatioInputHTML = document.getElementById('motifratio');
+  motifRatioInput = select('#motifratio');
+  rowIndentInputHTML = document.getElementById('rowindent');
+  rowIndentInput = select('#rowindent');
+
   symmetrySelect = document.getElementById('symmetry');
+  motifSelect = document.getElementById('motif');
   colorsSelect = document.getElementById('colors');
   exportButton = document.getElementById('exportButton');
             
   // Add event listeners
   countrySelectHTML.addEventListener('change', updatePostcard);
+  cellWidthInputHTML.addEventListener('change', updateGrid);
+  cellHeightInputHTML.addEventListener('change', updateGrid);
+  motifRatioInputHTML.addEventListener('change', updateGrid);
+  rowIndentInputHTML.addEventListener('change', updatePostcard);
   exportButton.addEventListener('click', exportCanvas);
+
+  // Initialize grid
+  updateGrid();
             
   // Load data
   d3.dsv(";", "data/gccs_country_with_temperature_and_gdp.csv", d3.autoType).then(function(csv) {
@@ -77,11 +92,22 @@ function setup() {
 
   });
   
-  // TODO test for cell sizes where multiplication with width and height does not result in integer values
+}
+
+function updateGrid() {
+
+  // Calculate number of cells
+  cellWidth = parseInt(cellWidthInput.value());
+  cellHeight = parseInt(cellHeightInput.value());
   nCells = Math.ceil(width / cellWidth) * Math.ceil(height / cellHeight);
   console.log('nCells: ' + nCells, 'pcWidth: ' + width + ', pcHeight: ' + height);
 
-  rScale.domain([0, 100]).range([1, Math.min(cellWidth, cellHeight) * 0.8]);
+  // Motif size
+  motifRatio = parseFloat(motifRatioInput.value());
+  rScale
+    .domain([0, 100])
+    .range([1, Math.min(cellWidth, cellHeight) * motifRatio]);
+
 }
 
 function updatePostcard() {
@@ -94,17 +120,20 @@ function updatePostcard() {
         
 function draw() {
   background(240);
-  
+
+  rowIndent = parseFloat(rowIndentInput.value());
+
   // initialize
   rectMode(TOP, LEFT);
   let x = 0;
   let y = 0;
+  let nRows = 1;
 
   // draw pattern
   for (let i = 0; i < nCells; i++) {
 
-    // draw grid
-    drawGrid(x, y);
+    // draw grid cell
+    drawGridCell(x, y);
 
     // draw motif
     // TODO draw motif in separate for loop?
@@ -113,16 +142,21 @@ function draw() {
     // move to next cell: planar symmetry with translation
     // TODO other symmetriy operations
     x = x + cellWidth;
+    let decimalPart;
     if (x >= width) {
-      x = 0;
+      let number = nRows * rowIndent;
+      decimalPart = number % 1;
+      //console.log(number.toString().split("."), decimalPart);
+      x = 0 + decimalPart*cellWidth;
       y += cellHeight;
+      nRows +=1;
     }
 
   }
 
 }
 
-function drawGrid(x, y) {
+function drawGridCell(x, y) {
 
   noFill();
   stroke(100);
