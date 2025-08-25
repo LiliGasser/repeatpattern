@@ -39,6 +39,7 @@ let nCells;
 function setup() {
   let cnv = createCanvas(pcWidth, pcHeight);
   cnv.position(pcPosX, pcPosY);
+  cnv.style("width", 500 + "px") // scale down size of canvas with html code
   noLoop();
 
   // load data from file
@@ -159,3 +160,9 @@ function drawMotif(x, y) {
   arc(x + cellWidth/2, y + cellHeight/2, r, r, PI, -PI/2);
 
 }
+
+
+// use d3 to generate svg
+// p5 can only create raster images
+
+// with p5: very big canvas elements, which are then shown much smaller (performance!)
