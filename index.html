@@ -125,7 +125,7 @@
 
             <div class="control-group">
                 <label for="motifratio">Motif ratio </label>
-                <input type="number" id="motifratio" value="0.8" min="0" max="1" />
+                <input type="number" id="motifratio" value="1" min="0" max="1" />
             </div>
 
             <div class="control-group">
@@ -134,35 +134,71 @@
             </div>
 
             <div class="control-group">
+                <label for="showgrid">Show Grid</label>
+                <input type="checkbox" id="showgrid" />
+            </div>
+
+            <div class="control-group">
                 <label for="symmetry">Symmetry</label>
                 <select id="symmetry">
-                    <option value="Symmetry 1" selected>Symmetry 1</option>
+                    <option value="Translation" selected>Translation (3.1)</option>
                     <option value="dotted">Dotted</option>
-                    <option value="dashed">Dashed</option>
-                    <option value="rough">Rough</option>
                 </select>
             </div>
             
             <div class="control-group">
                 <label for="motif">Motif</label>
                 <select id="motif">
-                    <option value="Motif 1" selected>Motif 1</option>
-                    <option value="Motif 2">Motif 2</option>
-                    <option value="255,0,0">Red</option>
+                    <option value="motifArc" >Arc</option>
+                    <option value="motifArc2" selected>Arc 2</option>
+                    <option value="motifCircles">Circles</option>
                 </select>
             </div>
-            
+
             <div class="control-group">
-                <label for="colors">Colors</label>
-                <select id="colors">
-                    <option value="255,255,255" selected>White</option>
-                    <option value="0,0,0">Black</option>
-                    <option value="220,220,220">Light Gray</option>
-                    <option value="173,216,230">Light Blue</option>
-                    <option value="144,238,144">Light Green</option>
-                </select>
-            </div>
-            
+                <label for="color1">WTP</label>
+                <input
+                    type="color"
+                    id="color1"
+                    name="color1"
+                    value="#649600"
+                    colorspace="display-p3"
+                    alpha />
+              </div>
+
+            <div class="control-group">
+                <label for="color2">WTP Belief</label>
+                <input
+                    type="color"
+                    id="color2"
+                    name="color2"
+                    value="#640000"
+                    colorspace="display-p3"
+                    alpha />
+              </div>
+
+            <div class="control-group">
+                <label for="color3">Social Norm</label>
+                <input
+                    type="color"
+                    id="color3"
+                    name="color3"
+                    value="#006496"
+                    colorspace="display-p3"
+                    alpha />
+              </div>
+
+            <div class="control-group">
+                <label for="color4">Government</label>
+                <input
+                    type="color"
+                    id="color4"
+                    name="color4"
+                    value="#6400C8"
+                    colorspace="display-p3"
+                    alpha />
+              </div>
+
             <button id="exportButton">Export as SVG</button>
         </div>
         
