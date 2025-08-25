@@ -10,16 +10,27 @@ let exportButton;
 // TODO might need to be the whole array
 let gccsValues;
 
+// define postcard size (A5 postcard: 210mm x 148mm)
+// calculation: https://imageonline.co/mm-to-px.php
+// laptop screen: 1920 x 1200, 14'' diagonal --> 162 ppi; 60Hz
+let pcWidthMM = 210; // mm
+let pcHeightMM = 148; // mm
+let dpi = 150; // dots per inch
+let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
+let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
+// TODO use to set good size for export (ask Webvisu guy)
+//console.log('aspect ratio: ', pcWidth / pcHeight);
+
 // define cell
-let cellWidth = 80;
-let cellHeight = 80;
+let cellWidth = 40;
+let cellHeight = 40;
 let nCells;
 // TODO proper motif with corresponding scales
 let rScale = d3.scaleSqrt();
 let r;
         
 function setup() {
-  canvas = createCanvas(800, 600);
+  canvas = createCanvas(800, 560, SVG);
   canvas.parent(document.querySelector('.canvas-container'));
             
   // Get references to HTML elements
@@ -62,7 +73,7 @@ function setup() {
 }
         
 function draw() {
-  background(220);
+  background(240);
   
   // initialize
   rectMode(TOP, LEFT);
@@ -95,7 +106,7 @@ function drawGrid(x, y) {
 
   noFill();
   stroke(100);
-  strokeWeight(1);
+  strokeWeight(0.2);
   rect(x, y, cellWidth, cellHeight);
 
 }
@@ -127,5 +138,5 @@ function drawMotif(x, y) {
 }
 
 function exportCanvas() {
-    saveCanvas('my-drawing', 'png');
+    save('postcard', 'svg');
 }
