@@ -20,7 +20,7 @@ let pcHeightMM = 148; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
-// QUESTION set appropriate size for export (ask Webvisu guy)
+// QUESTION set appropriate size for export (ask Felix Michel)
 //console.log('aspect ratio: ', pcWidth / pcHeight);
 // TODO 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
 
@@ -29,10 +29,14 @@ let cellWidth;
 let cellHeight;
 let nCells;
 
-// motif size within cell
+// motif properties
 // TODO proper motif with corresponding scales
-let rScale = d3.scaleSqrt();
+let rScale = d3.scaleSqrt(); // radius
 let r;
+let alphaScale = d3.scaleLinear(); // transparency
+let alpha;
+let areaScale = d3.scaleLinear(); // area of triangle
+let area;
 
 // motif and cell position
 let x;
@@ -137,11 +141,19 @@ function updateGrid() {
   nCells = Math.ceil(width / cellWidth) * Math.ceil(height / cellHeight);
   console.log('nCells: ' + nCells, 'pcWidth: ' + width + ', pcHeight: ' + height);
 
-  // Motif size
+  // Motif ratio
   motifRatio = parseFloat(motifRatioInput.value());
+
+  // Motif properties
   rScale
     .domain([0, 100])
     .range([1, Math.min(cellWidth, cellHeight) * motifRatio]);
+  alphaScale
+    .domain([0, 100])
+    .range([0, 255]);
+  areaScale
+    .domain([0, 100])
+    .range([0, cellWidth*cellWidth/4]) // gleichschenkliges Dreieck, Hypothenuse = cellWidth, cellWidth=cellHeight
 
   redraw();
 
@@ -149,11 +161,15 @@ function updateGrid() {
 
 function updateColors() {
   colors = {
-    'wtp': color1.value(),
-    'wtp_belief': color2.value(),
-    'norm': color3.value(),
-    'government': color4.value(),
+    'wtp': color(color1.value()),
+    'wtp_belief': color(color2.value()),
+    'norm': color(color3.value()),
+    'government': color(color4.value()),
   }
+  //for (let i=0; i<colors.length; i++) {
+    //colors[i].setAlpha(255);
+  //}
+  console.log(colors);
 
   redraw();
 
@@ -170,7 +186,7 @@ function updatePostcard() {
 }
         
 function draw() {
-  background(240);
+  background(255);
 
   rowIndent = parseFloat(rowIndentInput.value());
 
@@ -209,14 +225,21 @@ function drawGridCell() {
 
 }
 
+// TODO select from html
 function drawMotif() {
   //console.log('drawMotif at x: ' + x + ', y: ' + y);
-  if (motifSelect.value() === 'motifArc') {
+  if (motifSelect.value() === 'windwheelMotif') {
+    windwheelMotif();
+  } else if (motifSelect.value() === 'flowerMotif') {
+    flowerMotif();
+  } else if (motifSelect.value() === 'arcMotif') {
     arcMotif();
-  } else if (motifSelect.value() === 'motifArc2') {
+  } else if (motifSelect.value() === 'arcMotif2') {
     arcMotif2();
-  } else if (motifSelect.value() === 'motifCircles') {
+  } else if (motifSelect.value() === 'circlesMotif') {
     circlesMotif();
+  } else if (motifSelect.value() === 'alphaMotif') {
+    alphaMotif();
   }
 
 }
@@ -242,6 +265,126 @@ function exportCanvas() {
 // -----------------------------------------------------------------
 // Motifs
 
+function windwheelMotif() {
+  // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
+
+  stroke(0);
+  strokeWeight(0);
+
+  let xCenter = x + cellWidth/2;
+  let yCenter = y + cellHeight/2;
+  let adjustedHypotenuse;
+
+  // wtp
+  if (selectedData[0].gccs_wtp) {
+    fill(colors.wtp);
+    area = areaScale(selectedData[0].gccs_wtp);
+    console.log('area wtp: ', area);
+    adjustedHypotenuse = 4*area / cellWidth;
+    triangle(
+      xCenter, yCenter, 
+      xCenter - adjustedHypotenuse/2, y,
+      xCenter + adjustedHypotenuse/2, y,
+    );
+
+  }
+
+  // wtp_belief
+  if (selectedData[0].gccs_wtp_belief) {
+    fill(colors.wtp_belief)
+    area = areaScale(selectedData[0].gccs_wtp_belief);
+    console.log('area wtp belief: ', area);
+    adjustedHypotenuse = 4*area / cellHeight;
+    triangle(
+      xCenter, yCenter, 
+      x + cellWidth, yCenter - adjustedHypotenuse/2,
+      x + cellWidth, yCenter + adjustedHypotenuse/2,
+    );
+  }
+
+  // norm
+  if (selectedData[0].gccs_norm) {
+    fill(colors.norm);
+    area = areaScale(selectedData[0].gccs_norm);
+    console.log('area norm: ', area);
+    adjustedHypotenuse = 4*area / cellWidth;
+    triangle(
+      xCenter, yCenter, 
+      xCenter - adjustedHypotenuse/2, y + cellHeight,
+      xCenter + adjustedHypotenuse/2, y + cellHeight,
+    );
+  }
+
+  // government
+  if (selectedData[0].gccs_government) {
+    fill(colors.government);
+    area = areaScale(selectedData[0].gccs_government);
+    console.log('area wtp belief: ', area);
+    adjustedHypotenuse = 4*area / cellHeight;
+    triangle(
+      xCenter, yCenter, 
+      x, yCenter - adjustedHypotenuse/2,
+      x, yCenter + adjustedHypotenuse/2,
+    );
+  }
+}
+
+// TODO how to make petal size dependant on values?
+function flowerMotif() {
+
+  stroke(0);
+  strokeWeight(0);
+
+  let xCenter = x + cellWidth/2;
+  let yCenter = y + cellHeight/2;
+  let factorCW = 5;
+  let factorCH = 4.15;
+
+  // wtp
+  if (selectedData[0].gccs_wtp) {
+    fill(colors.wtp);
+    curve(
+      xCenter - factorCW*cellWidth, yCenter + factorCH*cellHeight, 
+      xCenter, yCenter,
+      xCenter, yCenter,
+      xCenter + factorCW*cellWidth, yCenter + factorCH*cellHeight
+    )
+  }
+
+  // wtp_belief
+  if (selectedData[0].gccs_wtp_belief) {
+    fill(colors.wtp_belief)
+    curve(
+      xCenter - factorCH*cellWidth, yCenter - factorCW*cellHeight, 
+      xCenter, yCenter,
+      xCenter, yCenter,
+      xCenter - factorCH*cellWidth, yCenter + factorCW*cellHeight
+    )
+  }
+
+  // norm
+  if (selectedData[0].gccs_norm) {
+    fill(colors.norm);
+    curve(
+      xCenter - factorCW*cellWidth, yCenter - factorCH*cellHeight, 
+      xCenter, yCenter,
+      xCenter, yCenter,
+      xCenter + factorCW*cellWidth, yCenter - factorCH*cellHeight
+    )
+  }
+
+  // government
+  if (selectedData[0].gccs_government) {
+    fill(colors.government);
+    curve(
+      xCenter + factorCH*cellWidth, yCenter - factorCW*cellHeight, 
+      xCenter, yCenter,
+      xCenter, yCenter,
+      xCenter + factorCH*cellWidth, yCenter + factorCW*cellHeight
+    )
+  }
+}
+
 function arcMotif() {
 
   noStroke();
@@ -249,6 +392,7 @@ function arcMotif() {
   // wtp
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
+    //console.log(colors.wtp);
     fill(colors.wtp);
     arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
   }
@@ -257,6 +401,7 @@ function arcMotif() {
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
     fill(colors.wtp_belief)
+    //console.log(colors.wtp_belief);
     arc(x + cellWidth/2, y + cellHeight/2, r, r, 0, PI/2);
   }
 
@@ -340,5 +485,43 @@ function circlesMotif() {
     r = rScale(selectedData[0].gccs_government);
     stroke(colors.government);
     ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
+  }
+}
+
+function alphaMotif() {
+
+  noStroke();
+  let c = [];
+
+  // wtp
+  if (selectedData[0].gccs_wtp) {
+    alpha = alphaScale(selectedData[0].gccs_wtp);
+    c = [...colors.wtp.levels.slice(0,3), round(alpha,0)];
+    fill(color(c));
+    rect(x + cellWidth/2, y, cellWidth/2, cellHeight/2);
+  }
+
+  // wtp_belief
+  if (selectedData[0].gccs_wtp_belief) {
+    alpha = alphaScale(selectedData[0].gccs_wtp_belief);
+    c = [...colors.wtp_belief.levels.slice(0,3), round(alpha,0)];
+    fill(color(c));
+    rect(x + cellWidth/2, y + cellHeight/2, cellWidth/2, cellHeight/2);
+  }
+
+  // norm
+  if (selectedData[0].gccs_norm) {
+    alpha = alphaScale(selectedData[0].gccs_norm);
+    c = [...colors.norm.levels.slice(0,3), round(alpha,0)];
+    fill(color(c));
+    rect(x, y + cellHeight/2, cellWidth/2, cellHeight/2);
+  }
+
+  // government
+  if (selectedData[0].gccs_government) {
+    alpha = alphaScale(selectedData[0].gccs_government);
+    c = [...colors.government.levels.slice(0,3), round(alpha,0)];
+    fill(color(c));
+    rect(x, y, cellWidth/2, cellHeight/2);
   }
 }
