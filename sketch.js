@@ -52,6 +52,7 @@ let order = [
   'gccs_norm', 
   'gccs_wtp', 
 ];
+let initialCellRotation = 0;
 
 function setup() {
   canvas = createCanvas(800, 560, SVG);
@@ -74,7 +75,8 @@ function setup() {
   showGridHTML = document.getElementById('showgrid');
   showGrid = select('#showgrid');
 
-  symmetrySelect = document.getElementById('symmetry');
+  symmetrySelectHTML = document.getElementById('symmetry');
+  symmetrySelect = select('#symmetry');
 
   motifSelectHTML = document.getElementById('motif');
   motifSelect = select('#motif');
@@ -87,7 +89,7 @@ function setup() {
   color4HTML = document.getElementById('color4');
   color4 = select('#color4');
 
-  colorsSelect = document.getElementById('colors');
+  //colorsSelect = document.getElementById('colors');
   exportButton = document.getElementById('exportButton');
             
   // Add event listeners
@@ -97,6 +99,7 @@ function setup() {
   motifRatioInputHTML.addEventListener('change', updateGrid);
   rowIndentInputHTML.addEventListener('change', updatePostcard);
   showGridHTML.addEventListener('change', updatePostcard);
+  symmetrySelectHTML.addEventListener('change', updatePostcard);
   motifSelectHTML.addEventListener('change', updatePostcard);
   color1HTML.addEventListener('change', updateColors);
   color2HTML.addEventListener('change', updateColors);
@@ -208,11 +211,19 @@ function draw() {
     }
 
     // draw motif
-    // TODO draw motif in separate for loop?
-    drawMotif();
-
-    // move to next cell: planar symmetry with translation
     // TODO other symmetriy operations
+    // TODO draw motif in separate for loop?
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    if (symmetrySelect.value() === '180degreeRotations') {
+      rotate(initialCellRotation + i*PI);
+    } else if (symmetrySelect.value() === '90degreeRotations') {
+      rotate(initialCellRotation + i*PI/2);
+    }
+    drawMotif();
+    pop();
+
+    // move to next cell: translation from left to right, top to bottom
     doTranslation();
 
   }
@@ -274,8 +285,8 @@ function windwheelMotif() {
   stroke(0);
   strokeWeight(0);
 
-  let xCenter = x + cellWidth/2;
-  let yCenter = y + cellHeight/2;
+  //let xCenter = x + cellWidth/2;
+  //let yCenter = y + cellHeight/2;
   let adjustedHypotenuse;
   let selVar;
   let initialRotation = 0;
@@ -289,7 +300,7 @@ function windwheelMotif() {
       area = areaScale(selectedData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
       push();
-      translate(xCenter, yCenter);
+      //translate(xCenter, yCenter);
       rotate(initialRotation + i*PI/2);
       triangle(
         0, 0, 
@@ -309,8 +320,8 @@ function flowerMotif() {
   stroke(0);
   strokeWeight(0);
 
-  let xCenter = x + cellWidth/2;
-  let yCenter = y + cellHeight/2;
+  //let xCenter = x + cellWidth/2;
+  //let yCenter = y + cellHeight/2;
   let factorCW = 5;
   let factorCH = 4.15;
   let selVar;
@@ -325,7 +336,7 @@ function flowerMotif() {
       area = areaScale(selectedData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
       push();
-      translate(xCenter, yCenter);
+      //translate(xCenter, yCenter);
       rotate(initialRotation + i*PI/2);
       curve(
         - factorCW*cellWidth, factorCH*cellHeight, 
@@ -353,7 +364,7 @@ function arcMotif() {
       fill(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
       push();
-      translate(x + cellWidth/2, y + cellHeight/2);
+      //translate(x + cellWidth/2, y + cellHeight/2);
       rotate(initialRotation + i*PI/2);
       arc(0, 0, r, r, 0, PI/2);
       pop();
@@ -370,28 +381,32 @@ function arcMotif2() {
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
     fill(colors['gccs_wtp']);
-    arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
+    arc(0, 0, r, r, -PI/2, 0);
+    //arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
     fill(colors['gccs_wtp_belief']);
-    arc(x + cellWidth, y + cellHeight/2, r, r, PI/2, PI);
+    arc(cellWidth/2, 0, r, r, PI/2, PI);
+    //arc(x + cellWidth, y + cellHeight/2, r, r, PI/2, PI);
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     r = rScale(selectedData[0].gccs_norm);
     fill(colors['gccs_norm']);
-    arc(x, y + cellHeight, r, r, -PI/2, 0);;
+    arc(-cellWidth/2, cellHeight/2, r, r, -PI/2, 0);
+    //arc(x, y + cellHeight, r, r, -PI/2, 0);
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
     fill(colors['gccs_government']);
-    arc(x + cellWidth/2, y, r, r, PI/2, PI);
+    //arc(x + cellWidth/2, y, r, r, PI/2, PI);
+    arc(0, -cellHeight/2, r, r, PI/2, PI);
   }
 }
 
@@ -410,7 +425,7 @@ function circlesMotif() {
       stroke(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
       push();
-      translate(x + cellWidth/2, y + cellHeight/2);
+      //translate(x + cellWidth/2, y + cellHeight/2);
       ellipse(0, 0, r, r);
       pop();
 
@@ -429,8 +444,7 @@ function alphaMotif() {
     c = [...colors['gccs_wtp'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     push();
-    translate(x, y);
-    rect(cellWidth/2, 0, cellWidth/2, cellHeight/2);
+    rect(0, -cellHeight/2, cellWidth/2, cellHeight/2);
     pop();
   }
 
@@ -440,8 +454,7 @@ function alphaMotif() {
     c = [...colors['gccs_wtp_belief'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     push();
-    translate(x, y);
-    rect(cellWidth/2, cellHeight/2, cellWidth/2, cellHeight/2);
+    rect(0, 0, cellWidth/2, cellHeight/2);
     pop();
   }
 
@@ -451,8 +464,7 @@ function alphaMotif() {
     c = [...colors['gccs_norm'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     push();
-    translate(x,y);
-    rect(0, cellHeight/2, cellWidth/2, cellHeight/2);
+    rect(-cellWidth/2, 0, cellWidth/2, cellHeight/2);
     pop();
   }
 
@@ -462,8 +474,7 @@ function alphaMotif() {
     c = [...colors['gccs_government'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     push();
-    translate(x,y);
-    rect(0, 0, cellWidth/2, cellHeight/2);
+    rect(-cellWidth/2, -cellHeight/2, cellWidth/2, cellHeight/2);
     pop();
   }
 }
