@@ -271,137 +271,35 @@ function windwheelMotif() {
   let xCenter = x + cellWidth/2;
   let yCenter = y + cellHeight/2;
   let adjustedHypotenuse;
-
-  // wtp
-  if (selectedData[0].gccs_wtp) {
-    fill(colors['gccs_wtp']);
-    area = areaScale(selectedData[0]['gccs_wtp']);
-    console.log('area wtp: ', area);
-    adjustedHypotenuse = 4*area / cellWidth;
-    push();
-    translate(xCenter, yCenter);
-    triangle(
-      0, 0, 
-      - adjustedHypotenuse/2, -cellHeight/2,
-      + adjustedHypotenuse/2, -cellHeight/2,
-    );
-    pop();
-
+  let selVar;
+  let rotation = {
+    'gccs_wtp': 0,
+    'gccs_wtp_belief': PI/2,
+    'gccs_norm': PI,
+    'gccs_government': -PI/2,
   }
 
-  // wtp_belief
-  if (selectedData[0].gccs_wtp_belief) {
-    fill(colors['gccs_wtp_belief']);
-    area = areaScale(selectedData[0]['gccs_wtp_belief']);
-    console.log('area wtp belief: ', area);
-    adjustedHypotenuse = 4*area / cellHeight;
-    push();
-    translate(xCenter, yCenter);
-    rotate(PI/2);
-    triangle(
-      0, 0, 
-      - adjustedHypotenuse/2, -cellHeight/2,
-      + adjustedHypotenuse/2, -cellHeight/2,
-    );
+  for (let i=0; i<4; i++) {
+    selVar = Object.keys(colors)[i];
+    console.log('selVar', selVar);
+    if (selectedData[0][selVar]) {
+      fill(colors[selVar]);
+      area = areaScale(selectedData[0][selVar]);
+      adjustedHypotenuse = 4*area / cellWidth;
+      push();
+      translate(xCenter, yCenter);
+      rotate(rotation[selVar]);
+      triangle(
+        0, 0, 
+        - adjustedHypotenuse/2, -cellHeight/2,
+        + adjustedHypotenuse/2, -cellHeight/2,
+      );
     pop();
-  }
 
-  // norm
-  if (selectedData[0].gccs_norm) {
-    fill(colors['gccs_norm']);
-    area = areaScale(selectedData[0]['gccs_norm']);
-    adjustedHypotenuse = 4*area / cellWidth;
-    push();
-    translate(xCenter, yCenter);
-    rotate(PI);
-    triangle(
-      0, 0, 
-      - adjustedHypotenuse/2, -cellHeight/2,
-      + adjustedHypotenuse/2, -cellHeight/2,
-    );
-    pop();
-  }
-
-  // government
-  if (selectedData[0].gccs_government) {
-    fill(colors['gccs_government']);
-    area = areaScale(selectedData[0]['gccs_government']);
-    adjustedHypotenuse = 4*area / cellHeight;
-    push();
-    translate(xCenter, yCenter);
-    rotate(-PI/2);
-    triangle(
-      0, 0, 
-      - adjustedHypotenuse/2, -cellHeight/2,
-      + adjustedHypotenuse/2, -cellHeight/2,
-    );
-    pop();
+    }
   }
 }
 
-function windwheelMotif_old() {
-  // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
-
-  stroke(0);
-  strokeWeight(0);
-
-  let xCenter = x + cellWidth/2;
-  let yCenter = y + cellHeight/2;
-  let adjustedHypotenuse;
-
-  // wtp
-  if (selectedData[0].gccs_wtp) {
-    fill(colors.wtp);
-    area = areaScale(selectedData[0].gccs_wtp);
-    console.log('area wtp: ', area);
-    adjustedHypotenuse = 4*area / cellWidth;
-    triangle(
-      xCenter, yCenter, 
-      xCenter - adjustedHypotenuse/2, y,
-      xCenter + adjustedHypotenuse/2, y,
-    );
-
-  }
-
-  // wtp_belief
-  if (selectedData[0].gccs_wtp_belief) {
-    fill(colors.wtp_belief)
-    area = areaScale(selectedData[0].gccs_wtp_belief);
-    console.log('area wtp belief: ', area);
-    adjustedHypotenuse = 4*area / cellHeight;
-    triangle(
-      xCenter, yCenter, 
-      x + cellWidth, yCenter - adjustedHypotenuse/2,
-      x + cellWidth, yCenter + adjustedHypotenuse/2,
-    );
-  }
-
-  // norm
-  if (selectedData[0].gccs_norm) {
-    fill(colors.norm);
-    area = areaScale(selectedData[0].gccs_norm);
-    console.log('area norm: ', area);
-    adjustedHypotenuse = 4*area / cellWidth;
-    triangle(
-      xCenter, yCenter, 
-      xCenter - adjustedHypotenuse/2, y + cellHeight,
-      xCenter + adjustedHypotenuse/2, y + cellHeight,
-    );
-  }
-
-  // government
-  if (selectedData[0].gccs_government) {
-    fill(colors.government);
-    area = areaScale(selectedData[0].gccs_government);
-    console.log('area wtp belief: ', area);
-    adjustedHypotenuse = 4*area / cellHeight;
-    triangle(
-      xCenter, yCenter, 
-      x, yCenter - adjustedHypotenuse/2,
-      x, yCenter + adjustedHypotenuse/2,
-    );
-  }
-}
 
 // TODO how to make petal size dependant on values?
 function flowerMotif() {
@@ -413,112 +311,60 @@ function flowerMotif() {
   let yCenter = y + cellHeight/2;
   let factorCW = 5;
   let factorCH = 4.15;
-
-  // wtp
-  if (selectedData[0].gccs_wtp) {
-    fill(colors['gccs_wtp']);
-    push();
-    translate(xCenter, yCenter);
-    curve(
-      - factorCW*cellWidth, factorCH*cellHeight, 
-      0, 0,
-      0, 0,
-      factorCW*cellWidth, factorCH*cellHeight
-    )
-    pop();
+  let selVar;
+  let rotation = {
+    'gccs_wtp': 0,
+    'gccs_wtp_belief': PI/2,
+    'gccs_norm': PI,
+    'gccs_government': -PI/2,
   }
 
-  // wtp_belief
-  if (selectedData[0].gccs_wtp_belief) {
-    fill(colors['gccs_wtp_belief'])
-    push();
-    translate(xCenter, yCenter);
-    rotate(PI/2);
-    curve(
-      - factorCW*cellWidth, factorCH*cellHeight, 
-      0, 0,
-      0, 0,
-      factorCW*cellWidth, factorCH*cellHeight
-    )
-    pop();
-  }
+  for (let i=0; i<4; i++) {
+    selVar = Object.keys(colors)[i];
+    console.log('selVar', selVar);
+    if (selectedData[0][selVar]) {
+      fill(colors[selVar]);
+      area = areaScale(selectedData[0][selVar]);
+      adjustedHypotenuse = 4*area / cellWidth;
+      push();
+      translate(xCenter, yCenter);
+      rotate(rotation[selVar]);
+      curve(
+        - factorCW*cellWidth, factorCH*cellHeight, 
+        0, 0,
+        0, 0,
+        factorCW*cellWidth, factorCH*cellHeight
+      )
+      pop();
 
-  // norm
-  if (selectedData[0].gccs_norm) {
-    fill(colors['gccs_norm']);
-    push();
-    translate(xCenter, yCenter);
-    rotate(PI);
-    curve(
-      - factorCW*cellWidth, factorCH*cellHeight, 
-      0, 0,
-      0, 0,
-      factorCW*cellWidth, factorCH*cellHeight
-    )
-    pop();
-  }
-
-  // government
-  if (selectedData[0].gccs_government) {
-    fill(colors['gccs_government']);
-    push();
-    translate(xCenter, yCenter);
-    rotate(-PI/2);
-    curve(
-      - factorCW*cellWidth, factorCH*cellHeight, 
-      0, 0,
-      0, 0,
-      factorCW*cellWidth, factorCH*cellHeight
-    )
-    pop();
+    }
   }
 }
 
 function arcMotif() {
 
   noStroke();
-
-  // wtp
-  if (selectedData[0].gccs_wtp) {
-    r = rScale(selectedData[0].gccs_wtp);
-    fill(colors['gccs_wtp']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    arc(0, 0, r, r, -PI/2, 0);
-    pop();
+  let selVar;
+  let rotation = {
+    'gccs_wtp': 0,
+    'gccs_wtp_belief': PI/2,
+    'gccs_norm': PI,
+    'gccs_government': -PI/2,
   }
 
-  // wtp_belief
-  if (selectedData[0].gccs_wtp_belief) {
-    r = rScale(selectedData[0].gccs_wtp_belief);
-    fill(colors['gccs_wtp_belief']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    rotate(PI/2);
-    arc(0, 0, r, r, -PI/2, 0);
-    pop();
-  }
+  for (let i=0; i<4; i++) {
+    selVar = Object.keys(colors)[i];
+    console.log('selVar', selVar);
+    if (selectedData[0][selVar]) {
+      fill(colors[selVar]);
+      r = rScale(selectedData[0][selVar]);
+      push();
+      translate(x + cellWidth/2, y + cellHeight/2);
+      rotate(rotation[selVar]);
+      arc(0, 0, r, r, -PI/2, 0);
+      pop();
 
-  // norm
-  if (selectedData[0].gccs_norm) {
-    r = rScale(selectedData[0].gccs_norm);
-    fill(colors['gccs_norm']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    rotate(PI);
-    arc(0, 0, r, r, -PI/2, 0);
-    pop();
-  }
-
-  // government
-  if (selectedData[0].gccs_government) {
-    r = rScale(selectedData[0].gccs_government);
-    fill(colors['gccs_government']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    rotate(-PI/2);
-    arc(0, 0, r, r, -PI/2, 0);
-    pop();
+    }
   }
 }
 
@@ -560,45 +406,20 @@ function circlesMotif() {
 
   noFill();
   strokeWeight(1);
+  let selVar;
 
-  // wtp
-  if (selectedData[0].gccs_wtp) {
-    r = rScale(selectedData[0].gccs_wtp);
-    stroke(colors['gccs_wtp']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    ellipse(0, 0, r, r);
-    pop(); 
-  }
+  for (let i=0; i<4; i++) {
+    selVar = Object.keys(colors)[i];
+    console.log('selVar', selVar);
+    if (selectedData[0][selVar]) {
+      stroke(colors[selVar]);
+      r = rScale(selectedData[0][selVar]);
+      push();
+      translate(x + cellWidth/2, y + cellHeight/2);
+      ellipse(0, 0, r, r);
+      pop();
 
-  // wtp_belief
-  if (selectedData[0].gccs_wtp_belief) {
-    r = rScale(selectedData[0].gccs_wtp_belief);
-    stroke(colors['gccs_wtp_belief']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    ellipse(0, 0, r, r);
-    pop(); 
-  }
-
-  // norm
-  if (selectedData[0].gccs_norm) {
-    r = rScale(selectedData[0].gccs_norm);
-    stroke(colors['gccs_norm']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    ellipse(0, 0, r, r);
-    pop(); 
-  }
-
-  // government
-  if (selectedData[0].gccs_government) {
-    r = rScale(selectedData[0].gccs_government);
-    stroke(colors['gccs_government']);
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    ellipse(0, 0, r, r);
-    pop();
+    }
   }
 }
 
