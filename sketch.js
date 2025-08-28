@@ -46,7 +46,13 @@ let rowIndent;
 
 // colors
 let colors;
-        
+let order = [
+  'gccs_government',
+  'gccs_wtp_belief', 
+  'gccs_norm', 
+  'gccs_wtp', 
+];
+
 function setup() {
   canvas = createCanvas(800, 560, SVG);
   canvas.parent(document.querySelector('.canvas-container'));
@@ -272,15 +278,11 @@ function windwheelMotif() {
   let yCenter = y + cellHeight/2;
   let adjustedHypotenuse;
   let selVar;
-  let rotation = {
-    'gccs_wtp': 0,
-    'gccs_wtp_belief': PI/2,
-    'gccs_norm': PI,
-    'gccs_government': -PI/2,
-  }
+  let initialRotation = 0;
 
   for (let i=0; i<4; i++) {
-    selVar = Object.keys(colors)[i];
+    selVar = order[i];
+    //selVar = Object.keys(colors)[i];
     console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
       fill(colors[selVar]);
@@ -288,7 +290,7 @@ function windwheelMotif() {
       adjustedHypotenuse = 4*area / cellWidth;
       push();
       translate(xCenter, yCenter);
-      rotate(rotation[selVar]);
+      rotate(initialRotation + i*PI/2);
       triangle(
         0, 0, 
         - adjustedHypotenuse/2, -cellHeight/2,
@@ -312,15 +314,11 @@ function flowerMotif() {
   let factorCW = 5;
   let factorCH = 4.15;
   let selVar;
-  let rotation = {
-    'gccs_wtp': 0,
-    'gccs_wtp_belief': PI/2,
-    'gccs_norm': PI,
-    'gccs_government': -PI/2,
-  }
+  let initialRotation = 0;
 
   for (let i=0; i<4; i++) {
-    selVar = Object.keys(colors)[i];
+    selVar = order[i];
+    //selVar = Object.keys(colors)[i];
     console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
       fill(colors[selVar]);
@@ -328,7 +326,7 @@ function flowerMotif() {
       adjustedHypotenuse = 4*area / cellWidth;
       push();
       translate(xCenter, yCenter);
-      rotate(rotation[selVar]);
+      rotate(initialRotation + i*PI/2);
       curve(
         - factorCW*cellWidth, factorCH*cellHeight, 
         0, 0,
@@ -345,23 +343,19 @@ function arcMotif() {
 
   noStroke();
   let selVar;
-  let rotation = {
-    'gccs_wtp': 0,
-    'gccs_wtp_belief': PI/2,
-    'gccs_norm': PI,
-    'gccs_government': -PI/2,
-  }
+  let initialRotation = 0;
 
   for (let i=0; i<4; i++) {
-    selVar = Object.keys(colors)[i];
-    console.log('selVar', selVar);
+    selVar = order[i];
+    //selVar = Object.keys(colors)[i];
+    //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
       fill(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
       push();
       translate(x + cellWidth/2, y + cellHeight/2);
-      rotate(rotation[selVar]);
-      arc(0, 0, r, r, -PI/2, 0);
+      rotate(initialRotation + i*PI/2);
+      arc(0, 0, r, r, 0, PI/2);
       pop();
 
     }
@@ -405,12 +399,13 @@ function arcMotif2() {
 function circlesMotif() {
 
   noFill();
-  strokeWeight(1);
+  strokeWeight(2);
   let selVar;
 
   for (let i=0; i<4; i++) {
-    selVar = Object.keys(colors)[i];
-    console.log('selVar', selVar);
+    selVar = order[i];
+    //selVar = Object.keys(colors)[i];
+    //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
       stroke(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
