@@ -278,11 +278,14 @@ function windwheelMotif() {
     area = areaScale(selectedData[0]['gccs_wtp']);
     console.log('area wtp: ', area);
     adjustedHypotenuse = 4*area / cellWidth;
+    push();
+    translate(xCenter, yCenter);
     triangle(
-      xCenter, yCenter, 
-      xCenter - adjustedHypotenuse/2, y,
-      xCenter + adjustedHypotenuse/2, y,
+      0, 0, 
+      - adjustedHypotenuse/2, -cellHeight/2,
+      + adjustedHypotenuse/2, -cellHeight/2,
     );
+    pop();
 
   }
 
@@ -292,11 +295,15 @@ function windwheelMotif() {
     area = areaScale(selectedData[0]['gccs_wtp_belief']);
     console.log('area wtp belief: ', area);
     adjustedHypotenuse = 4*area / cellHeight;
+    push();
+    translate(xCenter, yCenter);
+    rotate(PI/2);
     triangle(
-      xCenter, yCenter, 
-      x + cellWidth, yCenter - adjustedHypotenuse/2,
-      x + cellWidth, yCenter + adjustedHypotenuse/2,
+      0, 0, 
+      - adjustedHypotenuse/2, -cellHeight/2,
+      + adjustedHypotenuse/2, -cellHeight/2,
     );
+    pop();
   }
 
   // norm
@@ -304,11 +311,15 @@ function windwheelMotif() {
     fill(colors['gccs_norm']);
     area = areaScale(selectedData[0]['gccs_norm']);
     adjustedHypotenuse = 4*area / cellWidth;
+    push();
+    translate(xCenter, yCenter);
+    rotate(PI);
     triangle(
-      xCenter, yCenter, 
-      xCenter - adjustedHypotenuse/2, y + cellHeight,
-      xCenter + adjustedHypotenuse/2, y + cellHeight,
+      0, 0, 
+      - adjustedHypotenuse/2, -cellHeight/2,
+      + adjustedHypotenuse/2, -cellHeight/2,
     );
+    pop();
   }
 
   // government
@@ -316,11 +327,15 @@ function windwheelMotif() {
     fill(colors['gccs_government']);
     area = areaScale(selectedData[0]['gccs_government']);
     adjustedHypotenuse = 4*area / cellHeight;
+    push();
+    translate(xCenter, yCenter);
+    rotate(-PI/2);
     triangle(
-      xCenter, yCenter, 
-      x, yCenter - adjustedHypotenuse/2,
-      x, yCenter + adjustedHypotenuse/2,
+      0, 0, 
+      - adjustedHypotenuse/2, -cellHeight/2,
+      + adjustedHypotenuse/2, -cellHeight/2,
     );
+    pop();
   }
 }
 
@@ -402,45 +417,60 @@ function flowerMotif() {
   // wtp
   if (selectedData[0].gccs_wtp) {
     fill(colors['gccs_wtp']);
+    push();
+    translate(xCenter, yCenter);
     curve(
-      xCenter - factorCW*cellWidth, yCenter + factorCH*cellHeight, 
-      xCenter, yCenter,
-      xCenter, yCenter,
-      xCenter + factorCW*cellWidth, yCenter + factorCH*cellHeight
+      - factorCW*cellWidth, factorCH*cellHeight, 
+      0, 0,
+      0, 0,
+      factorCW*cellWidth, factorCH*cellHeight
     )
+    pop();
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     fill(colors['gccs_wtp_belief'])
+    push();
+    translate(xCenter, yCenter);
+    rotate(PI/2);
     curve(
-      xCenter - factorCH*cellWidth, yCenter - factorCW*cellHeight, 
-      xCenter, yCenter,
-      xCenter, yCenter,
-      xCenter - factorCH*cellWidth, yCenter + factorCW*cellHeight
+      - factorCW*cellWidth, factorCH*cellHeight, 
+      0, 0,
+      0, 0,
+      factorCW*cellWidth, factorCH*cellHeight
     )
+    pop();
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     fill(colors['gccs_norm']);
+    push();
+    translate(xCenter, yCenter);
+    rotate(PI);
     curve(
-      xCenter - factorCW*cellWidth, yCenter - factorCH*cellHeight, 
-      xCenter, yCenter,
-      xCenter, yCenter,
-      xCenter + factorCW*cellWidth, yCenter - factorCH*cellHeight
+      - factorCW*cellWidth, factorCH*cellHeight, 
+      0, 0,
+      0, 0,
+      factorCW*cellWidth, factorCH*cellHeight
     )
+    pop();
   }
 
   // government
   if (selectedData[0].gccs_government) {
     fill(colors['gccs_government']);
+    push();
+    translate(xCenter, yCenter);
+    rotate(-PI/2);
     curve(
-      xCenter + factorCH*cellWidth, yCenter - factorCW*cellHeight, 
-      xCenter, yCenter,
-      xCenter, yCenter,
-      xCenter + factorCH*cellWidth, yCenter + factorCW*cellHeight
+      - factorCW*cellWidth, factorCH*cellHeight, 
+      0, 0,
+      0, 0,
+      factorCW*cellWidth, factorCH*cellHeight
     )
+    pop();
   }
 }
 
@@ -452,28 +482,43 @@ function arcMotif() {
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
     fill(colors['gccs_wtp']);
-    arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    arc(0, 0, r, r, -PI/2, 0);
+    pop();
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
     fill(colors['gccs_wtp_belief']);
-    arc(x + cellWidth/2, y + cellHeight/2, r, r, 0, PI/2);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    rotate(PI/2);
+    arc(0, 0, r, r, -PI/2, 0);
+    pop();
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     r = rScale(selectedData[0].gccs_norm);
     fill(colors['gccs_norm']);
-    arc(x + cellWidth/2, y + cellHeight/2, r, r, PI/2, PI);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    rotate(PI);
+    arc(0, 0, r, r, -PI/2, 0);
+    pop();
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
     fill(colors['gccs_government']);
-    arc(x + cellWidth/2, y + cellHeight/2, r, r, PI, -PI/2);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    rotate(-PI/2);
+    arc(0, 0, r, r, -PI/2, 0);
+    pop();
   }
 }
 
@@ -520,28 +565,40 @@ function circlesMotif() {
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
     stroke(colors['gccs_wtp']);
-    ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    ellipse(0, 0, r, r);
+    pop(); 
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
     stroke(colors['gccs_wtp_belief']);
-    ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    ellipse(0, 0, r, r);
+    pop(); 
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     r = rScale(selectedData[0].gccs_norm);
     stroke(colors['gccs_norm']);
-    ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    ellipse(0, 0, r, r);
+    pop(); 
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
     stroke(colors['gccs_government']);
-    ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
+    push();
+    translate(x + cellWidth/2, y + cellHeight/2);
+    ellipse(0, 0, r, r);
+    pop();
   }
 }
 
@@ -555,7 +612,10 @@ function alphaMotif() {
     alpha = alphaScale(selectedData[0].gccs_wtp);
     c = [...colors['gccs_wtp'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
-    rect(x + cellWidth/2, y, cellWidth/2, cellHeight/2);
+    push();
+    translate(x, y);
+    rect(cellWidth/2, 0, cellWidth/2, cellHeight/2);
+    pop();
   }
 
   // wtp_belief
@@ -563,7 +623,10 @@ function alphaMotif() {
     alpha = alphaScale(selectedData[0].gccs_wtp_belief);
     c = [...colors['gccs_wtp_belief'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
-    rect(x + cellWidth/2, y + cellHeight/2, cellWidth/2, cellHeight/2);
+    push();
+    translate(x, y);
+    rect(cellWidth/2, cellHeight/2, cellWidth/2, cellHeight/2);
+    pop();
   }
 
   // norm
@@ -571,7 +634,10 @@ function alphaMotif() {
     alpha = alphaScale(selectedData[0].gccs_norm);
     c = [...colors['gccs_norm'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
-    rect(x, y + cellHeight/2, cellWidth/2, cellHeight/2);
+    push();
+    translate(x,y);
+    rect(0, cellHeight/2, cellWidth/2, cellHeight/2);
+    pop();
   }
 
   // government
@@ -579,6 +645,9 @@ function alphaMotif() {
     alpha = alphaScale(selectedData[0].gccs_government);
     c = [...colors['gccs_government'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
-    rect(x, y, cellWidth/2, cellHeight/2);
+    push();
+    translate(x,y);
+    rect(0, 0, cellWidth/2, cellHeight/2);
+    pop();
   }
 }
