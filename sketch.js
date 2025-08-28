@@ -161,14 +161,11 @@ function updateGrid() {
 
 function updateColors() {
   colors = {
-    'wtp': color(color1.value()),
-    'wtp_belief': color(color2.value()),
-    'norm': color(color3.value()),
-    'government': color(color4.value()),
+    'gccs_wtp': color(color1.value()),
+    'gccs_wtp_belief': color(color2.value()),
+    'gccs_norm': color(color3.value()),
+    'gccs_government': color(color4.value()),
   }
-  //for (let i=0; i<colors.length; i++) {
-    //colors[i].setAlpha(255);
-  //}
   console.log(colors);
 
   redraw();
@@ -277,6 +274,68 @@ function windwheelMotif() {
 
   // wtp
   if (selectedData[0].gccs_wtp) {
+    fill(colors['gccs_wtp']);
+    area = areaScale(selectedData[0]['gccs_wtp']);
+    console.log('area wtp: ', area);
+    adjustedHypotenuse = 4*area / cellWidth;
+    triangle(
+      xCenter, yCenter, 
+      xCenter - adjustedHypotenuse/2, y,
+      xCenter + adjustedHypotenuse/2, y,
+    );
+
+  }
+
+  // wtp_belief
+  if (selectedData[0].gccs_wtp_belief) {
+    fill(colors['gccs_wtp_belief']);
+    area = areaScale(selectedData[0]['gccs_wtp_belief']);
+    console.log('area wtp belief: ', area);
+    adjustedHypotenuse = 4*area / cellHeight;
+    triangle(
+      xCenter, yCenter, 
+      x + cellWidth, yCenter - adjustedHypotenuse/2,
+      x + cellWidth, yCenter + adjustedHypotenuse/2,
+    );
+  }
+
+  // norm
+  if (selectedData[0].gccs_norm) {
+    fill(colors['gccs_norm']);
+    area = areaScale(selectedData[0]['gccs_norm']);
+    adjustedHypotenuse = 4*area / cellWidth;
+    triangle(
+      xCenter, yCenter, 
+      xCenter - adjustedHypotenuse/2, y + cellHeight,
+      xCenter + adjustedHypotenuse/2, y + cellHeight,
+    );
+  }
+
+  // government
+  if (selectedData[0].gccs_government) {
+    fill(colors['gccs_government']);
+    area = areaScale(selectedData[0]['gccs_government']);
+    adjustedHypotenuse = 4*area / cellHeight;
+    triangle(
+      xCenter, yCenter, 
+      x, yCenter - adjustedHypotenuse/2,
+      x, yCenter + adjustedHypotenuse/2,
+    );
+  }
+}
+
+function windwheelMotif_old() {
+  // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
+
+  stroke(0);
+  strokeWeight(0);
+
+  let xCenter = x + cellWidth/2;
+  let yCenter = y + cellHeight/2;
+  let adjustedHypotenuse;
+
+  // wtp
+  if (selectedData[0].gccs_wtp) {
     fill(colors.wtp);
     area = areaScale(selectedData[0].gccs_wtp);
     console.log('area wtp: ', area);
@@ -342,7 +401,7 @@ function flowerMotif() {
 
   // wtp
   if (selectedData[0].gccs_wtp) {
-    fill(colors.wtp);
+    fill(colors['gccs_wtp']);
     curve(
       xCenter - factorCW*cellWidth, yCenter + factorCH*cellHeight, 
       xCenter, yCenter,
@@ -353,7 +412,7 @@ function flowerMotif() {
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
-    fill(colors.wtp_belief)
+    fill(colors['gccs_wtp_belief'])
     curve(
       xCenter - factorCH*cellWidth, yCenter - factorCW*cellHeight, 
       xCenter, yCenter,
@@ -364,7 +423,7 @@ function flowerMotif() {
 
   // norm
   if (selectedData[0].gccs_norm) {
-    fill(colors.norm);
+    fill(colors['gccs_norm']);
     curve(
       xCenter - factorCW*cellWidth, yCenter - factorCH*cellHeight, 
       xCenter, yCenter,
@@ -375,7 +434,7 @@ function flowerMotif() {
 
   // government
   if (selectedData[0].gccs_government) {
-    fill(colors.government);
+    fill(colors['gccs_government']);
     curve(
       xCenter + factorCH*cellWidth, yCenter - factorCW*cellHeight, 
       xCenter, yCenter,
@@ -392,30 +451,28 @@ function arcMotif() {
   // wtp
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
-    //console.log(colors.wtp);
-    fill(colors.wtp);
+    fill(colors['gccs_wtp']);
     arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
-    fill(colors.wtp_belief)
-    //console.log(colors.wtp_belief);
+    fill(colors['gccs_wtp_belief']);
     arc(x + cellWidth/2, y + cellHeight/2, r, r, 0, PI/2);
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     r = rScale(selectedData[0].gccs_norm);
-    fill(colors.norm);
+    fill(colors['gccs_norm']);
     arc(x + cellWidth/2, y + cellHeight/2, r, r, PI/2, PI);
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
-    fill(colors.government);
+    fill(colors['gccs_government']);
     arc(x + cellWidth/2, y + cellHeight/2, r, r, PI, -PI/2);
   }
 }
@@ -427,28 +484,28 @@ function arcMotif2() {
   // wtp
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
-    fill(colors.wtp);
+    fill(colors['gccs_wtp']);
     arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
-    fill(colors.wtp_belief)
+    fill(colors['gccs_wtp_belief']);
     arc(x + cellWidth, y + cellHeight/2, r, r, PI/2, PI);
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     r = rScale(selectedData[0].gccs_norm);
-    fill(colors.norm);
+    fill(colors['gccs_norm']);
     arc(x, y + cellHeight, r, r, -PI/2, 0);;
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
-    fill(colors.government);
+    fill(colors['gccs_government']);
     arc(x + cellWidth/2, y, r, r, PI/2, PI);
   }
 }
@@ -462,28 +519,28 @@ function circlesMotif() {
   // wtp
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
-    stroke(colors.wtp);
+    stroke(colors['gccs_wtp']);
     ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
-    stroke(colors.wtp_belief)
+    stroke(colors['gccs_wtp_belief']);
     ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     r = rScale(selectedData[0].gccs_norm);
-    stroke(colors.norm);
+    stroke(colors['gccs_norm']);
     ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
-    stroke(colors.government);
+    stroke(colors['gccs_government']);
     ellipse(x + cellWidth/2, y + cellHeight/2, r, r);
   }
 }
@@ -496,7 +553,7 @@ function alphaMotif() {
   // wtp
   if (selectedData[0].gccs_wtp) {
     alpha = alphaScale(selectedData[0].gccs_wtp);
-    c = [...colors.wtp.levels.slice(0,3), round(alpha,0)];
+    c = [...colors['gccs_wtp'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     rect(x + cellWidth/2, y, cellWidth/2, cellHeight/2);
   }
@@ -504,7 +561,7 @@ function alphaMotif() {
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     alpha = alphaScale(selectedData[0].gccs_wtp_belief);
-    c = [...colors.wtp_belief.levels.slice(0,3), round(alpha,0)];
+    c = [...colors['gccs_wtp_belief'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     rect(x + cellWidth/2, y + cellHeight/2, cellWidth/2, cellHeight/2);
   }
@@ -512,7 +569,7 @@ function alphaMotif() {
   // norm
   if (selectedData[0].gccs_norm) {
     alpha = alphaScale(selectedData[0].gccs_norm);
-    c = [...colors.norm.levels.slice(0,3), round(alpha,0)];
+    c = [...colors['gccs_norm'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     rect(x, y + cellHeight/2, cellWidth/2, cellHeight/2);
   }
@@ -520,7 +577,7 @@ function alphaMotif() {
   // government
   if (selectedData[0].gccs_government) {
     alpha = alphaScale(selectedData[0].gccs_government);
-    c = [...colors.government.levels.slice(0,3), round(alpha,0)];
+    c = [...colors['gccs_government'].levels.slice(0,3), round(alpha,0)];
     fill(color(c));
     rect(x, y, cellWidth/2, cellHeight/2);
   }
