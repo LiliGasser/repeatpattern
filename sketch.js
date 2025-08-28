@@ -28,6 +28,9 @@ let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
 let cellWidth;
 let cellHeight;
 let nCells;
+let nCellsAdditional;
+let initialCellPositionX;
+let initialCellPositionY;
 
 // motif properties
 // TODO proper motif with corresponding scales
@@ -41,7 +44,7 @@ let area;
 // motif and cell position
 let x;
 let y;
-let nRows;
+let rowCount;
 let rowIndent;
 
 // colors
@@ -63,13 +66,14 @@ function setup() {
   // QUESTION Where to define button, html or p5?
   countrySelectHTML = document.getElementById('country');
   countrySelect = select('#country');
-  //console.log('countrySelect:', countrySelect);
   cellWidthInputHTML = document.getElementById('cellwidth');
   cellWidthInput = select('#cellwidth');
   cellHeightInputHTML = document.getElementById('cellheight');
   cellHeightInput = select('#cellheight');
   motifRatioInputHTML = document.getElementById('motifratio');
   motifRatioInput = select('#motifratio');
+  nAddCellsInputHTML = document.getElementById('naddcells');
+  nAddCellsInput = select('#naddcells');
   rowIndentInputHTML = document.getElementById('rowindent');
   rowIndentInput = select('#rowindent');
   showGridHTML = document.getElementById('showgrid');
@@ -89,7 +93,6 @@ function setup() {
   color4HTML = document.getElementById('color4');
   color4 = select('#color4');
 
-  //colorsSelect = document.getElementById('colors');
   exportButton = document.getElementById('exportButton');
             
   // Add event listeners
@@ -97,6 +100,7 @@ function setup() {
   cellWidthInputHTML.addEventListener('change', updateGrid);
   cellHeightInputHTML.addEventListener('change', updateGrid);
   motifRatioInputHTML.addEventListener('change', updateGrid);
+  nAddCellsInputHTML.addEventListener('change', updateGrid);
   rowIndentInputHTML.addEventListener('change', updatePostcard);
   showGridHTML.addEventListener('change', updatePostcard);
   symmetrySelectHTML.addEventListener('change', updatePostcard);
@@ -116,7 +120,7 @@ function setup() {
   // Load data
   d3.dsv(";", "data/gccs_country_with_temperature_and_gdp.csv", d3.autoType).then(function(csv) {
     data = csv;
-    console.log("Data loaded:", data);
+    //console.log("Data loaded:", data);
 
     // Get unique countries and add to select
     countries = data.map(d=>d.country);
@@ -147,7 +151,12 @@ function updateGrid() {
   // Calculate number of cells
   cellWidth = parseInt(cellWidthInput.value());
   cellHeight = parseInt(cellHeightInput.value());
-  nCells = Math.ceil(width / cellWidth) * Math.ceil(height / cellHeight);
+  nCellsAdditional = parseFloat(nAddCellsInput.value());
+  let nCellsWidth = Math.ceil(width / cellWidth) + 2*nCellsAdditional;
+  let nCellsHeight = Math.ceil(height / cellHeight) + 2*nCellsAdditional;
+  nCells = nCellsWidth * nCellsHeight;
+  initialCellPositionX = - cellWidth*nCellsAdditional;
+  initialCellPositionY = - cellHeight*nCellsAdditional;
   console.log('nCells: ' + nCells, 'pcWidth: ' + width + ', pcHeight: ' + height);
 
   // Motif ratio
@@ -175,7 +184,7 @@ function updateColors() {
     'gccs_norm': color(color3.value()),
     'gccs_government': color(color4.value()),
   }
-  console.log(colors);
+  //console.log(colors);
 
   redraw();
 
@@ -198,9 +207,9 @@ function draw() {
 
   // initialize
   rectMode(TOP, LEFT);
-  x = 0;
-  y = 0;
-  nRows = 1;
+  x = initialCellPositionX;
+  y = initialCellPositionY;
+  rowCount = 1;
 
   // draw pattern
   for (let i = 0; i < nCells; i++) {
@@ -263,9 +272,9 @@ function doTranslation() {
   // planar Symmetry operation: 3.1 translation
     x = x + cellWidth;
     if (x >= width) {
-      x = 0 + ((nRows*rowIndent) % 1)*cellWidth;
+      x = initialCellPositionX + ((rowCount*rowIndent) % 1)*cellWidth;
       y += cellHeight;
-      nRows +=1;
+      rowCount +=1;
     }
 }
 
@@ -294,7 +303,7 @@ function windwheelMotif() {
   for (let i=0; i<4; i++) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
-    console.log('selVar', selVar);
+    //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
       fill(colors[selVar]);
       area = areaScale(selectedData[0][selVar]);
@@ -330,7 +339,7 @@ function flowerMotif() {
   for (let i=0; i<4; i++) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
-    console.log('selVar', selVar);
+    //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
       fill(colors[selVar]);
       area = areaScale(selectedData[0][selVar]);
