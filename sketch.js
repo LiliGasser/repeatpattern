@@ -46,16 +46,17 @@ let x;
 let y;
 let rowCount;
 let rowIndent;
-
-// colors
-let colors;
+let initialCellRotation = 0;
+// TODO set order of variables in UI
 let order = [
   'gccs_government',
   'gccs_wtp_belief', 
   'gccs_norm', 
   'gccs_wtp', 
 ];
-let initialCellRotation = 0;
+
+// colors
+let colors;
 
 function setup() {
   canvas = createCanvas(800, 560, SVG);
@@ -203,13 +204,12 @@ function updatePostcard() {
 function draw() {
   background(255);
 
-  rowIndent = parseFloat(rowIndentInput.value());
-
   // initialize
   rectMode(TOP, LEFT);
   x = initialCellPositionX;
   y = initialCellPositionY;
   rowCount = 1;
+  rowIndent = parseFloat(rowIndentInput.value());
 
   // draw pattern
   for (let i = 0; i < nCells; i++) {
@@ -236,6 +236,38 @@ function draw() {
     doTranslation();
 
   }
+
+  // add text for country
+  // text properties
+  textAlign(CENTER, CENTER);
+  textSize(48);
+  let txtWidth = textWidth(selectedCountry);
+  let txtHeight = textAscent() + textDescent();
+  let paddingX = 40;
+  let paddingY = 3;
+  // white rectangle around text
+  fill(255, 200);
+  noStroke();
+  rectMode(CENTER);
+  rect(
+    //width - (txtWidth + 2*paddingX)/2, 
+    //height - (txtHeight + 2*paddingY)/2, 
+    width/2,
+    height/2, 
+    txtWidth + 2*paddingX, 
+    txtHeight + 2*paddingY,
+  );
+  // text
+  fill(50);
+  // TODO choose font
+  textFont("Georgia");
+  text(
+    selectedCountry, 
+    //width - (txtWidth + 2*paddingX)/2, 
+    //height - (txtHeight + 2*paddingY)/2, 
+    width/2,
+    height/2, 
+  );
 
 }
 
@@ -269,7 +301,7 @@ function drawMotif() {
 
 function doTranslation() {
 
-  // planar Symmetry operation: 3.1 translation
+  // move to next cell: translation from left to right, top to bottom
     x = x + cellWidth;
     if (x >= width) {
       x = initialCellPositionX + ((rowCount*rowIndent) % 1)*cellWidth;
@@ -294,8 +326,6 @@ function windwheelMotif() {
   stroke(0);
   strokeWeight(0);
 
-  //let xCenter = x + cellWidth/2;
-  //let yCenter = y + cellHeight/2;
   let adjustedHypotenuse;
   let selVar;
   let initialRotation = 0;
@@ -309,7 +339,6 @@ function windwheelMotif() {
       area = areaScale(selectedData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
       push();
-      //translate(xCenter, yCenter);
       rotate(initialRotation + i*PI/2);
       triangle(
         0, 0, 
@@ -329,8 +358,6 @@ function flowerMotif() {
   stroke(0);
   strokeWeight(0);
 
-  //let xCenter = x + cellWidth/2;
-  //let yCenter = y + cellHeight/2;
   let factorCW = 5;
   let factorCH = 4.15;
   let selVar;
@@ -345,10 +372,9 @@ function flowerMotif() {
       area = areaScale(selectedData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
       push();
-      //translate(xCenter, yCenter);
       rotate(initialRotation + i*PI/2);
       curve(
-        - factorCW*cellWidth, factorCH*cellHeight, 
+        -factorCW*cellWidth, factorCH*cellHeight, 
         0, 0,
         0, 0,
         factorCW*cellWidth, factorCH*cellHeight
@@ -373,7 +399,6 @@ function arcMotif() {
       fill(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
       push();
-      //translate(x + cellWidth/2, y + cellHeight/2);
       rotate(initialRotation + i*PI/2);
       arc(0, 0, r, r, 0, PI/2);
       pop();
@@ -391,7 +416,6 @@ function arcMotif2() {
     r = rScale(selectedData[0].gccs_wtp);
     fill(colors['gccs_wtp']);
     arc(0, 0, r, r, -PI/2, 0);
-    //arc(x + cellWidth/2, y + cellHeight/2, r, r, -PI/2, 0);
   }
 
   // wtp_belief
@@ -399,7 +423,6 @@ function arcMotif2() {
     r = rScale(selectedData[0].gccs_wtp_belief);
     fill(colors['gccs_wtp_belief']);
     arc(cellWidth/2, 0, r, r, PI/2, PI);
-    //arc(x + cellWidth, y + cellHeight/2, r, r, PI/2, PI);
   }
 
   // norm
@@ -407,14 +430,12 @@ function arcMotif2() {
     r = rScale(selectedData[0].gccs_norm);
     fill(colors['gccs_norm']);
     arc(-cellWidth/2, cellHeight/2, r, r, -PI/2, 0);
-    //arc(x, y + cellHeight, r, r, -PI/2, 0);
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
     fill(colors['gccs_government']);
-    //arc(x + cellWidth/2, y, r, r, PI/2, PI);
     arc(0, -cellHeight/2, r, r, PI/2, PI);
   }
 }
@@ -434,7 +455,6 @@ function circlesMotif() {
       stroke(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
       push();
-      //translate(x + cellWidth/2, y + cellHeight/2);
       ellipse(0, 0, r, r);
       pop();
 
