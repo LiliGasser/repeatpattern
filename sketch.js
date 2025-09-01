@@ -12,17 +12,19 @@ let data = [];
 let selectedData = [];
 let countries = [];
 
-// define postcard size (A5 postcard: 210mm x 148mm)
+// define postcard size (A5 postcard: 148mm x 105mm)
 // calculation: https://imageonline.co/mm-to-px.php
 // laptop screen: 1920 x 1200, 14'' diagonal --> 162 ppi; 60Hz
-let pcWidthMM = 210; // mm
-let pcHeightMM = 148; // mm
+let pcWidthMM = 148; // mm
+let pcHeightMM = 105; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
-// QUESTION set appropriate size for export (ask Felix Michel)
+// To set appropriate size for export, Felix would do it as I did already.
+// For printing, pdf is better than svg.
 //console.log('aspect ratio: ', pcWidth / pcHeight);
 // TODO 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
+// Does something similar as is needed in Vue
 
 // define cell
 let cellWidth;
@@ -59,12 +61,12 @@ let order = [
 let colors;
 
 function setup() {
-  canvas = createCanvas(800, 560, SVG);
+  canvas = createCanvas(pcWidth, pcHeight, SVG);
   canvas.parent(document.querySelector('.canvas-container'));
   noLoop();
             
   // Get references to HTML elements
-  // QUESTION Where to define button, html or p5?
+  // It is better to define button in html and select in p5
   countrySelectHTML = document.getElementById('country');
   countrySelect = select('#country');
   cellWidthInputHTML = document.getElementById('cellwidth');
