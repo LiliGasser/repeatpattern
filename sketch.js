@@ -1,10 +1,18 @@
 // initialize canvas, selects and buttons
-// TODO initialize all
 let canvas;
 let countrySelect;
-let motifSelect;
+let cellWidthInput;
+let cellHightInput;
+let motifRatioInput;
+let nAddCellsInput;
+let rowIndentInput;
+let showGrid;
 let symmetrySelect;
-let colorsSelect;
+let motifSelect;
+let color1;
+let color2;
+let color3;
+let color4;
 let exportButton;
 
 // initialize data structure
@@ -60,70 +68,12 @@ let order = [
 // colors
 let colors;
 
-function setup() {
-  canvas = createCanvas(pcWidth, pcHeight, SVG);
-  canvas.parent(document.querySelector('.canvas-container'));
-  noLoop();
-            
-  // Get references to HTML elements
-  // It is better to define button in html and select in p5
-  countrySelectHTML = document.getElementById('country');
-  countrySelect = select('#country');
-  cellWidthInputHTML = document.getElementById('cellwidth');
-  cellWidthInput = select('#cellwidth');
-  cellHeightInputHTML = document.getElementById('cellheight');
-  cellHeightInput = select('#cellheight');
-  motifRatioInputHTML = document.getElementById('motifratio');
-  motifRatioInput = select('#motifratio');
-  nAddCellsInputHTML = document.getElementById('naddcells');
-  nAddCellsInput = select('#naddcells');
-  rowIndentInputHTML = document.getElementById('rowindent');
-  rowIndentInput = select('#rowindent');
-  showGridHTML = document.getElementById('showgrid');
-  showGrid = select('#showgrid');
 
-  symmetrySelectHTML = document.getElementById('symmetry');
-  symmetrySelect = select('#symmetry');
-
-  motifSelectHTML = document.getElementById('motif');
-  motifSelect = select('#motif');
-  color1HTML = document.getElementById('color1');
-  color1 = select('#color1');
-  color2HTML = document.getElementById('color2');
-  color2 = select('#color2');
-  color3HTML = document.getElementById('color3');
-  color3 = select('#color3');
-  color4HTML = document.getElementById('color4');
-  color4 = select('#color4');
-
-  exportButton = document.getElementById('exportButton');
-            
-  // Add event listeners
-  countrySelectHTML.addEventListener('change', updatePostcard);
-  cellWidthInputHTML.addEventListener('change', updateGrid);
-  cellHeightInputHTML.addEventListener('change', updateGrid);
-  motifRatioInputHTML.addEventListener('change', updateGrid);
-  nAddCellsInputHTML.addEventListener('change', updateGrid);
-  rowIndentInputHTML.addEventListener('change', updatePostcard);
-  showGridHTML.addEventListener('change', updatePostcard);
-  symmetrySelectHTML.addEventListener('change', updatePostcard);
-  motifSelectHTML.addEventListener('change', updatePostcard);
-  color1HTML.addEventListener('change', updateColors);
-  color2HTML.addEventListener('change', updateColors);
-  color3HTML.addEventListener('change', updateColors);
-  color4HTML.addEventListener('change', updateColors);
-  exportButton.addEventListener('click', exportCanvas);
-
-  // Initialize grid
-  updateGrid();
-            
-  // Colors
-  updateColors();
-
+function loadData(p) {
   // Load data
   d3.dsv(";", "data/gccs_country_with_temperature_and_gdp.csv", d3.autoType).then(function(csv) {
     data = csv;
-    //console.log("Data loaded:", data);
+    console.log("Data loaded:", data);
 
     // Get unique countries and add to select
     countries = data.map(d=>d.country);
@@ -143,24 +93,213 @@ function setup() {
     }
 
     // Draw initial postcard
-    updatePostcard();
+    updatePostcard(p);
+    p.redraw(); // TODO is this needed?
 
-  });
-  
+  });  
 }
 
-function updateGrid() {
+function sketch1(p) {
+  p.setup = function () {
+    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG); // TODO p.SVG (load )
+    canvas.parent(document.querySelector('.canvas-container'));
+    p.noLoop();
+
+    // Get references to HTML elements
+    // It is better to define button in html and select in p5
+    let countrySelectHTML = document.getElementById('country');
+    countrySelect = p.select('#country');
+    let cellWidthInputHTML = document.getElementById('cellwidth');
+    cellWidthInput = p.select('#cellwidth');
+    let cellHeightInputHTML = document.getElementById('cellheight');
+    cellHeightInput = p.select('#cellheight');
+    let motifRatioInputHTML = document.getElementById('motifratio');
+    motifRatioInput = p.select('#motifratio');
+    let nAddCellsInputHTML = document.getElementById('naddcells');
+    nAddCellsInput = p.select('#naddcells');
+    let rowIndentInputHTML = document.getElementById('rowindent');
+    rowIndentInput = p.select('#rowindent');
+    let showGridHTML = document.getElementById('showgrid');
+    showGrid = p.select('#showgrid');
+
+    let symmetrySelectHTML = document.getElementById('symmetry');
+    symmetrySelect = p.select('#symmetry');
+
+    let motifSelectHTML = document.getElementById('motif');
+    motifSelect = p.select('#motif');
+    let color1HTML = document.getElementById('color1');
+    color1 = p.select('#color1');
+    let color2HTML = document.getElementById('color2');
+    color2 = p.select('#color2');
+    let color3HTML = document.getElementById('color3');
+    color3 = p.select('#color3');
+    let color4HTML = document.getElementById('color4');
+    color4 = p.select('#color4');
+
+    exportButton = document.getElementById('exportButton');
+            
+    // Add event listeners
+    countrySelectHTML.addEventListener('change', function(event) {
+      updatePostcard(p);
+    });
+    //countrySelectHTML.addEventListener('change', updatePostcard);
+    cellWidthInputHTML.addEventListener('change', function(event) {
+      updateGrid(p);
+    });
+    //cellWidthInputHTML.addEventListener('change', updateGrid);
+    cellHeightInputHTML.addEventListener('change', function(event) {
+      updateGrid(p);
+    });
+    //cellHeightInputHTML.addEventListener('change', updateGrid);
+    motifRatioInputHTML.addEventListener('change', function(event) {
+      updateGrid(p);
+    });
+    //motifRatioInputHTML.addEventListener('change', updateGrid);
+    nAddCellsInputHTML.addEventListener('change', function(event) {
+      updateGrid(p);
+    });
+    //nAddCellsInputHTML.addEventListener('change', updateGrid);
+    rowIndentInputHTML.addEventListener('change', function(event) {
+      updatePostcard(p);
+    });
+    //rowIndentInputHTML.addEventListener('change', updatePostcard);
+    showGridHTML.addEventListener('change', function(event) {
+      updatePostcard(p);
+    });
+    //showGridHTML.addEventListener('change', updatePostcard);
+    symmetrySelectHTML.addEventListener('change', function(event) {
+      updatePostcard(p);
+    });
+    //symmetrySelectHTML.addEventListener('change', updatePostcard);
+    motifSelectHTML.addEventListener('change', function(event) {
+      updatePostcard(p);
+    });
+    //motifSelectHTML.addEventListener('change', updatePostcard);
+    color1HTML.addEventListener('change', function(event) {
+      updateColors(p);
+    });
+    color2HTML.addEventListener('change', function(event) {
+      updateColors(p);
+    });
+    color3HTML.addEventListener('change', function(event) {
+      updateColors(p);
+    });
+    color4HTML.addEventListener('change', function(event) {
+      updateColors(p);
+    });
+    //color1HTML.addEventListener('change', updateColors);
+    //color2HTML.addEventListener('change', updateColors);
+    //color3HTML.addEventListener('change', updateColors);
+    //color4HTML.addEventListener('change', updateColors);
+    exportButton.addEventListener('click', function(event) {
+      exportCanvas(p);
+    });
+    //exportButton.addEventListener('click', exportCanvas);
+
+    // Initialize grid
+    updateGrid(p);
+//    p.redraw();
+            
+    // Colors
+    updateColors(p);
+//    p.redraw();
+
+    // Load data
+    loadData(p);
+//    p.redraw();
+
+
+  };
+
+  p.draw = function () {
+    p.background(255);
+
+    // initialize
+    p.rectMode(p.TOP, p.LEFT);
+    x = initialCellPositionX;
+    y = initialCellPositionY;
+    rowCount = 1;
+    rowIndent = parseFloat(rowIndentInput.value());
+
+    // draw pattern
+    for (let i = 0; i < nCells; i++) {
+
+      // draw grid cell
+      if (showGrid.checked()) {
+        drawGridCell(p);
+      }
+
+      // draw motif
+      // TODO other symmetriy operations
+      // TODO draw motif in separate for loop?
+      p.push();
+      p.translate(x + cellWidth/2, y + cellHeight/2);
+      if (symmetrySelect.value() === '180degreeRotations') {
+        p.rotate(initialCellRotation + i*p.PI);
+      } else if (symmetrySelect.value() === '90degreeRotations') {
+        p.rotate(initialCellRotation + i*p.PI/2);
+      }
+      drawMotif(p);
+      p.pop();
+
+      // move to next cell: translation from left to right, top to bottom
+      doTranslation();
+
+    }
+
+    // add text for country
+    // text properties
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textSize(48);
+    let txtWidth = p.textWidth(selectedCountry);
+    let txtHeight = p.textAscent() + p.textDescent();
+    let paddingX = 40;
+    let paddingY = 3;
+    // white rectangle around text
+    p.fill(255, 200);
+    p.noStroke();
+    p.rectMode(p.CENTER);
+    p.rect(
+      //pcWidth - (txtWidth + 2*paddingX)/2, 
+      //pcHeight - (txtHeight + 2*paddingY)/2, 
+      pcWidth/2,
+      pcHeight/2, 
+      txtWidth + 2*paddingX, 
+      txtHeight + 2*paddingY,
+    );
+    // text
+    p.fill(50);
+    // TODO choose font
+    p.textFont("Georgia");
+    p.text(
+      selectedCountry, 
+      //pcWidth - (txtWidth + 2*paddingX)/2, 
+      //pcHeight - (txtHeight + 2*paddingY)/2, 
+      pcWidth/2,
+      pcHeight/2, 
+    );
+
+  }
+
+   
+}
+
+new p5(sketch1);
+
+
+function updateGrid(p) {
+  // TODO correct translation
 
   // Calculate number of cells
   cellWidth = parseInt(cellWidthInput.value());
   cellHeight = parseInt(cellHeightInput.value());
   nCellsAdditional = parseFloat(nAddCellsInput.value());
-  let nCellsWidth = Math.ceil(width / cellWidth) + 2*nCellsAdditional;
-  let nCellsHeight = Math.ceil(height / cellHeight) + 2*nCellsAdditional;
+  let nCellsWidth = Math.ceil(pcWidth / cellWidth) + 2*nCellsAdditional;
+  let nCellsHeight = Math.ceil(pcHeight / cellHeight) + 2*nCellsAdditional;
   nCells = nCellsWidth * nCellsHeight;
   initialCellPositionX = - cellWidth*nCellsAdditional;
   initialCellPositionY = - cellHeight*nCellsAdditional;
-  console.log('nCells: ' + nCells, 'pcWidth: ' + width + ', pcHeight: ' + height);
+  console.log('nCells: ' + nCells, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
 
   // Motif ratio
   motifRatio = parseFloat(motifRatioInput.value());
@@ -176,127 +315,57 @@ function updateGrid() {
     .domain([0, 100])
     .range([0, cellWidth*cellWidth/4]) // gleichschenkliges Dreieck, Hypothenuse = cellWidth, cellWidth=cellHeight
 
-  redraw();
+  p.redraw();
 
 }
 
-function updateColors() {
+function updateColors(p) {
   colors = {
-    'gccs_wtp': color(color1.value()),
-    'gccs_wtp_belief': color(color2.value()),
-    'gccs_norm': color(color3.value()),
-    'gccs_government': color(color4.value()),
+    'gccs_wtp': p.color(color1.value()),
+    'gccs_wtp_belief': p.color(color2.value()),
+    'gccs_norm': p.color(color3.value()),
+    'gccs_government': p.color(color4.value()),
   }
   //console.log(colors);
 
-  redraw();
+  p.redraw();
 
 }
 
-function updatePostcard() {
+function updatePostcard(p) {
   
   selectedCountry = countrySelect.value();
   selectedData = data.filter(d => d.country === selectedCountry);
   console.log("Filtered data for", selectedCountry, selectedData);
 
-  redraw();
+  p.redraw();
   
 }
         
-function draw() {
-  background(255);
+function drawGridCell(p) {
 
-  // initialize
-  rectMode(TOP, LEFT);
-  x = initialCellPositionX;
-  y = initialCellPositionY;
-  rowCount = 1;
-  rowIndent = parseFloat(rowIndentInput.value());
-
-  // draw pattern
-  for (let i = 0; i < nCells; i++) {
-
-    // draw grid cell
-    if (showGrid.checked()) {
-      drawGridCell();
-    }
-
-    // draw motif
-    // TODO other symmetriy operations
-    // TODO draw motif in separate for loop?
-    push();
-    translate(x + cellWidth/2, y + cellHeight/2);
-    if (symmetrySelect.value() === '180degreeRotations') {
-      rotate(initialCellRotation + i*PI);
-    } else if (symmetrySelect.value() === '90degreeRotations') {
-      rotate(initialCellRotation + i*PI/2);
-    }
-    drawMotif();
-    pop();
-
-    // move to next cell: translation from left to right, top to bottom
-    doTranslation();
-
-  }
-
-  // add text for country
-  // text properties
-  textAlign(CENTER, CENTER);
-  textSize(48);
-  let txtWidth = textWidth(selectedCountry);
-  let txtHeight = textAscent() + textDescent();
-  let paddingX = 40;
-  let paddingY = 3;
-  // white rectangle around text
-  fill(255, 200);
-  noStroke();
-  rectMode(CENTER);
-  rect(
-    //width - (txtWidth + 2*paddingX)/2, 
-    //height - (txtHeight + 2*paddingY)/2, 
-    width/2,
-    height/2, 
-    txtWidth + 2*paddingX, 
-    txtHeight + 2*paddingY,
-  );
-  // text
-  fill(50);
-  // TODO choose font
-  textFont("Georgia");
-  text(
-    selectedCountry, 
-    //width - (txtWidth + 2*paddingX)/2, 
-    //height - (txtHeight + 2*paddingY)/2, 
-    width/2,
-    height/2, 
-  );
-
-}
-
-function drawGridCell() {
-
-  noFill();
-  stroke(100);
-  strokeWeight(0.2);
-  rect(x, y, cellWidth, cellHeight);
+  p.noFill();
+  p.stroke(100);
+  p.strokeWeight(0.2);
+  p.rect(x, y, cellWidth, cellHeight);
 
 }
 
 // TODO select from html
-function drawMotif() {
+function drawMotif(p) {
   //console.log('drawMotif at x: ' + x + ', y: ' + y);
   if (motifSelect.value() === 'windwheelMotif') {
-    windwheelMotif();
+    windwheelMotif(p);
   } else if (motifSelect.value() === 'flowerMotif') {
-    flowerMotif();
+    flowerMotif(p);
   } else if (motifSelect.value() === 'arcMotif') {
-    arcMotif();
+    arcMotif(p);
   } else if (motifSelect.value() === 'arcMotif2') {
-    arcMotif2();
+    arcMotif2(p);
   } else if (motifSelect.value() === 'circlesMotif') {
-    circlesMotif();
+    circlesMotif(p);
   } else if (motifSelect.value() === 'alphaMotif') {
-    alphaMotif();
+    alphaMotif(p);
   }
 
 }
@@ -305,15 +374,15 @@ function doTranslation() {
 
   // move to next cell: translation from left to right, top to bottom
     x = x + cellWidth;
-    if (x >= width) {
+    if (x >= pcWidth) {
       x = initialCellPositionX + ((rowCount*rowIndent) % 1)*cellWidth;
       y += cellHeight;
       rowCount +=1;
     }
 }
 
-function exportCanvas() {
-    save('postcard', 'svg');
+function exportCanvas(p) {
+    p.save('postcard', 'svg');
 }
 
 
@@ -322,11 +391,11 @@ function exportCanvas() {
 // -----------------------------------------------------------------
 // Motifs
 
-function windwheelMotif() {
+function windwheelMotif(p) {
   // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
 
-  stroke(0);
-  strokeWeight(0);
+  p.stroke(0);
+  p.strokeWeight(0);
 
   let adjustedHypotenuse;
   let selVar;
@@ -337,17 +406,17 @@ function windwheelMotif() {
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
-      fill(colors[selVar]);
+      p.fill(colors[selVar]);
       area = areaScale(selectedData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
-      push();
-      rotate(initialRotation + i*PI/2);
-      triangle(
+      p.push();
+      p.rotate(initialRotation + i*p.PI/2);
+      p.triangle(
         0, 0, 
         - adjustedHypotenuse/2, -cellHeight/2,
         + adjustedHypotenuse/2, -cellHeight/2,
       );
-    pop();
+    p.pop();
 
     }
   }
@@ -355,10 +424,10 @@ function windwheelMotif() {
 
 
 // TODO how to make petal size dependant on values?
-function flowerMotif() {
+function flowerMotif(p) {
 
-  stroke(0);
-  strokeWeight(0);
+  p.stroke(0);
+  p.strokeWeight(0);
 
   let factorCW = 5;
   let factorCH = 4.15;
@@ -370,26 +439,26 @@ function flowerMotif() {
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
-      fill(colors[selVar]);
+      p.fill(colors[selVar]);
       area = areaScale(selectedData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
-      push();
-      rotate(initialRotation + i*PI/2);
-      curve(
+      p.push();
+      p.rotate(initialRotation + i*p.PI/2);
+      p.curve(
         -factorCW*cellWidth, factorCH*cellHeight, 
         0, 0,
         0, 0,
         factorCW*cellWidth, factorCH*cellHeight
       )
-      pop();
+      p.pop();
 
     }
   }
 }
 
-function arcMotif() {
+function arcMotif(p) {
 
-  noStroke();
+  p.noStroke();
   let selVar;
   let initialRotation = 0;
 
@@ -398,55 +467,55 @@ function arcMotif() {
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
-      fill(colors[selVar]);
+      p.fill(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
-      push();
-      rotate(initialRotation + i*PI/2);
-      arc(0, 0, r, r, 0, PI/2);
-      pop();
+      p.push();
+      p.rotate(initialRotation + i*p.PI/2);
+      p.arc(0, 0, r, r, 0, p.PI/2);
+      p.pop();
 
     }
   }
 }
 
-function arcMotif2() {
+function arcMotif2(p) {
 
-  noStroke();
+  p.noStroke();
 
   // wtp
   if (selectedData[0].gccs_wtp) {
     r = rScale(selectedData[0].gccs_wtp);
-    fill(colors['gccs_wtp']);
-    arc(0, 0, r, r, -PI/2, 0);
+    p.fill(colors['gccs_wtp']);
+    p.arc(0, 0, r, r, -p.PI/2, 0);
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     r = rScale(selectedData[0].gccs_wtp_belief);
-    fill(colors['gccs_wtp_belief']);
-    arc(cellWidth/2, 0, r, r, PI/2, PI);
+    p.fill(colors['gccs_wtp_belief']);
+    p.arc(cellWidth/2, 0, r, r, p.PI/2, p.PI);
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     r = rScale(selectedData[0].gccs_norm);
-    fill(colors['gccs_norm']);
-    arc(-cellWidth/2, cellHeight/2, r, r, -PI/2, 0);
+    p.fill(colors['gccs_norm']);
+    p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
   }
 
   // government
   if (selectedData[0].gccs_government) {
     r = rScale(selectedData[0].gccs_government);
-    fill(colors['gccs_government']);
-    arc(0, -cellHeight/2, r, r, PI/2, PI);
+    p.fill(colors['gccs_government']);
+    p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
   }
 }
 
 
-function circlesMotif() {
+function circlesMotif(p) {
 
-  noFill();
-  strokeWeight(2);
+  p.noFill();
+  p.strokeWeight(2);
   let selVar;
 
   for (let i=0; i<4; i++) {
@@ -454,58 +523,58 @@ function circlesMotif() {
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
-      stroke(colors[selVar]);
+      p.stroke(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
-      push();
-      ellipse(0, 0, r, r);
-      pop();
+      p.push();
+      p.ellipse(0, 0, r, r);
+      p.pop();
 
     }
   }
 }
 
-function alphaMotif() {
+function alphaMotif(p) {
 
-  noStroke();
+  p.noStroke();
   let c = [];
 
   // wtp
   if (selectedData[0].gccs_wtp) {
     alpha = alphaScale(selectedData[0].gccs_wtp);
-    c = [...colors['gccs_wtp'].levels.slice(0,3), round(alpha,0)];
-    fill(color(c));
-    push();
-    rect(0, -cellHeight/2, cellWidth/2, cellHeight/2);
-    pop();
+    c = [...colors['gccs_wtp'].levels.slice(0,3), p.round(alpha,0)];
+    p.fill(p.color(c));
+    p.push();
+    p.rect(0, -cellHeight/2, cellWidth/2, cellHeight/2);
+    p.pop();
   }
 
   // wtp_belief
   if (selectedData[0].gccs_wtp_belief) {
     alpha = alphaScale(selectedData[0].gccs_wtp_belief);
-    c = [...colors['gccs_wtp_belief'].levels.slice(0,3), round(alpha,0)];
-    fill(color(c));
-    push();
-    rect(0, 0, cellWidth/2, cellHeight/2);
-    pop();
+    c = [...colors['gccs_wtp_belief'].levels.slice(0,3), p.round(alpha,0)];
+    p.fill(p.color(c));
+    p.push();
+    p.rect(0, 0, cellWidth/2, cellHeight/2);
+    p.pop();
   }
 
   // norm
   if (selectedData[0].gccs_norm) {
     alpha = alphaScale(selectedData[0].gccs_norm);
-    c = [...colors['gccs_norm'].levels.slice(0,3), round(alpha,0)];
-    fill(color(c));
-    push();
-    rect(-cellWidth/2, 0, cellWidth/2, cellHeight/2);
-    pop();
+    c = [...colors['gccs_norm'].levels.slice(0,3), p.round(alpha,0)];
+    p.fill(p.color(c));
+    p.push();
+    p.rect(-cellWidth/2, 0, cellWidth/2, cellHeight/2);
+    p.pop();
   }
 
   // government
   if (selectedData[0].gccs_government) {
     alpha = alphaScale(selectedData[0].gccs_government);
-    c = [...colors['gccs_government'].levels.slice(0,3), round(alpha,0)];
-    fill(color(c));
-    push();
-    rect(-cellWidth/2, -cellHeight/2, cellWidth/2, cellHeight/2);
-    pop();
+    c = [...colors['gccs_government'].levels.slice(0,3), p.round(alpha,0)];
+    p.fill(p.color(c));
+    p.push();
+    p.rect(-cellWidth/2, -cellHeight/2, cellWidth/2, cellHeight/2);
+    p.pop();
   }
 }
