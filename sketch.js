@@ -94,14 +94,13 @@ function loadData(p) {
 
     // Draw initial postcard
     updatePostcard(p);
-    p.redraw(); // TODO is this needed?
 
   });  
 }
 
 function sketch1(p) {
   p.setup = function () {
-    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG); // TODO p.SVG (load )
+    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
     canvas.parent(document.querySelector('.canvas-container'));
     p.noLoop();
 
@@ -142,39 +141,30 @@ function sketch1(p) {
     countrySelectHTML.addEventListener('change', function(event) {
       updatePostcard(p);
     });
-    //countrySelectHTML.addEventListener('change', updatePostcard);
     cellWidthInputHTML.addEventListener('change', function(event) {
       updateGrid(p);
     });
-    //cellWidthInputHTML.addEventListener('change', updateGrid);
     cellHeightInputHTML.addEventListener('change', function(event) {
       updateGrid(p);
     });
-    //cellHeightInputHTML.addEventListener('change', updateGrid);
     motifRatioInputHTML.addEventListener('change', function(event) {
       updateGrid(p);
     });
-    //motifRatioInputHTML.addEventListener('change', updateGrid);
     nAddCellsInputHTML.addEventListener('change', function(event) {
       updateGrid(p);
     });
-    //nAddCellsInputHTML.addEventListener('change', updateGrid);
     rowIndentInputHTML.addEventListener('change', function(event) {
       updatePostcard(p);
     });
-    //rowIndentInputHTML.addEventListener('change', updatePostcard);
     showGridHTML.addEventListener('change', function(event) {
       updatePostcard(p);
     });
-    //showGridHTML.addEventListener('change', updatePostcard);
     symmetrySelectHTML.addEventListener('change', function(event) {
       updatePostcard(p);
     });
-    //symmetrySelectHTML.addEventListener('change', updatePostcard);
     motifSelectHTML.addEventListener('change', function(event) {
       updatePostcard(p);
     });
-    //motifSelectHTML.addEventListener('change', updatePostcard);
     color1HTML.addEventListener('change', function(event) {
       updateColors(p);
     });
@@ -187,26 +177,18 @@ function sketch1(p) {
     color4HTML.addEventListener('change', function(event) {
       updateColors(p);
     });
-    //color1HTML.addEventListener('change', updateColors);
-    //color2HTML.addEventListener('change', updateColors);
-    //color3HTML.addEventListener('change', updateColors);
-    //color4HTML.addEventListener('change', updateColors);
     exportButton.addEventListener('click', function(event) {
       exportCanvas(p);
     });
-    //exportButton.addEventListener('click', exportCanvas);
 
     // Initialize grid
     updateGrid(p);
-//    p.redraw();
             
     // Colors
     updateColors(p);
-//    p.redraw();
 
     // Load data
     loadData(p);
-//    p.redraw();
 
 
   };
@@ -232,15 +214,17 @@ function sketch1(p) {
       // draw motif
       // TODO other symmetriy operations
       // TODO draw motif in separate for loop?
-      p.push();
-      p.translate(x + cellWidth/2, y + cellHeight/2);
-      if (symmetrySelect.value() === '180degreeRotations') {
-        p.rotate(initialCellRotation + i*p.PI);
-      } else if (symmetrySelect.value() === '90degreeRotations') {
-        p.rotate(initialCellRotation + i*p.PI/2);
+      if (selectedData.length > 0) {
+        p.push();
+        p.translate(x + cellWidth/2, y + cellHeight/2);
+        if (symmetrySelect.value() === '180degreeRotations') {
+          p.rotate(initialCellRotation + i*p.PI);
+        } else if (symmetrySelect.value() === '90degreeRotations') {
+          p.rotate(initialCellRotation + i*p.PI/2);
+        }
+        drawMotif(p);
+        p.pop();
       }
-      drawMotif(p);
-      p.pop();
 
       // move to next cell: translation from left to right, top to bottom
       doTranslation();
@@ -248,36 +232,9 @@ function sketch1(p) {
     }
 
     // add text for country
-    // text properties
-    p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(48);
-    let txtWidth = p.textWidth(selectedCountry);
-    let txtHeight = p.textAscent() + p.textDescent();
-    let paddingX = 40;
-    let paddingY = 3;
-    // white rectangle around text
-    p.fill(255, 200);
-    p.noStroke();
-    p.rectMode(p.CENTER);
-    p.rect(
-      //pcWidth - (txtWidth + 2*paddingX)/2, 
-      //pcHeight - (txtHeight + 2*paddingY)/2, 
-      pcWidth/2,
-      pcHeight/2, 
-      txtWidth + 2*paddingX, 
-      txtHeight + 2*paddingY,
-    );
-    // text
-    p.fill(50);
-    // TODO choose font
-    p.textFont("Georgia");
-    p.text(
-      selectedCountry, 
-      //pcWidth - (txtWidth + 2*paddingX)/2, 
-      //pcHeight - (txtHeight + 2*paddingY)/2, 
-      pcWidth/2,
-      pcHeight/2, 
-    );
+    if (selectedData.length > 0) {
+      addCountryText(p);
+    }
 
   }
 
@@ -344,6 +301,8 @@ function updatePostcard(p) {
         
 function drawGridCell(p) {
 
+  console.log(x,y);
+  p.rectMode(p.TOP, p.LEFT);
   p.noFill();
   p.stroke(100);
   p.strokeWeight(0.2);
@@ -368,6 +327,40 @@ function drawMotif(p) {
     alphaMotif(p);
   }
 
+}
+
+function addCountryText(p) {
+
+  // text properties
+  p.textAlign(p.CENTER, p.CENTER);
+  p.textSize(48);
+  let txtWidth = p.textWidth(selectedCountry);
+  let txtHeight = p.textAscent() + p.textDescent();
+  let paddingX = 40;
+  let paddingY = 3;
+  // white rectangle around text
+  p.fill(255, 200);
+  p.noStroke();
+  p.rectMode(p.CENTER);
+  p.rect(
+    //pcWidth - (txtWidth + 2*paddingX)/2, 
+    //pcHeight - (txtHeight + 2*paddingY)/2, 
+    pcWidth/2,
+    pcHeight/2, 
+    txtWidth + 2*paddingX, 
+    txtHeight + 2*paddingY,
+  );
+  // text
+  p.fill(50);
+  // TODO choose font
+  p.textFont("Georgia");
+  p.text(
+    selectedCountry, 
+    //pcWidth - (txtWidth + 2*paddingX)/2, 
+    //pcHeight - (txtHeight + 2*paddingY)/2, 
+    pcWidth/2,
+    pcHeight/2, 
+  );
 }
 
 function doTranslation() {
