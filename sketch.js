@@ -33,7 +33,8 @@ let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
 // To set appropriate size for export, Felix would do it as I did already.
 // For printing, pdf is better than svg.
 //console.log('aspect ratio: ', pcWidth / pcHeight);
-// TODO 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
+
+// 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
 // Does something similar as is needed in Vue
 
 // define cell
@@ -217,7 +218,7 @@ function sketch1(p) {
 
     // draw pattern
     for (let i = 0; i < nCells; i++) {
-      console.log(x, y);
+      //console.log(x, y);
 
       // draw grid cell
       if (showGrid.checked()) {
@@ -225,8 +226,7 @@ function sketch1(p) {
       }
 
       // draw motif
-      // TODO other symmetriy operations
-      // TODO draw motif in separate for loop?
+      // TODO other symmetry operations
       if (selectedData.length > 0) {
 //        console.log("in sketch1 draw")
         p.push();
@@ -266,24 +266,32 @@ function sketch2(p) {
 
     // initialize
     p.rectMode(p.TOP, p.LEFT);
-    let xMotif = 0;
-    let yMotif = 0;
-    p.ellipse(xMotif, yMotif, 10, 10);
+    let xMotif = mWidth/2;
+    let yMotif = mHeight/2;
+    let mScale = p.min(mWidth/cellWidth, mHeight/cellHeight)*0.8
 
-    // draw motif
-    // TODO move to a function
-    // TODO other symmetriy operations
+    // draw scaled motif, without symmetry operations
     if (selectedData.length > 0) {
       console.log("in sketch2 draw")
-//      applySymmetry(p);
       p.push();
-      p.translate(xMotif + cellWidth/2, yMotif + cellHeight/2);
-      if (symmetrySelect.value() === '180degreeRotations') {
-        p.rotate(initialCellRotation + i*p.PI);
-      } else if (symmetrySelect.value() === '90degreeRotations') {
-        p.rotate(initialCellRotation + i*p.PI/2);
-      }
+      p.translate(xMotif, yMotif);
+      p.scale(mScale, mScale);
       drawMotif(p);
+
+      // draw grid cell 
+      // TODO move to function again
+      if (showGrid.checked()) {
+        p.rectMode(p.TOP, p.LEFT);
+        p.noFill();
+        p.stroke(100);
+        p.strokeWeight(0.2);
+        p.rect(
+          -cellWidth/2, 
+          -cellWidth/2, 
+          cellWidth, 
+          cellHeight
+        );
+      }
       p.pop();
     }
 
@@ -293,13 +301,13 @@ function sketch2(p) {
 
 // TODO good positioning of canvases
 console.log("new sketch2")
-//sketch2Instance = new p5(sketch2);
+sketch2Instance = new p5(sketch2);
 console.log("new sketch1")
 sketch1Instance = new p5(sketch1);
 console.log("init sketch 1 buttons")
 initializeSelectsAndButtons(sketch1Instance);
 console.log("init sketch 2 buttons")
-//initializeSelectsAndButtons(sketch2Instance);
+initializeSelectsAndButtons(sketch2Instance);
 console.log("update grid")
 updateGrid(sketch1Instance);
 console.log("upate colors")
@@ -308,10 +316,6 @@ console.log("load data")
 loadData(sketch1Instance);
 console.log("done")
 
-
-function applySymmetry() {
-
-}
 
 function updateScales() {
   rScale
@@ -368,6 +372,7 @@ function selectCountry(p) {
   console.log("Filtered data for", selectedCountry, selectedData);
 
   p.redraw();
+  sketch2Instance.redraw();  // for initial drawing of motif
 
 }
 
@@ -379,14 +384,13 @@ function updatePostcard(p) {
         
 function drawGridCell(p) {
 
-//  console.log('grid', x,y);
   p.rectMode(p.TOP, p.LEFT);
   p.noFill();
   p.stroke(100);
   p.strokeWeight(0.2);
   p.rect(
     x - cellWidth/2 + ((rowCount*rowIndent) % 1)*cellWidth, 
-    y-cellWidth/2, 
+    y - cellWidth/2, 
     cellWidth, 
     cellHeight
   );
@@ -492,7 +496,7 @@ function windwheelMotif(p) {
         - adjustedHypotenuse/2, -cellHeight/2,
         + adjustedHypotenuse/2, -cellHeight/2,
       );
-    p.pop();
+      p.pop();
 
     }
   }
