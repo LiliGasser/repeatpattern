@@ -1,4 +1,6 @@
 // initialize canvas, selects and buttons
+let sketch1Instance;
+let sketch2Instance;
 let canvas;
 let countrySelect;
 let cellWidthInput;
@@ -41,6 +43,10 @@ let nCells;
 let nCellsAdditional;
 let initialCellPositionX;
 let initialCellPositionY;
+
+// define motif canvas size
+let mWidth = 200;
+let mHeight = 200;
 
 // motif properties
 // TODO proper motif with corresponding scales
@@ -92,10 +98,90 @@ function loadData(p) {
       countrySelect.option(country);
     }
 
-    // Draw initial postcard
-    updatePostcard(p);
+    // Select country and draw initial postcard
+    selectCountry(p);
 
   });  
+}
+
+function initializeSelectsAndButtons(p) {
+
+  // It is better to define button in html and select in p5
+  let countrySelectHTML = document.getElementById('country');
+  countrySelect = p.select('#country');
+  let cellWidthInputHTML = document.getElementById('cellwidth');
+  cellWidthInput = p.select('#cellwidth');
+  let cellHeightInputHTML = document.getElementById('cellheight');
+  cellHeightInput = p.select('#cellheight');
+  let motifRatioInputHTML = document.getElementById('motifratio');
+  motifRatioInput = p.select('#motifratio');
+  let nAddCellsInputHTML = document.getElementById('naddcells');
+  nAddCellsInput = p.select('#naddcells');
+  let rowIndentInputHTML = document.getElementById('rowindent');
+  rowIndentInput = p.select('#rowindent');
+  let showGridHTML = document.getElementById('showgrid');
+  showGrid = p.select('#showgrid');
+
+  let symmetrySelectHTML = document.getElementById('symmetry');
+  symmetrySelect = p.select('#symmetry');
+
+  let motifSelectHTML = document.getElementById('motif');
+  motifSelect = p.select('#motif');
+  let color1HTML = document.getElementById('color1');
+  color1 = p.select('#color1');
+  let color2HTML = document.getElementById('color2');
+  color2 = p.select('#color2');
+  let color3HTML = document.getElementById('color3');
+  color3 = p.select('#color3');
+  let color4HTML = document.getElementById('color4');
+  color4 = p.select('#color4');
+
+  exportButton = document.getElementById('exportButton');
+            
+  // Add event listeners
+  countrySelectHTML.addEventListener('change', function(event) {
+    selectCountry(p);
+  });
+  cellWidthInputHTML.addEventListener('change', function(event) {
+    updateGrid(p);
+  });
+  cellHeightInputHTML.addEventListener('change', function(event) {
+    updateGrid(p);
+  });
+  motifRatioInputHTML.addEventListener('change', function(event) {
+    updateGrid(p);
+  });
+  nAddCellsInputHTML.addEventListener('change', function(event) {
+    updateGrid(p);
+  });
+  rowIndentInputHTML.addEventListener('change', function(event) {
+    updatePostcard(p);
+  });
+  showGridHTML.addEventListener('change', function(event) {
+    updatePostcard(p);
+  });
+  symmetrySelectHTML.addEventListener('change', function(event) {
+    updatePostcard(p);
+  });
+  motifSelectHTML.addEventListener('change', function(event) {
+    updatePostcard(p);
+  });
+  color1HTML.addEventListener('change', function(event) {
+    updateColors(p);
+  });
+  color2HTML.addEventListener('change', function(event) {
+    updateColors(p);
+  });
+  color3HTML.addEventListener('change', function(event) {
+    updateColors(p);
+  });
+  color4HTML.addEventListener('change', function(event) {
+    updateColors(p);
+  });
+  exportButton.addEventListener('click', function(event) {
+    exportCanvas(p);
+  });
+
 }
 
 function sketch1(p) {
@@ -105,90 +191,16 @@ function sketch1(p) {
     p.noLoop();
 
     // Get references to HTML elements
-    // It is better to define button in html and select in p5
-    let countrySelectHTML = document.getElementById('country');
-    countrySelect = p.select('#country');
-    let cellWidthInputHTML = document.getElementById('cellwidth');
-    cellWidthInput = p.select('#cellwidth');
-    let cellHeightInputHTML = document.getElementById('cellheight');
-    cellHeightInput = p.select('#cellheight');
-    let motifRatioInputHTML = document.getElementById('motifratio');
-    motifRatioInput = p.select('#motifratio');
-    let nAddCellsInputHTML = document.getElementById('naddcells');
-    nAddCellsInput = p.select('#naddcells');
-    let rowIndentInputHTML = document.getElementById('rowindent');
-    rowIndentInput = p.select('#rowindent');
-    let showGridHTML = document.getElementById('showgrid');
-    showGrid = p.select('#showgrid');
-
-    let symmetrySelectHTML = document.getElementById('symmetry');
-    symmetrySelect = p.select('#symmetry');
-
-    let motifSelectHTML = document.getElementById('motif');
-    motifSelect = p.select('#motif');
-    let color1HTML = document.getElementById('color1');
-    color1 = p.select('#color1');
-    let color2HTML = document.getElementById('color2');
-    color2 = p.select('#color2');
-    let color3HTML = document.getElementById('color3');
-    color3 = p.select('#color3');
-    let color4HTML = document.getElementById('color4');
-    color4 = p.select('#color4');
-
-    exportButton = document.getElementById('exportButton');
-            
-    // Add event listeners
-    countrySelectHTML.addEventListener('change', function(event) {
-      updatePostcard(p);
-    });
-    cellWidthInputHTML.addEventListener('change', function(event) {
-      updateGrid(p);
-    });
-    cellHeightInputHTML.addEventListener('change', function(event) {
-      updateGrid(p);
-    });
-    motifRatioInputHTML.addEventListener('change', function(event) {
-      updateGrid(p);
-    });
-    nAddCellsInputHTML.addEventListener('change', function(event) {
-      updateGrid(p);
-    });
-    rowIndentInputHTML.addEventListener('change', function(event) {
-      updatePostcard(p);
-    });
-    showGridHTML.addEventListener('change', function(event) {
-      updatePostcard(p);
-    });
-    symmetrySelectHTML.addEventListener('change', function(event) {
-      updatePostcard(p);
-    });
-    motifSelectHTML.addEventListener('change', function(event) {
-      updatePostcard(p);
-    });
-    color1HTML.addEventListener('change', function(event) {
-      updateColors(p);
-    });
-    color2HTML.addEventListener('change', function(event) {
-      updateColors(p);
-    });
-    color3HTML.addEventListener('change', function(event) {
-      updateColors(p);
-    });
-    color4HTML.addEventListener('change', function(event) {
-      updateColors(p);
-    });
-    exportButton.addEventListener('click', function(event) {
-      exportCanvas(p);
-    });
+    //initializeSelectsAndButtons(p);
 
     // Initialize grid
-    updateGrid(p);
+    //updateGrid(p);
             
     // Colors
-    updateColors(p);
+    //updateColors(p);
 
     // Load data
-    loadData(p);
+    //loadData(p);
 
 
   };
@@ -215,6 +227,7 @@ function sketch1(p) {
       // TODO other symmetriy operations
       // TODO draw motif in separate for loop?
       if (selectedData.length > 0) {
+        console.log("in sketch1 draw")
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
         if (symmetrySelect.value() === '180degreeRotations') {
@@ -234,18 +247,85 @@ function sketch1(p) {
     // add text for country
     if (selectedData.length > 0) {
       addCountryText(p);
+
     }
+  }
+}
+
+function sketch2(p) {
+  p.setup = function() {
+    canvas = p.createCanvas(mWidth, mHeight, p.SVG);
+    canvas.parent(document.querySelector('.canvas-container'));
+    p.noLoop();
 
   }
 
-   
+  p.draw = function () {
+    p.background(255);
+
+    // initialize
+    p.rectMode(p.TOP, p.LEFT);
+    let xMotif = 0;
+    let yMotif = 0;
+    p.ellipse(xMotif, yMotif, 10, 10);
+
+    // draw motif
+    // TODO move to a function
+    // TODO other symmetriy operations
+    if (selectedData.length > 0) {
+      console.log("in sketch2 draw")
+//      applySymmetry(p);
+      p.push();
+      p.translate(xMotif + cellWidth/2, yMotif + cellHeight/2);
+      if (symmetrySelect.value() === '180degreeRotations') {
+        p.rotate(initialCellRotation + i*p.PI);
+      } else if (symmetrySelect.value() === '90degreeRotations') {
+        p.rotate(initialCellRotation + i*p.PI/2);
+      }
+      drawMotif(p);
+      p.pop();
+    }
+
+  }
 }
 
-new p5(sketch1);
 
+// TODO good positioning of canvases
+console.log("new sketch2")
+//sketch2Instance = new p5(sketch2);
+console.log("new sketch1")
+sketch1Instance = new p5(sketch1);
+console.log("init sketch 1 buttons")
+initializeSelectsAndButtons(sketch1Instance);
+console.log("init sketch 2 buttons")
+//initializeSelectsAndButtons(sketch2Instance);
+console.log("update grid")
+updateGrid(sketch1Instance);
+console.log("upate colors")
+updateColors(sketch1Instance);
+console.log("load data")
+loadData(sketch1Instance);
+console.log("done")
+
+
+function applySymmetry() {
+
+}
+
+function updateScales() {
+  rScale
+    .domain([0, 100])
+    .range([1, Math.min(cellWidth, cellHeight) * motifRatio]);
+  alphaScale
+    .domain([0, 100])
+    .range([0, 255]);
+  areaScale
+    .domain([0, 100])
+    .range([0, cellWidth*cellWidth/4]) // gleichschenkliges Dreieck, Hypothenuse = cellWidth, cellWidth=cellHeight
+
+}
 
 function updateGrid(p) {
-  // TODO correct translation
 
   // Calculate number of cells
   cellWidth = parseInt(cellWidthInput.value());
@@ -262,15 +342,7 @@ function updateGrid(p) {
   motifRatio = parseFloat(motifRatioInput.value());
 
   // Motif properties
-  rScale
-    .domain([0, 100])
-    .range([1, Math.min(cellWidth, cellHeight) * motifRatio]);
-  alphaScale
-    .domain([0, 100])
-    .range([0, 255]);
-  areaScale
-    .domain([0, 100])
-    .range([0, cellWidth*cellWidth/4]) // gleichschenkliges Dreieck, Hypothenuse = cellWidth, cellWidth=cellHeight
+  updateScales();
 
   p.redraw();
 
@@ -289,12 +361,17 @@ function updateColors(p) {
 
 }
 
-function updatePostcard(p) {
-  
+function selectCountry(p) {
   selectedCountry = countrySelect.value();
   selectedData = data.filter(d => d.country === selectedCountry);
   console.log("Filtered data for", selectedCountry, selectedData);
 
+  p.redraw();
+
+}
+
+function updatePostcard(p) {
+  
   p.redraw();
   
 }
@@ -343,10 +420,10 @@ function addCountryText(p) {
   p.noStroke();
   p.rectMode(p.CENTER);
   p.rect(
-    //pcWidth - (txtWidth + 2*paddingX)/2, 
-    //pcHeight - (txtHeight + 2*paddingY)/2, 
-    pcWidth/2,
-    pcHeight/2, 
+    pcWidth - (txtWidth + 2*paddingX)/2, 
+    pcHeight - (txtHeight + 2*paddingY)/2, 
+    //pcWidth/2,
+    //pcHeight/2, 
     txtWidth + 2*paddingX, 
     txtHeight + 2*paddingY,
   );
@@ -356,10 +433,10 @@ function addCountryText(p) {
   p.textFont("Georgia");
   p.text(
     selectedCountry, 
-    //pcWidth - (txtWidth + 2*paddingX)/2, 
-    //pcHeight - (txtHeight + 2*paddingY)/2, 
-    pcWidth/2,
-    pcHeight/2, 
+    pcWidth - (txtWidth + 2*paddingX)/2, 
+    pcHeight - (txtHeight + 2*paddingY)/2, 
+    //pcWidth/2,
+    //pcHeight/2, 
   );
 }
 
