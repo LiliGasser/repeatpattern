@@ -95,6 +95,12 @@
             margin-top: 20px;
         }
         
+        .canvas-container-motif {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
         canvas {
             border: 2px solid #333;
             border-radius: 5px;
@@ -114,23 +120,23 @@
             </div>
 
             <div class="control-group">
-                <label for="cellwidth">Cell width </label>
-                <input type="number" id="cellwidth" value="50" min="10"/>
+                <label for="ncellsx"># cells per row </label>
+                <input type="number" id="ncellsx" value="12" min="1"/>
             </div>
 
             <div class="control-group">
-                <label for="cellheight">Cell height </label>
-                <input type="number" id="cellheight" value="50" min="10" />
+                <label for="cellaspectratio">Cell aspect ratio TODO fix</label>
+                <input type="number" id="cellaspectratio" value="1" min="0" />
             </div>
 
             <div class="control-group">
                 <label for="motifratio">Motif ratio </label>
                 <input type="number" id="motifratio" value="1" min="0" max="1" />
             </div>
-
+            
             <div class="control-group">
                 <label for="naddcells"># additional cells </label>
-                <input type="number" id="naddcells" value="2" min="0" max="10" />
+                <input type="number" id="naddcells" value="0" min="0" max="10" />
             </div>
 
             <div class="control-group">
@@ -140,7 +146,7 @@
 
             <div class="control-group">
                 <label for="showgrid">Show Grid</label>
-                <input type="checkbox" id="showgrid" />
+                <input type="checkbox" id="showgrid" checked/>
             </div>
 
             <div class="control-group">
@@ -211,13 +217,14 @@
             <button id="exportButton">Export as SVG</button>
         </div>
         
+        <div class="canvas-container">
+            <!-- Canvas will be inserted here by p5.js -->
+        </div>
+
         <div class="canvas-container-motif">
             <!-- Canvas will be inserted here by p5.js -->
         </div>
 
-        <div class="canvas-container">
-            <!-- Canvas will be inserted here by p5.js -->
-        </div>
     <script src="sketch.js"></script>
   </body>
 </html>

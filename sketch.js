@@ -3,8 +3,8 @@ let sketch1Instance;
 let sketch2Instance;
 let canvas;
 let countrySelect;
-let cellWidthInput;
-let cellHightInput;
+let nCellsXInput;
+let cellsAspectratioInput;
 let motifRatioInput;
 let nAddCellsInput;
 let rowIndentInput;
@@ -34,11 +34,10 @@ let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
 // For printing, pdf is better than svg.
 
 // define frame
+// TODO as input in app
 let frame = {
-  'top': 0.9,
-  'bottom': 0.9,
-  'left': 0.9,
-  'right': 0.9,
+  'top': 0.05,
+  'bottom': 0.05,
 }
 
 // 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
@@ -48,10 +47,13 @@ let frame = {
 let cellWidth;
 let cellHeight;
 let nCells;
+let nCellsX;
+let cellsAspectratio;
 let nCellsAdditional;
 let initialCellPositionX;
 let initialCellPositionY;
 let initialCellRotation = 0;
+let cellCount;
 let rowCount;
 let rowIndent;
 let x;
@@ -115,10 +117,10 @@ function initializeSelectsAndButtons(p) {
   // It is better to define button in html and select in p5
   let countrySelectHTML = document.getElementById('country');
   countrySelect = p.select('#country');
-  let cellWidthInputHTML = document.getElementById('cellwidth');
-  cellWidthInput = p.select('#cellwidth');
-  let cellHeightInputHTML = document.getElementById('cellheight');
-  cellHeightInput = p.select('#cellheight');
+  let nCellsXInputHTML = document.getElementById('ncellsx');
+  nCellsXInput = p.select('#ncellsx')
+  let cellsAspectratioInputHTML = document.getElementById('cellaspectratio');
+  cellsAspectratioInput = p.select('#cellaspectratio')
   let motifRatioInputHTML = document.getElementById('motifratio');
   motifRatioInput = p.select('#motifratio');
   let nAddCellsInputHTML = document.getElementById('naddcells');
@@ -148,12 +150,12 @@ function initializeSelectsAndButtons(p) {
   countrySelectHTML.addEventListener('change', function(event) {
     selectCountry(p);
   });
-  cellWidthInputHTML.addEventListener('change', function(event) {
+  nCellsXInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
-  });
-  cellHeightInputHTML.addEventListener('change', function(event) {
+  })
+  cellsAspectratioInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
-  });
+  })
   motifRatioInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   });
@@ -205,6 +207,7 @@ function sketch1(p) {
     p.rectMode(p.TOP, p.LEFT);
     x = initialCellPositionX;
     y = initialCellPositionY;
+    cellCount = 1;
     rowCount = 1;
     rowIndent = parseFloat(rowIndentInput.value());
 
@@ -221,6 +224,7 @@ function sketch1(p) {
       if (selectedData.length > 0) {
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
+        p.scale(cellsAspectratio, 1);
         if (symmetrySelect.value() === '180degreeRotations') {
           p.rotate(initialCellRotation + i*p.PI);
         } else if (symmetrySelect.value() === '90degreeRotations') {
@@ -246,7 +250,7 @@ function sketch1(p) {
 function sketch2(p) {
   p.setup = function() {
     canvas = p.createCanvas(mWidth, mHeight, p.SVG);
-    canvas.parent(document.querySelector('.canvas-container'));
+    canvas.parent(document.querySelector('.canvas-container-motif'));
     p.noLoop();
 
   }
@@ -266,7 +270,10 @@ function sketch2(p) {
       p.push();
       p.translate(xMotif, yMotif);
       p.scale(mScale, mScale);
+      p.push();
+      p.scale(cellsAspectratio, 1);
       drawMotif(p);
+      p.pop();
 
       // draw grid cell 
       // TODO move to function again
@@ -277,7 +284,7 @@ function sketch2(p) {
         p.strokeWeight(0.2);
         p.rect(
           -cellWidth/2, 
-          -cellWidth/2, 
+          -cellHeight/2, 
           cellWidth, 
           cellHeight
         );
@@ -290,21 +297,13 @@ function sketch2(p) {
 
 
 // TODO good positioning of canvases
-console.log("new sketch2")
-sketch2Instance = new p5(sketch2);
-console.log("new sketch1")
 sketch1Instance = new p5(sketch1);
-console.log("init sketch 1 buttons")
+sketch2Instance = new p5(sketch2);
 initializeSelectsAndButtons(sketch1Instance);
-console.log("init sketch 2 buttons")
 initializeSelectsAndButtons(sketch2Instance);
-console.log("update grid")
 updateGrid(sketch1Instance);
-console.log("upate colors")
 updateColors(sketch1Instance);
-console.log("load data")
 loadData(sketch1Instance);
-console.log("done")
 
 
 function updateScales() {
@@ -323,16 +322,21 @@ function updateScales() {
 
 function updateGrid(p) {
 
+  // Set initial cell positions (same distance from top and left)
+  initialCellPositionY = frame['top']*pcHeight;
+  initialCellPositionX = initialCellPositionY;
+  let distanceX = pcWidth - 2*initialCellPositionX;
+  let distanceY = pcHeight - 2*initialCellPositionY;
+
   // Calculate number of cells
-  cellWidth = parseInt(cellWidthInput.value());
-  cellHeight = parseInt(cellHeightInput.value());
-  nCellsAdditional = parseFloat(nAddCellsInput.value());
-  let nCellsWidth = Math.ceil(pcWidth / cellWidth) + 2*nCellsAdditional;
-  let nCellsHeight = Math.ceil(pcHeight / cellHeight) + 2*nCellsAdditional;
-  nCells = nCellsWidth * nCellsHeight;
-  initialCellPositionX = - cellWidth*nCellsAdditional;
-  initialCellPositionY = - cellHeight*nCellsAdditional;
-  console.log('nCells: ' + nCells, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
+  nCellsX = parseInt(nCellsXInput.value());
+  cellWidth = distanceX / nCellsX;
+  cellsAspectratio = parseFloat(cellsAspectratioInput.value());
+  cellHeight = cellWidth / cellsAspectratio;  // aspectratio = width / height
+  let nCellsY = Math.floor(distanceY / cellHeight);
+  nCells = nCellsX * nCellsY;
+  console.log('nCells: ' + nCells, nCellsX, nCellsY, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
+  //nCellsAdditional = parseFloat(nAddCellsInput.value());
 
   // Motif ratio
   // TODO implement mit push, scale, pop
@@ -375,15 +379,17 @@ function updatePostcard(p) {
   
 }
         
+// TODO fix for rowIndent
 function drawGridCell(p) {
 
   p.rectMode(p.TOP, p.LEFT);
   p.noFill();
   p.stroke(100);
   p.strokeWeight(0.2);
+  console.log(x + ((rowCount*rowIndent) % 1)*cellWidth, y)
   p.rect(
-    x - cellWidth/2 + ((rowCount*rowIndent) % 1)*cellWidth, 
-    y - cellWidth/2, 
+    x + ((rowCount*rowIndent) % 1)*cellWidth, 
+    y, 
     cellWidth, 
     cellHeight
   );
@@ -413,33 +419,32 @@ function addCountryText(p) {
 
   // text properties
   p.textAlign(p.CENTER, p.CENTER);
-  p.textSize(48);
-  let txtWidth = p.textWidth(selectedCountry);
+  p.textSize(20);
+  //let txtWidth = p.textWidth(selectedCountry);
   let txtHeight = p.textAscent() + p.textDescent();
-  let paddingX = 40;
-  let paddingY = 3;
+  //let paddingX = 40;
+  let paddingY = 10;
+
   // white rectangle around text
-  p.fill(255, 200);
-  p.noStroke();
-  p.rectMode(p.CENTER);
-  p.rect(
-    pcWidth - (txtWidth + 2*paddingX)/2, 
-    pcHeight - (txtHeight + 2*paddingY)/2, 
-    //pcWidth/2,
-    //pcHeight/2, 
-    txtWidth + 2*paddingX, 
-    txtHeight + 2*paddingY,
-  );
+  //p.fill(255, 200);
+  //p.noStroke();
+  //p.rectMode(p.CENTER);
+  //p.rect(
+    //pcWidth - (txtWidth + 2*paddingX)/2, 
+    //pcHeight - (txtHeight + 2*paddingY)/2, 
+    //txtWidth + 2*paddingX, 
+    //txtHeight + 2*paddingY,
+  //);
+
   // text
-  p.fill(50);
+  p.fill(150);
   // TODO choose font
-  p.textFont("Georgia");
+  p.textFont("Verdana");  // Option: Avantgarde
   p.text(
     selectedCountry, 
-    pcWidth - (txtWidth + 2*paddingX)/2, 
+    pcWidth / 2, 
+    //pcWidth - (txtWidth + 2*paddingX)/2, 
     pcHeight - (txtHeight + 2*paddingY)/2, 
-    //pcWidth/2,
-    //pcHeight/2, 
   );
 }
 
@@ -447,9 +452,11 @@ function doTranslation() {
 
   // move to next cell: translation from left to right, top to bottom
     x = x + cellWidth;
-    if (x >= pcWidth) {
+    cellCount +=1;
+    if (cellCount > nCellsX) {
       x = initialCellPositionX + ((rowCount*rowIndent) % 1)*cellWidth;
       y += cellHeight;
+      cellCount = 1;
       rowCount +=1;
     }
 }
