@@ -217,6 +217,7 @@ function sketch1(p) {
 
     // draw pattern
     for (let i = 0; i < nCells; i++) {
+      console.log(x, y);
 
       // draw grid cell
       if (showGrid.checked()) {
@@ -227,7 +228,7 @@ function sketch1(p) {
       // TODO other symmetriy operations
       // TODO draw motif in separate for loop?
       if (selectedData.length > 0) {
-        console.log("in sketch1 draw")
+//        console.log("in sketch1 draw")
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
         if (symmetrySelect.value() === '180degreeRotations') {
@@ -378,12 +379,17 @@ function updatePostcard(p) {
         
 function drawGridCell(p) {
 
-  console.log(x,y);
+//  console.log('grid', x,y);
   p.rectMode(p.TOP, p.LEFT);
   p.noFill();
   p.stroke(100);
   p.strokeWeight(0.2);
-  p.rect(x, y, cellWidth, cellHeight);
+  p.rect(
+    x - cellWidth/2 + ((rowCount*rowIndent) % 1)*cellWidth, 
+    y-cellWidth/2, 
+    cellWidth, 
+    cellHeight
+  );
 
 }
 
