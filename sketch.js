@@ -32,7 +32,14 @@ let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
 // To set appropriate size for export, Felix would do it as I did already.
 // For printing, pdf is better than svg.
-//console.log('aspect ratio: ', pcWidth / pcHeight);
+
+// define frame
+let frame = {
+  'top': 0.9,
+  'bottom': 0.9,
+  'left': 0.9,
+  'right': 0.9,
+}
 
 // 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
 // Does something similar as is needed in Vue
@@ -44,12 +51,22 @@ let nCells;
 let nCellsAdditional;
 let initialCellPositionX;
 let initialCellPositionY;
+let initialCellRotation = 0;
+let rowCount;
+let rowIndent;
+let x;
+let y;
 
-// define motif canvas size
-let mWidth = 200;
-let mHeight = 200;
-
-// motif properties
+// motif
+let colors;
+// TODO set order of variables in UI
+let order = [
+  'gccs_government',
+  'gccs_wtp_belief', 
+  'gccs_norm', 
+  'gccs_wtp', 
+];
+// initialize scales
 // TODO proper motif with corresponding scales
 let rScale = d3.scaleSqrt(); // radius
 let r;
@@ -58,22 +75,10 @@ let alpha;
 let areaScale = d3.scaleLinear(); // area of triangle
 let area;
 
-// motif and cell position
-let x;
-let y;
-let rowCount;
-let rowIndent;
-let initialCellRotation = 0;
-// TODO set order of variables in UI
-let order = [
-  'gccs_government',
-  'gccs_wtp_belief', 
-  'gccs_norm', 
-  'gccs_wtp', 
-];
+// define canvas size for motif
+let mWidth = 200;
+let mHeight = 200;
 
-// colors
-let colors;
 
 
 function loadData(p) {
@@ -191,19 +196,6 @@ function sketch1(p) {
     canvas.parent(document.querySelector('.canvas-container'));
     p.noLoop();
 
-    // Get references to HTML elements
-    //initializeSelectsAndButtons(p);
-
-    // Initialize grid
-    //updateGrid(p);
-            
-    // Colors
-    //updateColors(p);
-
-    // Load data
-    //loadData(p);
-
-
   };
 
   p.draw = function () {
@@ -218,7 +210,6 @@ function sketch1(p) {
 
     // draw pattern
     for (let i = 0; i < nCells; i++) {
-      //console.log(x, y);
 
       // draw grid cell
       if (showGrid.checked()) {
@@ -228,7 +219,6 @@ function sketch1(p) {
       // draw motif
       // TODO other symmetry operations
       if (selectedData.length > 0) {
-//        console.log("in sketch1 draw")
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
         if (symmetrySelect.value() === '180degreeRotations') {
@@ -318,6 +308,7 @@ console.log("done")
 
 
 function updateScales() {
+
   rScale
     .domain([0, 100])
     .range([1, Math.min(cellWidth, cellHeight) * motifRatio]);
@@ -344,6 +335,7 @@ function updateGrid(p) {
   console.log('nCells: ' + nCells, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
 
   // Motif ratio
+  // TODO implement mit push, scale, pop
   motifRatio = parseFloat(motifRatioInput.value());
 
   // Motif properties
@@ -354,19 +346,20 @@ function updateGrid(p) {
 }
 
 function updateColors(p) {
+
   colors = {
     'gccs_wtp': p.color(color1.value()),
     'gccs_wtp_belief': p.color(color2.value()),
     'gccs_norm': p.color(color3.value()),
     'gccs_government': p.color(color4.value()),
   }
-  //console.log(colors);
 
   p.redraw();
 
 }
 
 function selectCountry(p) {
+
   selectedCountry = countrySelect.value();
   selectedData = data.filter(d => d.country === selectedCountry);
   console.log("Filtered data for", selectedCountry, selectedData);
@@ -399,7 +392,7 @@ function drawGridCell(p) {
 
 // TODO select from html
 function drawMotif(p) {
-  //console.log('drawMotif at x: ' + x + ', y: ' + y);
+
   if (motifSelect.value() === 'windwheelMotif') {
     windwheelMotif(p);
   } else if (motifSelect.value() === 'flowerMotif') {
