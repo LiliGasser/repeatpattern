@@ -84,8 +84,21 @@
             font-weight: bold;
             transition: background 0.3s;
         }
+
+        #exportButtonMotif {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
         
-        #exportBtn:hover {
+        
+        #exportButton:hover {
             background: #218838;
         }
         
@@ -125,7 +138,7 @@
             </div>
 
             <div class="control-group">
-                <label for="cellaspectratio">Cell aspect ratio TODO fix</label>
+                <label for="cellaspectratio">Cell aspect ratio </label>
                 <input type="number" id="cellaspectratio" value="1" min="0" />
             </div>
 
@@ -146,7 +159,7 @@
 
             <div class="control-group">
                 <label for="showgrid">Show Grid</label>
-                <input type="checkbox" id="showgrid" checked/>
+                <input type="checkbox" id="showgrid" />
             </div>
 
             <div class="control-group">
@@ -176,7 +189,7 @@
                     type="color"
                     id="color1"
                     name="color1"
-                    value="#ffc600"
+                    value="#fbbc40"
                     colorspace="display-p3"
                     alpha />
               </div>
@@ -187,7 +200,7 @@
                     type="color"
                     id="color2"
                     name="color2"
-                    value="#853a76"
+                    value="#95d4e8"
                     colorspace="display-p3"
                     alpha />
               </div>
@@ -198,7 +211,7 @@
                     type="color"
                     id="color3"
                     name="color3"
-                    value="#b4cc4e"
+                    value="#dcd5eb"
                     colorspace="display-p3"
                     alpha />
               </div>
@@ -209,12 +222,13 @@
                     type="color"
                     id="color4"
                     name="color4"
-                    value="#277647"
+                    value="#b6dedf"
                     colorspace="display-p3"
                     alpha />
               </div>
 
-            <button id="exportButton">Export as SVG</button>
+            <button id="exportButton">Export card as SVG</button>
+            <button id="exportButtonMotif">Export motif as SVG</button>
         </div>
         
         <div class="canvas-container">

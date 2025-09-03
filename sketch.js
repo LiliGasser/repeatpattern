@@ -16,6 +16,7 @@ let color2;
 let color3;
 let color4;
 let exportButton;
+let exportButtonMotif;
 
 // initialize data structure
 let data = [];
@@ -42,6 +43,8 @@ let frame = {
 
 // 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
 // Does something similar as is needed in Vue
+
+// Scaling: https://p5js.org/tutorials/coordinates-and-transformations/
 
 // define cell
 let cellWidth;
@@ -87,7 +90,7 @@ function loadData(p) {
   // Load data
   d3.dsv(";", "data/gccs_country_with_temperature_and_gdp.csv", d3.autoType).then(function(csv) {
     data = csv;
-    console.log("Data loaded:", data);
+    //console.log("Data loaded:", data);
 
     // Get unique countries and add to select
     countries = data.map(d=>d.country);
@@ -112,7 +115,7 @@ function loadData(p) {
   });  
 }
 
-function initializeSelectsAndButtons(p) {
+function initializeSelectsAndButtons(p, selSketch) {
 
   // It is better to define button in html and select in p5
   let countrySelectHTML = document.getElementById('country');
@@ -145,6 +148,7 @@ function initializeSelectsAndButtons(p) {
   color4 = p.select('#color4');
 
   exportButton = document.getElementById('exportButton');
+  exportButtonMotif = document.getElementById('exportButtonMotif');
             
   // Add event listeners
   countrySelectHTML.addEventListener('change', function(event) {
@@ -186,9 +190,15 @@ function initializeSelectsAndButtons(p) {
   color4HTML.addEventListener('change', function(event) {
     updateColors(p);
   });
-  exportButton.addEventListener('click', function(event) {
-    exportCanvas(p);
-  });
+  if (selSketch == 1) {
+    exportButton.addEventListener('click', function(event) {
+      exportCanvas(p, selSketch);
+    });
+  } else if (selSketch == 2) {
+    exportButtonMotif.addEventListener('click', function(event) {
+      exportCanvas(p, selSketch);
+    });
+  }
 
 }
 
@@ -299,8 +309,8 @@ function sketch2(p) {
 // TODO good positioning of canvases
 sketch1Instance = new p5(sketch1);
 sketch2Instance = new p5(sketch2);
-initializeSelectsAndButtons(sketch1Instance);
-initializeSelectsAndButtons(sketch2Instance);
+initializeSelectsAndButtons(sketch1Instance, 1);
+initializeSelectsAndButtons(sketch2Instance, 2);
 updateGrid(sketch1Instance);
 updateColors(sketch1Instance);
 loadData(sketch1Instance);
@@ -386,7 +396,7 @@ function drawGridCell(p) {
   p.noFill();
   p.stroke(100);
   p.strokeWeight(0.2);
-  console.log(x + ((rowCount*rowIndent) % 1)*cellWidth, y)
+  //console.log(x + ((rowCount*rowIndent) % 1)*cellWidth, y)
   p.rect(
     x + ((rowCount*rowIndent) % 1)*cellWidth, 
     y, 
@@ -439,6 +449,8 @@ function addCountryText(p) {
   // text
   p.fill(150);
   // TODO choose font
+  // https://p5js.org/tutorials/loading-and-selecting-fonts/
+  // https://www.fontsquirrel.com/fonts/list/find_fonts
   p.textFont("Verdana");  // Option: Avantgarde
   p.text(
     selectedCountry, 
@@ -461,8 +473,13 @@ function doTranslation() {
     }
 }
 
-function exportCanvas(p) {
+function exportCanvas(p, selSketch) {
+  if (selSketch == 1) {
     p.save('postcard', 'svg');
+  } else if (selSketch == 2) {
+    p.save('motif', 'svg');
+
+  }
 }
 
 
@@ -597,13 +614,17 @@ function circlesMotif(p) {
   p.noFill();
   p.strokeWeight(2);
   let selVar;
+  let c = [];
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selectedData[0][selVar]) {
-      p.stroke(colors[selVar]);
+      alpha = 200;
+      c = [...colors[selVar].levels.slice(0,3), alpha]
+      p.stroke(p.color(c));
+      //p.stroke(colors[selVar]);
       r = rScale(selectedData[0][selVar]);
       p.push();
       p.ellipse(0, 0, r, r);
