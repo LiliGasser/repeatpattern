@@ -1,6 +1,7 @@
 // initialize canvas, selects and buttons
 let sketch1Instance;
 let sketch2Instance;
+let sketch3Instance;
 let canvas;
 let countrySelect;
 let nCellsXInput;
@@ -16,11 +17,12 @@ let color2;
 let color3;
 let color4;
 let exportButton;
+let exportButtonBack;
 let exportButtonMotif;
 
 // initialize data structure
 let data = [];
-let selectedData = [];
+let selData = [];
 let countries = [];
 
 // define postcard size (A5 postcard: 148mm x 105mm)
@@ -31,6 +33,8 @@ let pcHeightMM = 105; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
+let bWidth = pcWidth/2;
+let bHeight = pcHeight;
 // To set appropriate size for export, Felix would do it as I did already.
 // For printing, pdf is better than svg.
 
@@ -148,6 +152,7 @@ function initializeSelectsAndButtons(p, selSketch) {
   color4 = p.select('#color4');
 
   exportButton = document.getElementById('exportButton');
+  exportButtonBack = document.getElementById('exportButtonBack');
   exportButtonMotif = document.getElementById('exportButtonMotif');
             
   // Add event listeners
@@ -195,6 +200,10 @@ function initializeSelectsAndButtons(p, selSketch) {
       exportCanvas(p, selSketch);
     });
   } else if (selSketch == 2) {
+    exportButtonBack.addEventListener('click', function(event) {
+      exportCanvas(p, selSketch);
+    });
+  } else if (selSketch == 3) {
     exportButtonMotif.addEventListener('click', function(event) {
       exportCanvas(p, selSketch);
     });
@@ -231,7 +240,7 @@ function sketch1(p) {
 
       // draw motif
       // TODO other symmetry operations
-      if (selectedData.length > 0) {
+      if (selData.length > 0) {
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
         p.scale(cellsAspectratio, 1);
@@ -250,14 +259,163 @@ function sketch1(p) {
     }
 
     // add text for country
-    if (selectedData.length > 0) {
+    if (selData.length > 0) {
       addCountryText(p);
 
     }
   }
 }
 
+
 function sketch2(p) {
+  p.setup = function () {
+    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
+    canvas.parent(document.querySelector('.canvas-container'));
+    p.noLoop();
+
+  };
+
+  p.draw = function () {
+    p.background(255);
+
+    // initialize
+    p.rectMode(p.TOP, p.LEFT);
+    let xMotif = bWidth/2;
+    let yMotif = bHeight/2;
+    let bScale = p.min(bWidth/cellWidth, bHeight/cellHeight)*0.5
+
+    // draw scaled motif, without symmetry operations
+    if (selData.length > 0) {
+      console.log("in sketch2 draw")
+      p.push();
+      p.translate(xMotif, yMotif);
+      p.scale(bScale, bScale);
+      p.push();
+      //p.scale(cellsAspectratio, 1);
+      drawMotif(p);
+      p.pop();
+
+      // draw grid cell 
+      // TODO move to function again
+      if (showGrid.checked()) {
+        p.rectMode(p.TOP, p.LEFT);
+        p.noFill();
+        p.stroke(100);
+        p.strokeWeight(0.2);
+        p.rect(
+          -cellWidth/2, 
+          -cellHeight/2, 
+          cellWidth, 
+          cellHeight
+        );
+      }
+      p.pop();
+    }
+
+    // legend text
+    p.textAlign(p.TOP, p.LEFT);
+    // TODO choose font
+    // https://p5js.org/tutorials/loading-and-selecting-fonts/
+    // https://www.fontsquirrel.com/fonts/list/find_fonts
+    p.textFont("Verdana");  // Option: Avantgarde
+    p.fill(50);
+    p.textSize(20);
+    p.text(
+      'Good news',
+      50,
+      60,
+    )
+    p.textSize(14);
+    p.fill(colors['gccs_wtp']);
+    p.text(
+      `In ${selCountry}, ${selData[0]['gccs_wtp']}% of the people are willing`, 
+      50, 
+      90,
+    );
+    p.text(
+      "to give 1% of their income to fight global warming.", 
+      50, 
+      110,
+    );
+    p.fill(colors['gccs_wtp_belief']);
+    p.text(
+      `Interestingly, they think that only ${selData[0]['gccs_wtp_belief']}% of the others`, 
+      50, 
+      140,
+    );
+    p.text(
+      "are also willing to fight global warming,", 
+      50, 
+      160,
+    );
+    p.text(
+      `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`, 
+      50, 
+      180,
+    );
+    p.fill(colors['gccs_norm']);
+    p.text(
+      `Also, ${selData[0]['gccs_norm']}% think that social norms should`,
+      50,
+      460,
+    )
+    p.text(
+      "be climate-friendly.",
+      50,
+      480,
+    )
+    p.fill(colors['gccs_government']);
+    p.text(
+      `And ${selData[0]['gccs_government']}% think that politics and `,
+      50,
+      510,
+    )
+    p.text(
+      "politicians should do more.",
+      50,
+      530,
+    )
+
+    p.fill(100);
+    p.text(
+      "This difference in perception is reported in 125 countries across the globe,",
+      50,
+      560,
+    )
+    p.text(
+      "all that participated in the survey (see source).",
+      50,
+      580,
+    )
+
+
+
+    // reference
+    p.textSize(12);
+    p.fill(150);
+    p.text(
+      'Source: Here comes the reference',
+      20,
+      pcHeight - 10,
+    )
+
+    // address block
+    p.push();
+    p.noFill();
+    p.stroke(200);
+    p.strokeWeight(2);
+    p.line(bWidth, 20, bWidth, bHeight-20);
+    p.line(bWidth + 40, bHeight*0.5, pcWidth-200, bHeight*0.5);
+    p.line(bWidth + 40, bHeight*0.59, pcWidth-50, bHeight*0.59);
+    p.line(bWidth + 40, bHeight*0.68, pcWidth-50, bHeight*0.68);
+    p.line(bWidth + 40, bHeight*0.77, pcWidth-50, bHeight*0.77);
+    p.line(bWidth + 40, bHeight*0.86, pcWidth-50, bHeight*0.86);
+    p.pop();
+
+  }
+}
+
+function sketch3(p) {
   p.setup = function() {
     canvas = p.createCanvas(mWidth, mHeight, p.SVG);
     canvas.parent(document.querySelector('.canvas-container-motif'));
@@ -275,13 +433,13 @@ function sketch2(p) {
     let mScale = p.min(mWidth/cellWidth, mHeight/cellHeight)*0.8
 
     // draw scaled motif, without symmetry operations
-    if (selectedData.length > 0) {
-      console.log("in sketch2 draw")
+    if (selData.length > 0) {
+      console.log("in sketch3 draw")
       p.push();
       p.translate(xMotif, yMotif);
       p.scale(mScale, mScale);
       p.push();
-      p.scale(cellsAspectratio, 1);
+      //p.scale(cellsAspectratio, 1);
       drawMotif(p);
       p.pop();
 
@@ -309,8 +467,10 @@ function sketch2(p) {
 // TODO good positioning of canvases
 sketch1Instance = new p5(sketch1);
 sketch2Instance = new p5(sketch2);
+sketch3Instance = new p5(sketch3);
 initializeSelectsAndButtons(sketch1Instance, 1);
 initializeSelectsAndButtons(sketch2Instance, 2);
+initializeSelectsAndButtons(sketch3Instance, 3);
 updateGrid(sketch1Instance);
 updateColors(sketch1Instance);
 loadData(sketch1Instance);
@@ -374,12 +534,13 @@ function updateColors(p) {
 
 function selectCountry(p) {
 
-  selectedCountry = countrySelect.value();
-  selectedData = data.filter(d => d.country === selectedCountry);
-  console.log("Filtered data for", selectedCountry, selectedData);
+  selCountry = countrySelect.value();
+  selData = data.filter(d => d.country === selCountry);
+  console.log("Filtered data for", selCountry, selData);
 
   p.redraw();
-  sketch2Instance.redraw();  // for initial drawing of motif
+  sketch2Instance.redraw();  // for initial drawing of back
+  sketch3Instance.redraw();  // for initial drawing of motif
 
 }
 
@@ -432,21 +593,10 @@ function addCountryText(p) {
   // text properties
   p.textAlign(p.CENTER, p.CENTER);
   p.textSize(20);
-  //let txtWidth = p.textWidth(selectedCountry);
+  //let txtWidth = p.textWidth(selCountry);
   let txtHeight = p.textAscent() + p.textDescent();
   //let paddingX = 40;
   let paddingY = 10;
-
-  // white rectangle around text
-  //p.fill(255, 200);
-  //p.noStroke();
-  //p.rectMode(p.CENTER);
-  //p.rect(
-    //pcWidth - (txtWidth + 2*paddingX)/2, 
-    //pcHeight - (txtHeight + 2*paddingY)/2, 
-    //txtWidth + 2*paddingX, 
-    //txtHeight + 2*paddingY,
-  //);
 
   // text
   p.fill(150);
@@ -455,7 +605,7 @@ function addCountryText(p) {
   // https://www.fontsquirrel.com/fonts/list/find_fonts
   p.textFont("Verdana");  // Option: Avantgarde
   p.text(
-    selectedCountry, 
+    selCountry, 
     pcWidth / 2, 
     //pcWidth - (txtWidth + 2*paddingX)/2, 
     pcHeight - (txtHeight + 2*paddingY)/2, 
@@ -480,7 +630,8 @@ function exportCanvas(p, selSketch) {
     p.save('postcard', 'svg');
   } else if (selSketch == 2) {
     p.save('motif', 'svg');
-
+  } else if (selSketch == 3) {
+    p.save('back', 'svg');
   }
 }
 
@@ -504,9 +655,9 @@ function windwheelMotif(p) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
-    if (selectedData[0][selVar]) {
+    if (selData[0][selVar]) {
       p.fill(colors[selVar]);
-      area = areaScale(selectedData[0][selVar]);
+      area = areaScale(selData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
       p.push();
       p.rotate(initialRotation + i*p.PI/2);
@@ -535,7 +686,7 @@ function flowerMotif(p) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
-    if (selectedData[0][selVar]) {
+    if (selData[0][selVar]) {
       p.fill(colors[selVar]);
       p.push();
       p.rotate(initialRotation + p.PI/4+ i*p.PI/2);
@@ -560,9 +711,9 @@ function flowerMotifCurve(p) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
-    if (selectedData[0][selVar]) {
+    if (selData[0][selVar]) {
       p.fill(colors[selVar]);
-      area = areaScale(selectedData[0][selVar]);
+      area = areaScale(selData[0][selVar]);
       adjustedHypotenuse = 4*area / cellWidth;
       p.push();
       p.rotate(initialRotation + i*p.PI/2);
@@ -588,9 +739,9 @@ function arcMotif(p) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
-    if (selectedData[0][selVar]) {
+    if (selData[0][selVar]) {
       p.fill(colors[selVar]);
-      r = rScale(selectedData[0][selVar]);
+      r = rScale(selData[0][selVar]);
       p.push();
       p.rotate(initialRotation + i*p.PI/2);
       p.arc(0, 0, r, r, 0, p.PI/2);
@@ -605,29 +756,29 @@ function arcMotif2(p) {
   p.noStroke();
 
   // wtp
-  if (selectedData[0].gccs_wtp) {
-    r = rScale(selectedData[0].gccs_wtp);
+  if (selData[0].gccs_wtp) {
+    r = rScale(selData[0].gccs_wtp);
     p.fill(colors['gccs_wtp']);
     p.arc(0, 0, r, r, -p.PI/2, 0);
   }
 
   // wtp_belief
-  if (selectedData[0].gccs_wtp_belief) {
-    r = rScale(selectedData[0].gccs_wtp_belief);
+  if (selData[0].gccs_wtp_belief) {
+    r = rScale(selData[0].gccs_wtp_belief);
     p.fill(colors['gccs_wtp_belief']);
     p.arc(cellWidth/2, 0, r, r, p.PI/2, p.PI);
   }
 
   // norm
-  if (selectedData[0].gccs_norm) {
-    r = rScale(selectedData[0].gccs_norm);
+  if (selData[0].gccs_norm) {
+    r = rScale(selData[0].gccs_norm);
     p.fill(colors['gccs_norm']);
     p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
   }
 
   // government
-  if (selectedData[0].gccs_government) {
-    r = rScale(selectedData[0].gccs_government);
+  if (selData[0].gccs_government) {
+    r = rScale(selData[0].gccs_government);
     p.fill(colors['gccs_government']);
     p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
   }
@@ -645,12 +796,12 @@ function circlesMotif(p) {
     selVar = order[i];
     //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
-    if (selectedData[0][selVar]) {
+    if (selData[0][selVar]) {
       alpha = 200;
       c = [...colors[selVar].levels.slice(0,3), alpha]
       p.stroke(p.color(c));
       //p.stroke(colors[selVar]);
-      r = rScale(selectedData[0][selVar]);
+      r = rScale(selData[0][selVar]);
       p.push();
       p.ellipse(0, 0, r, r);
       p.pop();
@@ -665,8 +816,8 @@ function alphaMotif(p, shape='ellipse') {
   let c = [];
 
   // wtp
-  if (selectedData[0].gccs_wtp) {
-    alpha = alphaScale(selectedData[0].gccs_wtp);
+  if (selData[0].gccs_wtp) {
+    alpha = alphaScale(selData[0].gccs_wtp);
     c = [...colors['gccs_wtp'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();
@@ -679,8 +830,8 @@ function alphaMotif(p, shape='ellipse') {
   }
 
   // wtp_belief
-  if (selectedData[0].gccs_wtp_belief) {
-    alpha = alphaScale(selectedData[0].gccs_wtp_belief);
+  if (selData[0].gccs_wtp_belief) {
+    alpha = alphaScale(selData[0].gccs_wtp_belief);
     c = [...colors['gccs_wtp_belief'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();
@@ -693,8 +844,8 @@ function alphaMotif(p, shape='ellipse') {
   }
 
   // norm
-  if (selectedData[0].gccs_norm) {
-    alpha = alphaScale(selectedData[0].gccs_norm);
+  if (selData[0].gccs_norm) {
+    alpha = alphaScale(selData[0].gccs_norm);
     c = [...colors['gccs_norm'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();
@@ -707,8 +858,8 @@ function alphaMotif(p, shape='ellipse') {
   }
 
   // government
-  if (selectedData[0].gccs_government) {
-    alpha = alphaScale(selectedData[0].gccs_government);
+  if (selData[0].gccs_government) {
+    alpha = alphaScale(selData[0].gccs_government);
     c = [...colors['gccs_government'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();

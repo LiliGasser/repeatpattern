@@ -73,7 +73,7 @@
             outline: none;
         }
         
-        #exportButton {
+        button {
             padding: 10px 20px;
             background: #28a745;
             color: white;
@@ -85,24 +85,13 @@
             transition: background 0.3s;
         }
 
-        #exportButtonMotif {
-            padding: 10px 20px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        
-        
-        #exportButton:hover {
-            background: #218838;
-        }
-        
         .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .canvas-container-back {
             display: flex;
             justify-content: center;
             margin-top: 20px;
@@ -228,11 +217,18 @@
                     alpha />
               </div>
 
-            <button id="exportButton">Export card as SVG</button>
-            <button id="exportButtonMotif">Export motif as SVG</button>
+            <div class="button">
+              <button id="exportButton">Export card as SVG</button>
+              <button id="exportButtonBack">Export back as SVG</button>
+              <button id="exportButtonMotif">Export motif as SVG</button>
+            </div>
         </div>
         
         <div class="canvas-container">
+            <!-- Canvas will be inserted here by p5.js -->
+        </div>
+
+        <div class="canvas-container-back">
             <!-- Canvas will be inserted here by p5.js -->
         </div>
 
