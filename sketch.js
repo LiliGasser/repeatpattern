@@ -394,7 +394,7 @@ function sketch2(p) {
     p.textSize(12);
     p.fill(150);
     p.text(
-      'Source: Here comes the reference',
+      'Source: global climate change survey https://gccs.iza.org/',
       20,
       pcHeight - 10,
     )
