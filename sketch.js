@@ -119,7 +119,7 @@ function loadData(p) {
   });  
 }
 
-function initializeSelectsAndButtons(p, selSketch) {
+function initializeSelects(p) {
 
   // It is better to define button in html and select in p5
   let countrySelectHTML = document.getElementById('country');
@@ -151,10 +151,6 @@ function initializeSelectsAndButtons(p, selSketch) {
   let color4HTML = document.getElementById('color4');
   color4 = p.select('#color4');
 
-  exportButton = document.getElementById('exportButton');
-  exportButtonBack = document.getElementById('exportButtonBack');
-  exportButtonMotif = document.getElementById('exportButtonMotif');
-            
   // Add event listeners
   countrySelectHTML.addEventListener('change', function(event) {
     selectCountry(p);
@@ -195,19 +191,16 @@ function initializeSelectsAndButtons(p, selSketch) {
   color4HTML.addEventListener('change', function(event) {
     updateColors(p);
   });
-  if (selSketch == 1) {
-    exportButton.addEventListener('click', function(event) {
-      exportCanvas(p, selSketch);
-    });
-  } else if (selSketch == 2) {
-    exportButtonBack.addEventListener('click', function(event) {
-      exportCanvas(p, selSketch);
-    });
-  } else if (selSketch == 3) {
-    exportButtonMotif.addEventListener('click', function(event) {
-      exportCanvas(p, selSketch);
-    });
-  }
+
+}
+
+function initializeButtons() {
+  exportButton = document.getElementById('exportButton');
+            
+  // Add event listeners
+  exportButton.addEventListener('click', function(event) {
+    exportCanvases();
+  });
 
 }
 
@@ -221,6 +214,12 @@ function sketch1(p) {
 
   p.draw = function () {
     p.background(255);
+
+    // rectangle around card
+    p.noFill()
+    p.stroke('red');
+    p.strokeWeight(1);
+    p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
     p.rectMode(p.TOP, p.LEFT);
@@ -278,6 +277,12 @@ function sketch2(p) {
   p.draw = function () {
     p.background(255);
 
+    // rectangle around card
+    p.noFill()
+    p.stroke('red');
+    p.strokeWeight(1);
+    p.rect(0, 0, pcWidth, pcHeight);
+
     // initialize
     p.rectMode(p.TOP, p.LEFT);
     let xMotif = bWidth/2;
@@ -313,78 +318,80 @@ function sketch2(p) {
     }
 
     // legend text
+    let xPos = 20;
     p.textAlign(p.TOP, p.LEFT);
     // TODO choose font
     // https://p5js.org/tutorials/loading-and-selecting-fonts/
     // https://www.fontsquirrel.com/fonts/list/find_fonts
     p.textFont("Verdana");  // Option: Avantgarde
+    p.noStroke();
     p.fill(50);
     p.textSize(20);
     p.text(
       'Good news',
-      50,
+      xPos,
       60,
     )
     p.textSize(14);
     p.fill(colors['gccs_wtp']);
     p.text(
       `In ${selCountry}, ${selData[0]['gccs_wtp']}% of the people are willing`, 
-      50, 
+      xPos,
       90,
     );
     p.text(
       "to give 1% of their income to fight global warming.", 
-      50, 
+      xPos,
       110,
     );
     p.fill(colors['gccs_wtp_belief']);
     p.text(
       `Interestingly, they think that only ${selData[0]['gccs_wtp_belief']}% of the others`, 
-      50, 
+      xPos,
       140,
     );
     p.text(
       "are also willing to fight global warming,", 
-      50, 
+      xPos,
       160,
     );
     p.text(
       `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`, 
-      50, 
+      xPos,
       180,
     );
     p.fill(colors['gccs_norm']);
     p.text(
       `Also, ${selData[0]['gccs_norm']}% think that social norms should`,
-      50,
+      xPos,
       460,
     )
     p.text(
       "be climate-friendly.",
-      50,
+      xPos,
       480,
     )
     p.fill(colors['gccs_government']);
     p.text(
       `And ${selData[0]['gccs_government']}% think that politics and `,
-      50,
+      xPos,
       510,
     )
     p.text(
       "politicians should do more.",
-      50,
+      xPos,
       530,
     )
 
     p.fill(100);
     p.text(
       "This difference in perception is reported in 125 countries across the globe,",
-      50,
+      xPos,
       560,
     )
     p.text(
       "all that participated in the survey (see source).",
-      50,
+      xPos,
       580,
     )
 
@@ -394,7 +401,7 @@ function sketch2(p) {
     p.textSize(12);
     p.fill(150);
     p.text(
-      'Source: global climate change survey https://gccs.iza.org/',
+      'Data from global climate change survey. https://gccs.iza.org/',
       20,
       pcHeight - 10,
     )
@@ -468,9 +475,10 @@ function sketch3(p) {
 sketch1Instance = new p5(sketch1);
 sketch2Instance = new p5(sketch2);
 sketch3Instance = new p5(sketch3);
-initializeSelectsAndButtons(sketch1Instance, 1);
-initializeSelectsAndButtons(sketch2Instance, 2);
-initializeSelectsAndButtons(sketch3Instance, 3);
+initializeSelects(sketch1Instance);
+initializeSelects(sketch2Instance);
+initializeSelects(sketch3Instance);
+initializeButtons(sketch1Instance);
 updateGrid(sketch1Instance);
 updateColors(sketch1Instance);
 loadData(sketch1Instance);
@@ -599,6 +607,7 @@ function addCountryText(p) {
   let paddingY = 10;
 
   // text
+  p.noStroke();
   p.fill(150);
   // TODO choose font
   // https://p5js.org/tutorials/loading-and-selecting-fonts/
@@ -625,14 +634,19 @@ function doTranslation() {
     }
 }
 
-function exportCanvas(p, selSketch) {
-  if (selSketch == 1) {
-    p.save('postcard', 'svg');
-  } else if (selSketch == 2) {
-    p.save('motif', 'svg');
-  } else if (selSketch == 3) {
-    p.save('back', 'svg');
-  }
+function exportCanvases() {
+  let parts = [
+    selCountry, 
+    motifSelect.value(),
+    nCellsX, 
+    colors['gccs_wtp'], 
+    colors['gccs_wtp_belief'],
+    colors['gccs_norm'],
+    colors['gccs_government']];
+  let filename = parts.join('_');
+  sketch1Instance.save(filename + '_postcardfront', 'svg');
+  sketch2Instance.save(filename + '_postcardback', 'svg');
+  sketch3Instance.save(filename + '_motif', 'svg');
 }
 
 
