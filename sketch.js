@@ -5,9 +5,9 @@ let sketch3Instance;
 let canvas;
 let countrySelect;
 let nCellsXInput;
-let cellsAspectratioInput;
-let motifRatioInput;
-let nAddCellsInput;
+//let cellsAspectratioInput;
+let relMotifSizeInput;
+//let nAddCellsInput;
 let rowIndentInput;
 let showGrid;
 let symmetrySelect;
@@ -55,7 +55,7 @@ let cellWidth;
 let cellHeight;
 let nCells;
 let nCellsX;
-let cellsAspectratio;
+let cellsAspectratio = 1;
 let nCellsAdditional;
 let initialCellPositionX;
 let initialCellPositionY;
@@ -126,12 +126,12 @@ function initializeSelects(p) {
   countrySelect = p.select('#country');
   let nCellsXInputHTML = document.getElementById('ncellsx');
   nCellsXInput = p.select('#ncellsx')
-  let cellsAspectratioInputHTML = document.getElementById('cellaspectratio');
-  cellsAspectratioInput = p.select('#cellaspectratio')
-  let motifRatioInputHTML = document.getElementById('motifratio');
-  motifRatioInput = p.select('#motifratio');
-  let nAddCellsInputHTML = document.getElementById('naddcells');
-  nAddCellsInput = p.select('#naddcells');
+  //let cellsAspectratioInputHTML = document.getElementById('cellaspectratio');
+  //cellsAspectratioInput = p.select('#cellaspectratio')
+  let relMotifSizeInputHTML = document.getElementById('relmotifsize');
+  relMotifSizeInput = p.select('#relmotifsize');
+  //let nAddCellsInputHTML = document.getElementById('naddcells');
+  //nAddCellsInput = p.select('#naddcells');
   let rowIndentInputHTML = document.getElementById('rowindent');
   rowIndentInput = p.select('#rowindent');
   let showGridHTML = document.getElementById('showgrid');
@@ -158,15 +158,15 @@ function initializeSelects(p) {
   nCellsXInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   })
-  cellsAspectratioInputHTML.addEventListener('change', function(event) {
-    updateGrid(p);
-  })
-  motifRatioInputHTML.addEventListener('change', function(event) {
-    updateGrid(p);
-  });
-  nAddCellsInputHTML.addEventListener('change', function(event) {
+  //cellsAspectratioInputHTML.addEventListener('change', function(event) {
+    //updateGrid(p);
+  //})
+  relMotifSizeInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   });
+  //nAddCellsInputHTML.addEventListener('change', function(event) {
+    //updateGrid(p);
+  //});
   rowIndentInputHTML.addEventListener('change', function(event) {
     updatePostcard(p);
   });
@@ -242,7 +242,8 @@ function sketch1(p) {
       if (selData.length > 0) {
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
-        p.scale(cellsAspectratio, 1);
+        //p.scale(cellsAspectratio, 1);
+        p.scale(relMotifSize, relMotifSize);
         if (symmetrySelect.value() === '180degreeRotations') {
           p.rotate(initialCellRotation + i*p.PI);
         } else if (symmetrySelect.value() === '90degreeRotations') {
@@ -315,108 +316,21 @@ function sketch2(p) {
         );
       }
       p.pop();
+
+      // add legend text
+      addLegendText(p);
     }
-
-    // legend text
-    let xPos = 20;
-    p.textAlign(p.TOP, p.LEFT);
-    // TODO choose font
-    // https://p5js.org/tutorials/loading-and-selecting-fonts/
-    // https://www.fontsquirrel.com/fonts/list/find_fonts
-    p.textFont("Verdana");  // Option: Avantgarde
-    p.noStroke();
-    p.fill(50);
-    p.textSize(20);
-    p.text(
-      'Good news',
-      xPos,
-      60,
-    )
-    p.textSize(14);
-    p.fill(colors['gccs_wtp']);
-    p.text(
-      `In ${selCountry}, ${selData[0]['gccs_wtp']}% of the people are willing`, 
-      xPos,
-      90,
-    );
-    p.text(
-      "to give 1% of their income to fight global warming.", 
-      xPos,
-      110,
-    );
-    p.fill(colors['gccs_wtp_belief']);
-    p.text(
-      `Interestingly, they think that only ${selData[0]['gccs_wtp_belief']}% of the others`, 
-      xPos,
-      140,
-    );
-    p.text(
-      "are also willing to fight global warming,", 
-      xPos,
-      160,
-    );
-    p.text(
-      `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`, 
-      xPos,
-      180,
-    );
-    p.fill(colors['gccs_norm']);
-    p.text(
-      `Also, ${selData[0]['gccs_norm']}% think that social norms should`,
-      xPos,
-      460,
-    )
-    p.text(
-      "be climate-friendly.",
-      xPos,
-      480,
-    )
-    p.fill(colors['gccs_government']);
-    p.text(
-      `And ${selData[0]['gccs_government']}% think that politics and `,
-      xPos,
-      510,
-    )
-    p.text(
-      "politicians should do more.",
-      xPos,
-      530,
-    )
-
-    p.fill(100);
-    p.text(
-      "This difference in perception is reported in 125 countries across the globe,",
-      xPos,
-      560,
-    )
-    p.text(
-      "all that participated in the survey (see source).",
-      xPos,
-      580,
-    )
-
-
-
-    // reference
-    p.textSize(12);
-    p.fill(150);
-    p.text(
-      'Data from global climate change survey. https://gccs.iza.org/',
-      20,
-      pcHeight - 10,
-    )
 
     // address block
     p.push();
     p.noFill();
     p.stroke(200);
-    p.strokeWeight(2);
-    p.line(bWidth, 20, bWidth, bHeight-20);
-    p.line(bWidth + 40, bHeight*0.5, pcWidth-200, bHeight*0.5);
-    p.line(bWidth + 40, bHeight*0.59, pcWidth-50, bHeight*0.59);
-    p.line(bWidth + 40, bHeight*0.68, pcWidth-50, bHeight*0.68);
-    p.line(bWidth + 40, bHeight*0.77, pcWidth-50, bHeight*0.77);
-    p.line(bWidth + 40, bHeight*0.86, pcWidth-50, bHeight*0.86);
+    p.strokeWeight(0.8);
+    p.line(bWidth, 70, bWidth, bHeight - 70);
+    p.line(bWidth + 70, bHeight*0.50, pcWidth - 70, bHeight*0.50);
+    p.line(bWidth + 70, bHeight*0.58, pcWidth - 70, bHeight*0.58);
+    p.line(bWidth + 70, bHeight*0.66, pcWidth - 70, bHeight*0.66);
+    p.line(bWidth + 70, bHeight*0.74, pcWidth - 70, bHeight*0.74);
     p.pop();
 
   }
@@ -488,7 +402,7 @@ function updateScales() {
 
   rScale
     .domain([0, 100])
-    .range([1, Math.min(cellWidth, cellHeight) * motifRatio]);
+    .range([1, Math.min(cellWidth, cellHeight)]);
   alphaScale
     .domain([0, 100])
     .range([0, 255]);
@@ -509,16 +423,15 @@ function updateGrid(p) {
   // Calculate number of cells
   nCellsX = parseInt(nCellsXInput.value());
   cellWidth = distanceX / nCellsX;
-  cellsAspectratio = parseFloat(cellsAspectratioInput.value());
+  //cellsAspectratio = parseFloat(cellsAspectratioInput.value());
   cellHeight = cellWidth / cellsAspectratio;  // aspectratio = width / height
   let nCellsY = Math.floor(distanceY / cellHeight);
   nCells = nCellsX * nCellsY;
   console.log('nCells: ' + nCells, nCellsX, nCellsY, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
   //nCellsAdditional = parseFloat(nAddCellsInput.value());
 
-  // Motif ratio
-  // TODO implement mit push, scale, pop
-  motifRatio = parseFloat(motifRatioInput.value());
+  // Relative motif size
+  relMotifSize = parseFloat(relMotifSizeInput.value());
 
   // Motif properties
   updateScales();
@@ -619,6 +532,97 @@ function addCountryText(p) {
     //pcWidth - (txtWidth + 2*paddingX)/2, 
     pcHeight - (txtHeight + 2*paddingY)/2, 
   );
+}
+
+function addLegendText(p) {
+
+  // legend text
+  let xPos = 20;
+  p.textAlign(p.TOP, p.LEFT);
+  // TODO choose font
+  // https://p5js.org/tutorials/loading-and-selecting-fonts/
+  // https://www.fontsquirrel.com/fonts/list/find_fonts
+  p.textFont("Verdana");
+  p.noStroke();
+  p.fill(50);
+  p.textSize(20);
+  p.text(
+    'Good news',
+    xPos,
+    60,
+  )
+  p.textSize(14);
+  p.fill(colors['gccs_wtp']);
+  p.text(
+    `In ${selCountry}, ${selData[0]['gccs_wtp']}% of the people are willing`, 
+    xPos,
+    90,
+  );
+  p.text(
+    "to give 1% of their income to fight global warming.", 
+    xPos,
+    110,
+  );
+  p.fill(colors['gccs_wtp_belief']);
+  p.text(
+    `Interestingly, they think that only ${selData[0]['gccs_wtp_belief']}% of the others`, 
+    xPos,
+    140,
+  );
+  p.text(
+    "are also willing to fight global warming,", 
+    xPos,
+    160,
+  );
+  p.text(
+    `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`, 
+    xPos,
+    180,
+  );
+  p.fill(colors['gccs_norm']);
+  p.text(
+    `Also, ${selData[0]['gccs_norm']}% think that social norms should`,
+    xPos,
+    460,
+  )
+  p.text(
+    "be climate-friendly.",
+    xPos,
+    480,
+  )
+  p.fill(colors['gccs_government']);
+  p.text(
+    `And ${selData[0]['gccs_government']}% think that politics and `,
+    xPos,
+    510,
+  )
+  p.text(
+    "politicians should do more.",
+    xPos,
+    530,
+  )
+
+  p.fill(100);
+  p.text(
+    "This difference in perception is reported in 125 countries across the globe,",
+    xPos,
+    560,
+  )
+  p.text(
+    "all that participated in the survey (see source).",
+    xPos,
+    580,
+  )
+
+  // reference
+  p.textSize(12);
+  p.fill(150);
+  p.text(
+    'Data from global climate change survey. https://gccs.iza.org/',
+    20,
+    pcHeight - 10,
+  )
+
 }
 
 function doTranslation() {
