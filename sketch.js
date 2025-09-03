@@ -419,8 +419,10 @@ function drawMotif(p) {
     arcMotif2(p);
   } else if (motifSelect.value() === 'circlesMotif') {
     circlesMotif(p);
-  } else if (motifSelect.value() === 'alphaMotif') {
-    alphaMotif(p);
+  } else if (motifSelect.value() === 'alphaMotifRect') {
+    alphaMotif(p, 'rect');
+  } else if (motifSelect.value() === 'alphaMotifEllipse') {
+    alphaMotif(p, 'ellipse');
   }
 
 }
@@ -523,6 +525,29 @@ function windwheelMotif(p) {
 // TODO how to make petal size dependant on values?
 function flowerMotif(p) {
 
+  // TODO test with stroke
+  p.noStroke();
+
+  let selVar;
+  let initialRotation = 0;
+
+  for (let i=0; i<4; i++) {
+    selVar = order[i];
+    //selVar = Object.keys(colors)[i];
+    //console.log('selVar', selVar);
+    if (selectedData[0][selVar]) {
+      p.fill(colors[selVar]);
+      p.push();
+      p.rotate(initialRotation + p.PI/4+ i*p.PI/2);
+      p.ellipse(cellWidth*0, cellWidth*0.25, 20, 30);
+      p.pop();
+
+    }
+  }
+}
+
+function flowerMotifCurve(p) {
+
   p.stroke(0);
   p.strokeWeight(0);
 
@@ -612,7 +637,7 @@ function arcMotif2(p) {
 function circlesMotif(p) {
 
   p.noFill();
-  p.strokeWeight(2);
+  p.strokeWeight(3);
   let selVar;
   let c = [];
 
@@ -634,7 +659,7 @@ function circlesMotif(p) {
   }
 }
 
-function alphaMotif(p) {
+function alphaMotif(p, shape='ellipse') {
 
   p.noStroke();
   let c = [];
@@ -645,7 +670,11 @@ function alphaMotif(p) {
     c = [...colors['gccs_wtp'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();
-    p.rect(0, -cellHeight/2, cellWidth/2, cellHeight/2);
+    if (shape == 'rect') {
+      p.rect(0, -cellHeight/2, cellWidth/2, cellHeight/2);
+    } else if (shape == 'ellipse') {
+      p.ellipse(-cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2);
+    }
     p.pop();
   }
 
@@ -655,7 +684,11 @@ function alphaMotif(p) {
     c = [...colors['gccs_wtp_belief'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();
-    p.rect(0, 0, cellWidth/2, cellHeight/2);
+    if (shape == 'rect') {
+      p.rect(0, 0, cellWidth/2, cellHeight/2);
+    } else if (shape == 'ellipse') {
+      p.ellipse(cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2);
+    }
     p.pop();
   }
 
@@ -665,7 +698,11 @@ function alphaMotif(p) {
     c = [...colors['gccs_norm'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();
-    p.rect(-cellWidth/2, 0, cellWidth/2, cellHeight/2);
+    if (shape == 'rect') {
+      p.rect(-cellWidth/2, 0, cellWidth/2, cellHeight/2);
+    } else if (shape == 'ellipse') {
+      p.ellipse(-cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2);
+    }
     p.pop();
   }
 
@@ -675,7 +712,11 @@ function alphaMotif(p) {
     c = [...colors['gccs_government'].levels.slice(0,3), p.round(alpha,0)];
     p.fill(p.color(c));
     p.push();
-    p.rect(-cellWidth/2, -cellHeight/2, cellWidth/2, cellHeight/2);
+    if (shape == 'rect') {
+      p.rect(-cellWidth/2, -cellHeight/2, cellWidth/2, cellHeight/2);
+    } else if (shape == 'ellipse') {
+      p.ellipse(cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2);
+    }
     p.pop();
   }
 }
