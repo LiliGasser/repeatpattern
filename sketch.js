@@ -64,15 +64,17 @@ let y;
 // motif
 let colors;
 // TODO set order of variables in UI
-let order = [
-  'gccs_government',
-  'gccs_wtp_belief', 
-  'gccs_norm', 
-  'gccs_wtp', 
-];
+let order = [];
+//let order = [
+  //'gccs_government',
+  //'gccs_wtp_belief', 
+  //'gccs_norm', 
+  //'gccs_wtp', 
+//];
 // initialize scales
 // TODO proper motif with corresponding scales
 let rScale = d3.scaleSqrt(); // radius
+let rScaleHalfCell = d3.scaleSqrt(); // radius
 let r;
 let alphaScale = d3.scaleLinear(); // transparency
 let alpha;
@@ -144,6 +146,11 @@ function initializeSelects(p) {
   let colorbgHTML = document.getElementById('colorbg');
   colorbg = p.select('#colorbg');
 
+  let pos1HTML = document.getElementById('pos1');
+  let pos2HTML = document.getElementById('pos2');
+  let pos3HTML = document.getElementById('pos3');
+  let pos4HTML = document.getElementById('pos4');
+
   let typefaceSelectHTML = document.getElementById('typeface');
   typefaceSelect = p.select('#typeface');
 
@@ -184,6 +191,18 @@ function initializeSelects(p) {
   colorbgHTML.addEventListener('change', function(event) {
     updateColors(p);
   });
+  pos1HTML.addEventListener('change', function(event) {
+    updateOrder(p);
+  });
+  pos2HTML.addEventListener('change', function(event) {
+    updateOrder(p);
+  });
+  pos3HTML.addEventListener('change', function(event) {
+    updateOrder(p);
+  });
+  pos4HTML.addEventListener('change', function(event) {
+    updateOrder(p);
+  });
   typefaceSelectHTML.addEventListener('change', function(event) {
     updatePostcard(p);
   });
@@ -199,6 +218,19 @@ function initializeButtons() {
   });
 
 }
+
+function getDropdownOrder() {
+  order = [
+    document.getElementById('pos1').value,
+    document.getElementById('pos2').value,
+    document.getElementById('pos3').value,
+    document.getElementById('pos4').value
+  ].filter(val => val !== ''); // Remove empty selections
+            
+  //document.getElementById('dropdownResult').innerHTML = 
+    //`<strong>Selected Order:</strong> [${order.join(', ')}]`;
+}
+
 
 function sketch1(p) {
   p.setup = function () {
@@ -407,6 +439,7 @@ initializeSelects(sketch2Instance);
 initializeSelects(sketch3Instance);
 initializeButtons(sketch1Instance);
 updateGrid(sketch1Instance);
+updateOrder(sketch1Instance);
 updateColors(sketch1Instance);
 loadData(sketch1Instance);
 
@@ -416,6 +449,9 @@ function updateScales() {
   rScale
     .domain([0, 100])
     .range([1, Math.min(cellWidth, cellHeight)]);
+  rScaleHalfCell
+    .domain([0, 100])
+    .range([1, Math.min(cellWidth/2, cellHeight/2)]);
   alphaScale
     .domain([0, 100])
     .range([0, 255]);
@@ -447,6 +483,15 @@ function updateGrid(p) {
   // Motif properties
   updateScales();
 
+  p.redraw();
+
+}
+
+function updateOrder(p) {
+
+  getDropdownOrder();
+
+  console.log('order change', order);
   p.redraw();
 
 }
@@ -503,19 +548,23 @@ function drawGridCell(p) {
 // TODO select from html
 function drawMotif(p) {
 
-  if (motifSelect.value() === 'windwheelMotif') {
+  if (motifSelect.value() === 'windwheel') {
     windwheelMotif(p);
-  } else if (motifSelect.value() === 'flowerMotif') {
-    flowerMotif(p);
-  } else if (motifSelect.value() === 'arcMotif') {
+  } else if (motifSelect.value() === 'arc') {
     arcMotif(p);
-  } else if (motifSelect.value() === 'arcMotif2') {
+  } else if (motifSelect.value() === 'arc2') {
     arcMotif2(p);
-  } else if (motifSelect.value() === 'circlesMotif') {
+  } else if (motifSelect.value() === 'circles') {
     circlesMotif(p);
-  } else if (motifSelect.value() === 'alphaMotifRect') {
+  } else if (motifSelect.value() === 'squares') {
+    squaresMotif(p);
+  } else if (motifSelect.value() === 'flower') {
+    flowerMotif(p);
+  } else if (motifSelect.value() === 'circles2') {
+    circlesMotif2(p);
+  } else if (motifSelect.value() === 'alphaRect') {
     alphaMotif(p, 'rect');
-  } else if (motifSelect.value() === 'alphaMotifEllipse') {
+  } else if (motifSelect.value() === 'alphaEllipse') {
     alphaMotif(p, 'ellipse');
   }
 
@@ -645,16 +694,13 @@ function windwheelMotif(p) {
   // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
 
   p.noStroke();
-  //p.stroke(0);
-  //p.strokeWeight(0);
 
   let adjustedHypotenuse;
   let selVar;
-  let initialRotation = 0;
+  let initialRotation = -p.PI/2;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
-    //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selData[0][selVar]) {
       p.fill(colors[selVar]);
@@ -734,11 +780,10 @@ function arcMotif(p) {
 
   p.noStroke();
   let selVar;
-  let initialRotation = 0;
+  let initialRotation = p.PI;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
-    //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selData[0][selVar]) {
       p.fill(colors[selVar]);
@@ -785,8 +830,51 @@ function arcMotif2(p) {
   }
 }
 
-
 function circlesMotif(p) {
+
+  p.noStroke();
+  let selVar;
+  let initialRotation = p.PI;
+
+  for (let i=0; i<4; i++) {
+    selVar = order[i];
+    //console.log('selVar', selVar);
+    if (selData[0][selVar]) {
+      p.fill(colors[selVar]);
+      r = rScaleHalfCell(selData[0][selVar]);
+      p.push();
+      p.rotate(initialRotation + i*p.PI/2);
+      p.ellipse(cellWidth/4, cellWidth/4, r, r);
+      p.pop();
+
+    }
+  }
+
+}
+
+function squaresMotif(p) {
+
+  p.noStroke();
+  let selVar;
+  let initialRotation = p.PI;
+
+  for (let i=0; i<4; i++) {
+    selVar = order[i];
+    //console.log('selVar', selVar);
+    if (selData[0][selVar]) {
+      p.fill(colors[selVar]);
+      r = rScaleHalfCell(selData[0][selVar]);
+      p.push();
+      p.rotate(initialRotation + i*p.PI/2);
+      p.rect(0, 0, r, r);
+      p.pop();
+
+    }
+  }
+
+}
+
+function circlesMotif2(p) {
 
   p.noFill();
   p.strokeWeight(2);
@@ -795,7 +883,6 @@ function circlesMotif(p) {
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
-    //selVar = Object.keys(colors)[i];
     //console.log('selVar', selVar);
     if (selData[0][selVar]) {
       alpha = 200;

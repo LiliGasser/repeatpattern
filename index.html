@@ -54,11 +54,19 @@
             align-items: center;
             gap: 5px;
         }
+
+        .color-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+        }
         
         label {
             font-size: 12px;
             color: #666;
             font-weight: bold;
+            width: 80px;
         }
         
         select {
@@ -155,70 +163,118 @@
             <div class="control-group">
                 <label for="motif">Motif</label>
                 <select id="motif">
-                    <option value="windwheelMotif" selected>Wind wheel</option>
-                    <option value="flowerMotif" >Flower</option>
-                    <option value="arcMotif" >Arc</option>
-                    <option value="arcMotif2" selected>Arc 2</option>
-                    <option value="circlesMotif" >Circles</option>
-                    <option value="alphaMotifRect" >Alpha Rect</option>
-                    <option value="alphaMotifEllipse" >Alpha Ellipse</option>
+                    <option value="windwheel" selected>Wind wheel</option>
+                    <option value="arc" >Arc</option>
+                    <option value="arc2" >Arc 2</option>
+                    <option value="circles" >Circles</option>
+                    <option value="squares" >Squares</option>
+                    <option value="flower" >Flower</option>
+                    <option value="circles2" >Circles 2</option>
+                    <option value="alphaRect" >Alpha Rect</option>
+                    <option value="alphaEllipse" >Alpha Ellipse</option>
                 </select>
             </div>
 
-            <div class="control-group">
-                <label for="color1">WTP</label>
-                <input
-                    type="color"
-                    id="color1"
-                    name="color1"
-                    value="#fbbc40"
-                    colorspace="display-p3"
-                    alpha />
-              </div>
+            <div class="selector-container">
+                <div>
+                    <label>1st position:</label>
+                    <select id="pos1">
+                        <option value="gccs_wtp" selected>WTP</option>
+                        <option value="gccs_wtp_belief">WTP Belief</option>
+                        <option value="gccs_norm">Social Norm</option>
+                        <option value="gccs_government">Government</option>
+                    </select>
+                </div>
+                <div>
+                    <label>2nd position:</label>
+                    <select id="pos2">
+                        <option value="gccs_wtp">WTP</option>
+                        <option value="gccs_wtp_belief">WTP Belief</option>
+                        <option value="gccs_norm" selected>Social Norm</option>
+                        <option value="gccs_government">Government</option>
+                    </select>
+                </div>
+                <div>
+                    <label>3rd position:</label>
+                    <select id="pos3">
+                        <option value="gccs_wtp">WTP</option>
+                        <option value="gccs_wtp_belief" selected>WTP Belief</option>
+                        <option value="gccs_norm">Social Norm</option>
+                        <option value="gccs_government">Government</option>
+                    </select>
+                </div>
+                <div>
+                    <label>4th position:</label>
+                    <select id="pos4">
+                        <option value="gccs_wtp">WTP</option>
+                        <option value="gccs_wtp_belief">WTP Belief</option>
+                        <option value="gccs_norm">Social Norm</option>
+                        <option value="gccs_government" selected>Government</option>
+                    </select>
+                </div>
+                <!--
+                <button onclick="getDropdownOrder()">Get Order</button>
+                <div id="dropdownResult" class="result"></div>
+                -->
+            </div>
+            
+            <div class="color-container">
 
-            <div class="control-group">
-                <label for="color2">WTP Belief</label>
-                <input
-                    type="color"
-                    id="color2"
-                    name="color2"
-                    value="#95d4e8"
-                    colorspace="display-p3"
-                    alpha />
-              </div>
+                <div class="color-group">
+                    <label for="color1">WTP</label>
+                    <input
+                        type="color"
+                        id="color1"
+                        name="color1"
+                        value="#fbbc40"
+                        colorspace="display-p3"
+                        alpha />
+                  </div>
 
-            <div class="control-group">
-                <label for="color3">Social Norm</label>
-                <input
-                    type="color"
-                    id="color3"
-                    name="color3"
-                    value="#e6def7"
-                    colorspace="display-p3"
-                    alpha />
-              </div>
+                <div class="color-group">
+                    <label for="color2">WTP Belief</label>
+                    <input
+                        type="color"
+                        id="color2"
+                        name="color2"
+                        value="#95d4e8"
+                        colorspace="display-p3"
+                        alpha />
+                  </div>
 
-            <div class="control-group">
-                <label for="color4">Government</label>
-                <input
-                    type="color"
-                    id="color4"
-                    name="color4"
-                    value="#abe7e8"
-                    colorspace="display-p3"
-                    alpha />
-              </div>
+                <div class="color-group">
+                    <label for="color3">Social Norm</label>
+                    <input
+                        type="color"
+                        id="color3"
+                        name="color3"
+                        value="#e6def7"
+                        colorspace="display-p3"
+                        alpha />
+                  </div>
 
-            <div class="control-group">
-                <label for="colorbg">Background</label>
-                <input
-                    type="color"
-                    id="colorbg"
-                    name="colorbg"
-                    value="#ffffff"
-                    colorspace="display-p3"
-                    alpha />
-              </div>
+                <div class="color-group">
+                    <label for="color4">Government</label>
+                    <input
+                        type="color"
+                        id="color4"
+                        name="color4"
+                        value="#abe7e8"
+                        colorspace="display-p3"
+                        alpha />
+                  </div>
+
+                <div class="color-group">
+                    <label for="colorbg">Background</label>
+                    <input
+                        type="color"
+                        id="colorbg"
+                        name="colorbg"
+                        value="#ffffff"
+                        colorspace="display-p3"
+                        alpha />
+                  </div>
+            </div>
 
             <div class="control-group">
                 <label for="typeface">Typeface</label>
