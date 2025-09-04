@@ -63,7 +63,7 @@ let y;
 
 // motif
 let colors;
-// TODO set order of variables in UI
+// order of variables in UI
 let order = [];
 //let order = [
   //'gccs_government',
@@ -72,14 +72,17 @@ let order = [];
   //'gccs_wtp', 
 //];
 // initialize scales
-// TODO proper motif with corresponding scales
 let rScale = d3.scaleSqrt(); // radius
-let rScaleHalfCell = d3.scaleSqrt(); // radius
+let rScaleHalfCell = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell)
 let r;
 let alphaScale = d3.scaleLinear(); // transparency
 let alpha;
 let areaScale = d3.scaleLinear(); // area of triangle
 let area;
+let hScale = d3.scaleLinear(); // height of rectangle
+let h;
+let angleScale = d3.scaleLinear(); // angle of circle completion
+let angle;
 
 // define canvas size for motif
 let mWidth = 200;
@@ -243,9 +246,10 @@ function sketch1(p) {
   p.draw = function () {
     p.background(colors['background']);
 
-    // TODO choose font
+    // select font
     // https://p5js.org/tutorials/loading-and-selecting-fonts/
     // https://www.fontsquirrel.com/fonts/list/find_fonts
+    // Adobe Fonts
     p.textFont(typefaceSelect.value());
 
     // rectangle around card
@@ -270,7 +274,6 @@ function sketch1(p) {
       }
 
       // draw motif
-      // TODO other symmetry operations
       if (selData.length > 0) {
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
@@ -444,7 +447,7 @@ updateColors(sketch1Instance);
 loadData(sketch1Instance);
 
 
-function updateScales() {
+function updateScales(p) {
 
   rScale
     .domain([0, 100])
@@ -458,6 +461,12 @@ function updateScales() {
   areaScale
     .domain([0, 100])
     .range([0, cellWidth*cellWidth/4]) // gleichschenkliges Dreieck, Hypothenuse = cellWidth, cellWidth=cellHeight
+  hScale
+    .domain([0, 100])
+    .range([0, cellWidth/2]);
+  angleScale
+    .domain([0, 100])
+    .range([0, p.PI]);
 
 }
 
@@ -481,7 +490,7 @@ function updateGrid(p) {
   relMotifSize = parseFloat(relMotifSizeInput.value());
 
   // Motif properties
-  updateScales();
+  updateScales(p);
 
   p.redraw();
 
@@ -549,15 +558,29 @@ function drawGridCell(p) {
 function drawMotif(p) {
 
   if (motifSelect.value() === 'windwheel') {
-    windwheelMotif(p);
+    windwheelMotif(p, 0);
+  } else if (motifSelect.value() === 'windwheel45') {
+    windwheelMotif(p, p.PI/4);
   } else if (motifSelect.value() === 'arc') {
-    arcMotif(p);
+    arcMotif(p, 'arc');
+  } else if (motifSelect.value() === 'squares') {
+    arcMotif(p, 'squares');
+  } else if (motifSelect.value() === 'rectangles') {
+    arcMotif(p, 'rectangles');
+  } else if (motifSelect.value() === 'rectangles2') {
+    arcMotif(p, 'rectangles2');
+  } else if (motifSelect.value() === 'rectangles3') {
+    rectMotif(p);
+  } else if (motifSelect.value() === '3/4circles') {
+    openCirclesMotif(p, '3/4');
+  } else if (motifSelect.value() === 'anglecircles') {
+    openCirclesMotif(p, 'angle');
+  } else if (motifSelect.value() === 'interlockingcircles') {
+    openCirclesMotif2(p);
   } else if (motifSelect.value() === 'arc2') {
     arcMotif2(p);
   } else if (motifSelect.value() === 'circles') {
     circlesMotif(p);
-  } else if (motifSelect.value() === 'squares') {
-    squaresMotif(p);
   } else if (motifSelect.value() === 'flower') {
     flowerMotif(p);
   } else if (motifSelect.value() === 'circles2') {
@@ -690,14 +713,14 @@ function exportCanvases() {
 // -----------------------------------------------------------------
 // Motifs
 
-function windwheelMotif(p) {
+function windwheelMotif(p, addRotation) {
   // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
 
   p.noStroke();
 
   let adjustedHypotenuse;
   let selVar;
-  let initialRotation = -p.PI/2;
+  let initialRotation = -p.PI/2 + addRotation;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
@@ -776,7 +799,7 @@ function flowerMotifCurve(p) {
   }
 }
 
-function arcMotif(p) {
+function arcMotif(p, shape) {
 
   p.noStroke();
   let selVar;
@@ -787,15 +810,126 @@ function arcMotif(p) {
     //console.log('selVar', selVar);
     if (selData[0][selVar]) {
       p.fill(colors[selVar]);
-      r = rScale(selData[0][selVar]);
       p.push();
       p.rotate(initialRotation + i*p.PI/2);
-      p.arc(0, 0, r, r, 0, p.PI/2);
+      if (shape == 'arc') {
+        r = rScale(selData[0][selVar]);
+        p.arc(0, 0, r, r, 0, p.PI/2);
+      } else if (shape == 'triangle') {
+        // TODO maybe?
+      } else if (shape == 'squares') {
+        r = rScaleHalfCell(selData[0][selVar]);
+        p.rect(0, 0, r, r);
+      } else if (shape == 'rectangles') {
+        h = hScale(selData[0][selVar]);
+        p.rect(0, 0, cellWidth/2, h);
+      } else if (shape == 'rectangles2') {
+        h = hScale(selData[0][selVar]);
+        p.rect(0, cellHeight/2 - h, cellWidth/2, h);
+      }
       p.pop();
 
     }
   }
 }
+
+function rectMotif(p) {
+
+  p.noStroke();
+
+  // wtp
+  // TODO unclear why -h is needed for this one....
+  if (selData[0].gccs_wtp) {
+    h = hScale(selData[0].gccs_wtp);
+    p.fill(colors['gccs_wtp']);
+    p.rect(-cellWidth/2, 0, cellWidth/2, -h);
+  }
+
+  // wtp_belief
+  if (selData[0].gccs_wtp_belief) {
+    h = hScale(selData[0].gccs_wtp_belief);
+    p.fill(colors['gccs_wtp_belief']);
+    p.rect(0, 0, cellWidth/2, -h);
+  }
+
+  // norm
+  if (selData[0].gccs_norm) {
+    h = hScale(selData[0].gccs_norm);
+    p.fill(colors['gccs_norm']);
+    p.rect(0, 0, cellWidth/2, h);
+  }
+
+  // government
+  if (selData[0].gccs_government) {
+    h = hScale(selData[0].gccs_government);
+    p.fill(colors['gccs_government']);
+    p.rect(-cellWidth/2, 0, cellWidth/2, h);
+  }
+}
+
+function openCirclesMotif(p, shape) {
+  
+  p.noStroke();
+  let selVar;
+  let initialRotation = p.PI;
+
+  for (let i=0; i<4; i++) {
+    selVar = order[i];
+    //console.log('selVar', selVar);
+    if (selData[0][selVar]) {
+      p.fill(colors[selVar]);
+      p.push();
+      p.rotate(initialRotation + i*p.PI/2);
+      if (shape == '3/4') {
+        r = rScaleHalfCell(selData[0][selVar]);
+        p.arc(cellWidth/4, cellHeight/4, r, r, -p.PI/2, p.PI);
+      } else if (shape == 'angle') {
+        angle = angleScale(selData[0][selVar]);
+        p.arc(cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2, -angle+5*p.PI/4, angle+5*p.PI/4);
+        //p.arc(cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2, -angle+p.PI/4, angle+p.PI/4);
+      }
+      p.pop();
+
+    }
+  }
+}
+
+function openCirclesMotif2(p) {
+  
+  p.fill(0);
+  p.stroke(255);
+
+  // wtp
+  if (selData[0].gccs_wtp) {
+    //h = hScale(selData[0].gccs_wtp);
+    //p.fill(colors['gccs_wtp']);
+    p.arc(-cellWidth/6, -cellWidth/6, cellWidth*0.75, cellWidth*0.75, 0, 3*p.PI/2);
+  }
+
+  // wtp_belief
+  if (selData[0].gccs_wtp_belief) {
+    //h = hScale(selData[0].gccs_wtp_belief);
+    //p.fill(colors['gccs_wtp_belief']);
+    p.arc(cellWidth/6, -cellWidth/6, cellWidth*0.75, cellWidth*0.75, p.PI, p.PI/2);
+  }
+
+  // norm
+  if (selData[0].gccs_norm) {
+    //h = hScale(selData[0].gccs_norm);
+    //p.fill(colors['gccs_norm']);
+    p.arc(cellWidth/6, cellWidth/6, cellWidth*0.75, cellWidth*0.75, 0, 3*p.PI/2);
+  }
+
+  // government
+  if (selData[0].gccs_government) {
+    //h = hScale(selData[0].gccs_government);
+    //p.fill(colors['gccs_government']);
+    p.arc(cellWidth/2, cellWidth/6, cellWidth*0.75, cellWidth*0.75, p.PI, p.PI/2);
+  }
+
+}
+
+
 
 function arcMotif2(p) {
 
@@ -831,6 +965,7 @@ function arcMotif2(p) {
 }
 
 function circlesMotif(p) {
+  // filled circles in a 2x2 grid
 
   p.noStroke();
   let selVar;
@@ -849,32 +984,10 @@ function circlesMotif(p) {
 
     }
   }
-
-}
-
-function squaresMotif(p) {
-
-  p.noStroke();
-  let selVar;
-  let initialRotation = p.PI;
-
-  for (let i=0; i<4; i++) {
-    selVar = order[i];
-    //console.log('selVar', selVar);
-    if (selData[0][selVar]) {
-      p.fill(colors[selVar]);
-      r = rScaleHalfCell(selData[0][selVar]);
-      p.push();
-      p.rotate(initialRotation + i*p.PI/2);
-      p.rect(0, 0, r, r);
-      p.pop();
-
-    }
-  }
-
 }
 
 function circlesMotif2(p) {
+  // concentric non-filled circles
 
   p.noFill();
   p.strokeWeight(2);
