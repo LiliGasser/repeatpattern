@@ -14,6 +14,7 @@ let color1;
 let color2;
 let color3;
 let color4;
+let colorbg;
 let typefaceSelect;
 let exportButton;
 
@@ -140,6 +141,8 @@ function initializeSelects(p) {
   color3 = p.select('#color3');
   let color4HTML = document.getElementById('color4');
   color4 = p.select('#color4');
+  let colorbgHTML = document.getElementById('colorbg');
+  colorbg = p.select('#colorbg');
 
   let typefaceSelectHTML = document.getElementById('typeface');
   typefaceSelect = p.select('#typeface');
@@ -178,6 +181,9 @@ function initializeSelects(p) {
   color4HTML.addEventListener('change', function(event) {
     updateColors(p);
   });
+  colorbgHTML.addEventListener('change', function(event) {
+    updateColors(p);
+  });
   typefaceSelectHTML.addEventListener('change', function(event) {
     updatePostcard(p);
   });
@@ -203,13 +209,12 @@ function sketch1(p) {
   };
 
   p.draw = function () {
-    p.background(255);
+    p.background(colors['background']);
 
     // TODO choose font
     // https://p5js.org/tutorials/loading-and-selecting-fonts/
     // https://www.fontsquirrel.com/fonts/list/find_fonts
     p.textFont(typefaceSelect.value());
-    console.log(typefaceSelect.value());
 
     // rectangle around card
     p.noFill()
@@ -218,7 +223,6 @@ function sketch1(p) {
     p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
-    //p.rectMode(p.TOP, p.LEFT);
     x = initialCellPositionX;
     y = initialCellPositionY;
     cellCount = 1;
@@ -282,14 +286,13 @@ function sketch2(p) {
     p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
-    //p.rectMode(p.TOP, p.LEFT);
     let xMotif = bWidth*0.2;
     let yMotif = bHeight*0.4;
     let bScale = p.min(bWidth/cellWidth, bHeight/cellHeight)*0.3
 
     // draw scaled motif, without symmetry operations
     if (selData.length > 0) {
-      console.log("in sketch2 draw")
+      //console.log("in sketch2 draw")
       p.push();
       p.translate(xMotif, yMotif);
       p.scale(bScale, bScale);
@@ -300,7 +303,6 @@ function sketch2(p) {
       // draw grid cell 
       // TODO move to function again
       if (showGrid.checked()) {
-        //p.rectMode(p.TOP, p.LEFT);
         p.noFill();
         p.stroke(100);
         p.strokeWeight(0.2);
@@ -362,14 +364,13 @@ function sketch3(p) {
     p.background(255);
 
     // initialize
-    //p.rectMode(p.TOP, p.LEFT);
     let xMotif = mWidth/2;
     let yMotif = mHeight/2;
     let mScale = p.min(mWidth/cellWidth, mHeight/cellHeight)*0.8
 
     // draw scaled motif, without symmetry operations
     if (selData.length > 0) {
-      console.log("in sketch3 draw")
+      //console.log("in sketch3 draw")
       p.push();
       p.translate(xMotif, yMotif);
       p.scale(mScale, mScale);
@@ -380,7 +381,6 @@ function sketch3(p) {
       // draw grid cell 
       // TODO move to function again
       if (showGrid.checked()) {
-        //p.rectMode(p.TOP, p.LEFT);
         p.noFill();
         p.stroke(100);
         p.strokeWeight(0.2);
@@ -458,8 +458,10 @@ function updateColors(p) {
     'gccs_wtp_belief': p.color(color2.value()),
     'gccs_norm': p.color(color3.value()),
     'gccs_government': p.color(color4.value()),
+    'background': p.color(colorbg.value()),
   }
 
+  console.log('color change', colors);
   p.redraw();
 
 }
@@ -485,7 +487,6 @@ function updatePostcard(p) {
 // TODO fix for rowIndent
 function drawGridCell(p) {
 
-  //np.rectMode(p.TOP, p.LEFT);
   p.noFill();
   p.stroke(100);
   p.strokeWeight(0.2);
@@ -542,6 +543,8 @@ function addCountryText(p) {
 }
 
 function addLegendText(p) {
+  // TODO add around motif?
+  // TODO short sentence for WTP, statements for rest?
 
   // legend text
   let xPos = 20;
