@@ -5,9 +5,7 @@ let sketch3Instance;
 let canvas;
 let countrySelect;
 let nCellsXInput;
-//let cellsAspectratioInput;
 let relMotifSizeInput;
-//let nAddCellsInput;
 let rowIndentInput;
 let showGrid;
 let symmetrySelect;
@@ -16,9 +14,8 @@ let color1;
 let color2;
 let color3;
 let color4;
+let typefaceSelect;
 let exportButton;
-let exportButtonBack;
-let exportButtonMotif;
 
 // initialize data structure
 let data = [];
@@ -44,9 +41,6 @@ let frame = {
   'top': 0.05,
   'bottom': 0.05,
 }
-
-// 2 canvases: https://p5js.org/examples/advanced-canvas-rendering-multiple-canvases/
-// Does something similar as is needed in Vue
 
 // Scaling: https://p5js.org/tutorials/coordinates-and-transformations/
 
@@ -126,12 +120,8 @@ function initializeSelects(p) {
   countrySelect = p.select('#country');
   let nCellsXInputHTML = document.getElementById('ncellsx');
   nCellsXInput = p.select('#ncellsx')
-  //let cellsAspectratioInputHTML = document.getElementById('cellaspectratio');
-  //cellsAspectratioInput = p.select('#cellaspectratio')
   let relMotifSizeInputHTML = document.getElementById('relmotifsize');
   relMotifSizeInput = p.select('#relmotifsize');
-  //let nAddCellsInputHTML = document.getElementById('naddcells');
-  //nAddCellsInput = p.select('#naddcells');
   let rowIndentInputHTML = document.getElementById('rowindent');
   rowIndentInput = p.select('#rowindent');
   let showGridHTML = document.getElementById('showgrid');
@@ -151,6 +141,9 @@ function initializeSelects(p) {
   let color4HTML = document.getElementById('color4');
   color4 = p.select('#color4');
 
+  let typefaceSelectHTML = document.getElementById('typeface');
+  typefaceSelect = p.select('#typeface');
+
   // Add event listeners
   countrySelectHTML.addEventListener('change', function(event) {
     selectCountry(p);
@@ -158,15 +151,9 @@ function initializeSelects(p) {
   nCellsXInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   })
-  //cellsAspectratioInputHTML.addEventListener('change', function(event) {
-    //updateGrid(p);
-  //})
   relMotifSizeInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   });
-  //nAddCellsInputHTML.addEventListener('change', function(event) {
-    //updateGrid(p);
-  //});
   rowIndentInputHTML.addEventListener('change', function(event) {
     updatePostcard(p);
   });
@@ -190,6 +177,9 @@ function initializeSelects(p) {
   });
   color4HTML.addEventListener('change', function(event) {
     updateColors(p);
+  });
+  typefaceSelectHTML.addEventListener('change', function(event) {
+    updatePostcard(p);
   });
 
 }
@@ -215,14 +205,20 @@ function sketch1(p) {
   p.draw = function () {
     p.background(255);
 
+    // TODO choose font
+    // https://p5js.org/tutorials/loading-and-selecting-fonts/
+    // https://www.fontsquirrel.com/fonts/list/find_fonts
+    p.textFont(typefaceSelect.value());
+    console.log(typefaceSelect.value());
+
     // rectangle around card
     p.noFill()
-    p.stroke('red');
+    p.stroke('black');
     p.strokeWeight(1);
     p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
-    p.rectMode(p.TOP, p.LEFT);
+    //p.rectMode(p.TOP, p.LEFT);
     x = initialCellPositionX;
     y = initialCellPositionY;
     cellCount = 1;
@@ -242,7 +238,6 @@ function sketch1(p) {
       if (selData.length > 0) {
         p.push();
         p.translate(x + cellWidth/2, y + cellHeight/2);
-        //p.scale(cellsAspectratio, 1);
         p.scale(relMotifSize, relMotifSize);
         if (symmetrySelect.value() === '180degreeRotations') {
           p.rotate(initialCellRotation + i*p.PI);
@@ -278,17 +273,19 @@ function sketch2(p) {
   p.draw = function () {
     p.background(255);
 
+    p.textFont(typefaceSelect.value());
+
     // rectangle around card
     p.noFill()
-    p.stroke('red');
+    p.stroke('black');
     p.strokeWeight(1);
     p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
-    p.rectMode(p.TOP, p.LEFT);
-    let xMotif = bWidth/2;
-    let yMotif = bHeight/2;
-    let bScale = p.min(bWidth/cellWidth, bHeight/cellHeight)*0.5
+    //p.rectMode(p.TOP, p.LEFT);
+    let xMotif = bWidth*0.2;
+    let yMotif = bHeight*0.4;
+    let bScale = p.min(bWidth/cellWidth, bHeight/cellHeight)*0.3
 
     // draw scaled motif, without symmetry operations
     if (selData.length > 0) {
@@ -297,14 +294,13 @@ function sketch2(p) {
       p.translate(xMotif, yMotif);
       p.scale(bScale, bScale);
       p.push();
-      //p.scale(cellsAspectratio, 1);
       drawMotif(p);
       p.pop();
 
       // draw grid cell 
       // TODO move to function again
       if (showGrid.checked()) {
-        p.rectMode(p.TOP, p.LEFT);
+        //p.rectMode(p.TOP, p.LEFT);
         p.noFill();
         p.stroke(100);
         p.strokeWeight(0.2);
@@ -321,16 +317,34 @@ function sketch2(p) {
       addLegendText(p);
     }
 
+    // add source as separating line
+    // TODO add link to my scrollytelling website
+    // TODO add my name and contact
+    // TODO add HKB CAS GDD
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textSize(12);
+    p.noStroke();
+    p.fill(150);
+    p.push();
+    p.translate(pcWidth*0.55, pcHeight/2);
+    p.rotate(-p.PI/2);
+    p.text(
+      'Data from the global climate change survey. https://gccs.iza.org/',
+      0,
+      0,
+    )
+    p.pop();
+
+
     // address block
     p.push();
     p.noFill();
     p.stroke(200);
     p.strokeWeight(0.8);
-    p.line(bWidth, 70, bWidth, bHeight - 70);
-    p.line(bWidth + 70, bHeight*0.50, pcWidth - 70, bHeight*0.50);
-    p.line(bWidth + 70, bHeight*0.58, pcWidth - 70, bHeight*0.58);
-    p.line(bWidth + 70, bHeight*0.66, pcWidth - 70, bHeight*0.66);
-    p.line(bWidth + 70, bHeight*0.74, pcWidth - 70, bHeight*0.74);
+    p.line(bWidth*1.08 + 60, bHeight*0.50, pcWidth - 70, bHeight*0.50);
+    p.line(bWidth*1.08 + 60, bHeight*0.58, pcWidth - 70, bHeight*0.58);
+    p.line(bWidth*1.08 + 60, bHeight*0.66, pcWidth - 70, bHeight*0.66);
+    p.line(bWidth*1.08 + 60, bHeight*0.74, pcWidth - 70, bHeight*0.74);
     p.pop();
 
   }
@@ -348,7 +362,7 @@ function sketch3(p) {
     p.background(255);
 
     // initialize
-    p.rectMode(p.TOP, p.LEFT);
+    //p.rectMode(p.TOP, p.LEFT);
     let xMotif = mWidth/2;
     let yMotif = mHeight/2;
     let mScale = p.min(mWidth/cellWidth, mHeight/cellHeight)*0.8
@@ -360,14 +374,13 @@ function sketch3(p) {
       p.translate(xMotif, yMotif);
       p.scale(mScale, mScale);
       p.push();
-      //p.scale(cellsAspectratio, 1);
       drawMotif(p);
       p.pop();
 
       // draw grid cell 
       // TODO move to function again
       if (showGrid.checked()) {
-        p.rectMode(p.TOP, p.LEFT);
+        //p.rectMode(p.TOP, p.LEFT);
         p.noFill();
         p.stroke(100);
         p.strokeWeight(0.2);
@@ -423,12 +436,10 @@ function updateGrid(p) {
   // Calculate number of cells
   nCellsX = parseInt(nCellsXInput.value());
   cellWidth = distanceX / nCellsX;
-  //cellsAspectratio = parseFloat(cellsAspectratioInput.value());
   cellHeight = cellWidth / cellsAspectratio;  // aspectratio = width / height
   let nCellsY = Math.floor(distanceY / cellHeight);
   nCells = nCellsX * nCellsY;
   console.log('nCells: ' + nCells, nCellsX, nCellsY, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
-  //nCellsAdditional = parseFloat(nAddCellsInput.value());
 
   // Relative motif size
   relMotifSize = parseFloat(relMotifSizeInput.value());
@@ -474,7 +485,7 @@ function updatePostcard(p) {
 // TODO fix for rowIndent
 function drawGridCell(p) {
 
-  p.rectMode(p.TOP, p.LEFT);
+  //np.rectMode(p.TOP, p.LEFT);
   p.noFill();
   p.stroke(100);
   p.strokeWeight(0.2);
@@ -522,10 +533,6 @@ function addCountryText(p) {
   // text
   p.noStroke();
   p.fill(150);
-  // TODO choose font
-  // https://p5js.org/tutorials/loading-and-selecting-fonts/
-  // https://www.fontsquirrel.com/fonts/list/find_fonts
-  p.textFont("Verdana");  // Option: Avantgarde
   p.text(
     selCountry, 
     pcWidth / 2, 
@@ -539,88 +546,60 @@ function addLegendText(p) {
   // legend text
   let xPos = 20;
   p.textAlign(p.TOP, p.LEFT);
-  // TODO choose font
-  // https://p5js.org/tutorials/loading-and-selecting-fonts/
-  // https://www.fontsquirrel.com/fonts/list/find_fonts
-  p.textFont("Verdana");
   p.noStroke();
   p.fill(50);
   p.textSize(20);
   p.text(
-    'Good news',
+    'Share the good news',
     xPos,
     60,
   )
   p.textSize(14);
   p.fill(colors['gccs_wtp']);
   p.text(
-    `In ${selCountry}, ${selData[0]['gccs_wtp']}% of the people are willing`, 
+    `${selData[0]['gccs_wtp']}% of the people in ${selCountry} are willing to give 1% of their income`, 
     xPos,
     90,
   );
   p.text(
-    "to give 1% of their income to fight global warming.", 
+    "to fight global warming.", 
     xPos,
     110,
   );
   p.fill(colors['gccs_wtp_belief']);
   p.text(
-    `Interestingly, they think that only ${selData[0]['gccs_wtp_belief']}% of the others`, 
+    `They think that only ${selData[0]['gccs_wtp_belief']}% of the others are also willing to do so, `, 
     xPos,
-    140,
-  );
-  p.text(
-    "are also willing to fight global warming,", 
-    xPos,
-    160,
+    130,
   );
   p.text(
     `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`, 
     xPos,
-    180,
+    150,
   );
   p.fill(colors['gccs_norm']);
   p.text(
-    `Also, ${selData[0]['gccs_norm']}% think that social norms should`,
+    `${selData[0]['gccs_norm']}% think that others should try to fight global warming.`,
     xPos,
-    460,
-  )
-  p.text(
-    "be climate-friendly.",
-    xPos,
-    480,
+    330,
   )
   p.fill(colors['gccs_government']);
   p.text(
-    `And ${selData[0]['gccs_government']}% think that politics and `,
+    `${selData[0]['gccs_government']}% think that their national government should do more.`,
     xPos,
-    510,
-  )
-  p.text(
-    "politicians should do more.",
-    xPos,
-    530,
+    350,
   )
 
   p.fill(100);
   p.text(
-    "This difference in perception is reported in 125 countries across the globe,",
+    "This difference in perception is reported in 125 countries,",
     xPos,
-    560,
+    370,
   )
   p.text(
-    "all that participated in the survey (see source).",
+    "in every country partcipating in the survey.",
     xPos,
-    580,
-  )
-
-  // reference
-  p.textSize(12);
-  p.fill(150);
-  p.text(
-    'Data from global climate change survey. https://gccs.iza.org/',
-    20,
-    pcHeight - 10,
+    390,
   )
 
 }
@@ -662,8 +641,9 @@ function exportCanvases() {
 function windwheelMotif(p) {
   // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
 
-  p.stroke(0);
-  p.strokeWeight(0);
+  p.noStroke();
+  //p.stroke(0);
+  //p.strokeWeight(0);
 
   let adjustedHypotenuse;
   let selVar;
@@ -806,7 +786,7 @@ function arcMotif2(p) {
 function circlesMotif(p) {
 
   p.noFill();
-  p.strokeWeight(3);
+  p.strokeWeight(2);
   let selVar;
   let c = [];
 

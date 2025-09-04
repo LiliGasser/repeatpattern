@@ -7,6 +7,8 @@
     <title>Sketch</title>
 
     <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- fonts -->
+    <link rel="stylesheet" href="https://use.typekit.net/pda2xrb.css">
 
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script>
@@ -126,24 +128,10 @@
                 <input type="number" id="ncellsx" value="12" min="1"/>
             </div>
 
-            <!--
-            <div class="control-group">
-                <label for="cellaspectratio">Cell aspect ratio </label>
-                <input type="number" id="cellaspectratio" value="1" min="0" />
-            </div>
-            -->
-
             <div class="control-group">
                 <label for="relmotifsize">Rel. motif size </label>
                 <input type="number" id="relmotifsize" value="1" min="0"/>
             </div>
-            
-            <!--
-            <div class="control-group">
-                <label for="naddcells"># additional cells </label>
-                <input type="number" id="naddcells" value="0" min="0" max="10" />
-            </div>
-            -->
 
             <div class="control-group">
                 <label for="rowindent">Row indent </label>
@@ -168,10 +156,10 @@
                 <label for="motif">Motif</label>
                 <select id="motif">
                     <option value="windwheelMotif" selected>Wind wheel</option>
-                    <option value="flowerMotif" selected>Flower</option>
+                    <option value="flowerMotif" >Flower</option>
                     <option value="arcMotif" >Arc</option>
-                    <option value="arcMotif2" >Arc 2</option>
-                    <option value="circlesMotif" selected>Circles</option>
+                    <option value="arcMotif2" selected>Arc 2</option>
+                    <option value="circlesMotif" >Circles</option>
                     <option value="alphaMotifRect" >Alpha Rect</option>
                     <option value="alphaMotifEllipse" >Alpha Ellipse</option>
                 </select>
@@ -216,10 +204,23 @@
                     type="color"
                     id="color4"
                     name="color4"
-                    value="#bcf4f5"
+                    value="#abe7e8"
                     colorspace="display-p3"
                     alpha />
               </div>
+
+            <div class="control-group">
+                <label for="typeface">Typeface</label>
+                <select id="typeface">
+                    <option value="soleil" selected>Soleil</option>
+                    <option value="houschka-pro" >Houschka Pro</option>
+                    <option value="fenwick" >Fenwick</option>
+                    <option value="halcom" >Halcom</option>
+                    <option value="mundial" >Mundial</option>
+                    <option value="sofia-pro" >Sofia Pro</option>
+                    <option value="sofia-pro-soft" >Sofia Pro Soft</option>
+                </select>
+            </div>
 
             <div class="button">
               <button id="exportButton">Export as SVG</button>
