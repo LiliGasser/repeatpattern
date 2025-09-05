@@ -648,7 +648,7 @@ function addLegendText(p) {
   p.textSize(14);
   p.fill(colors['gccs_wtp']);
   p.text(
-    `${selData[0]['gccs_wtp']}% of the people in ${selCountry} are willing to give 1% of their income`, 
+    `${selData[0]['gccs_wtp']}% of the people ${selData[0]['country_prefix'].toLowerCase()} ${selCountry} are willing to give 1% of their income`, 
     xPos,
     90,
   );

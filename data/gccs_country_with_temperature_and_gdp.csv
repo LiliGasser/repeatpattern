@@ -1,126 +1,134 @@
-﻿iso3;country;gdp;temperature;gccs_wtp;gccs_wtp_belief;gccs_norm;gccs_government
-USA;United States;58018;10;48;33;79;74
-EGY;Egypt;10148;24;30;27;63;84
-MAR;Morocco;7141;18;83;54;86;93
-LBN;Lebanon;17951;16;59;41;67;74
-SAU;Saudi Arabia;45379;26;77;52;88;
-JOR;Jordan;10621;20;62;34;77;86
-TUR;Turkey;24792;12;66;40;83;89
-PAK;Pakistan;4542;21;47;31;77;81
-IDN;Indonesia;9984;26;80;44;84;86
-BGD;Bangladesh;4312;26;83;49;87;94
-GBR;United Kingdom;44594;9;48;37;87;83
-FRA;France;43643;12;51;39;88;85
-DEU;Germany;51085;10;68;40;90;86
-NLD;Netherlands;53507;11;66;42;86;82
-BEL;Belgium;49411;11;61;38;91;90
-ESP;Spain;37763;14;65;41;86;88
-ITA;Italy;41468;14;64;39;92;93
-POL;Poland;27683;9;64;38;47;86
-HUN;Hungary;27514;12;73;37;91;88
-CZE;Czech Republic;36216;9;55;32;87;88
-ROU;Romania;24341;11;69;33;89;94
-SWE;Sweden;50217;3;72;44;91;85
-GRC;Greece;29224;14;78;36;88;93
-DNK;Denmark;53229;9;72;46;91;73
-IRN;Iran;14645;19;76;44;91;95
-HKG;Hong Kong;56600;23;65;31;93;95
-SGP;Singapore;88743;28;53;35;91;93
-JPN;Japan;40028;12;49;24;88;86
-CHN;China;12326;8;81;56;96;97
-IND;India;5335;25;64;36;77;80
-VEN;Venezuela;15938;26;85;45;94;96
-BRA;Brazil;15017;26;67;43;92;95
-MEX;Mexico;19304;22;75;42;96;96
-NGA;Nigeria;5147;28;67;39;79;89
-KEN;Kenya;4125;25;79;39;82;93
-TZA;Tanzania;2279;23;64;45;70;82
-ISR;Israel;37394;21;37;19;76;89
-GHA;Ghana;4616;28;72;40;84;89
-UGA;Uganda;2079;23;75;38;89;94
-BEN;Benin;2847;28;84;44;87;93
-MDG;Madagascar;1522;23;71;34;77;83
-MWI;Malawi;1428;23;71;39;64;76
-ZAF;South Africa;13859;19;54;34;81;88
-CAN;Canada;47251;-4;49;34;87;82
-AUS;Australia;47323;22;56;39;85;83
-PHL;Philippines;7165;26;81;49;90;94
-LKA;Sri Lanka;12043;27;80;47;87;95
-VNM;Vietnam;8041;25;77;50;93;97
-THA;Thailand;15945;27;58;46;92;93
-KHM;Cambodia;3514;28;87;55;96;96
-LAO;Laos;6321;24;85;50;83;87
-MMR;Myanmar;3766;24;93;60;95;
-NZL;New Zealand;40521;11;46;36;84;74
-BWA;Botswana;14048;22;71;49;85;91
-MLI;Mali;2064;29;86;42;94;97
-MOZ;Mozambique;1210;25;76;41;65;69
-SEN;Senegal;3036;29;79;48;91;91
-ZMB;Zambia;3316;22;81;55;75;86
-KOR;South Korea;38515;12;71;35;92;94
-TWN;Taiwan;45699;20;62;30;93;95
-AFG;Afghanistan;2087;14;82;41;90;88
-GEO;Georgia;12397;10;83;51;91;96
-KAZ;Kazakhstan;23876;7;45;38;71;79
-KGZ;Kyrgyzstan;4724;3;73;53;85;87
-MDA;Moldova;10506;11;65;40;79;91
-RUS;Russia;25807;-3;41;29;71;79
-UKR;Ukraine;12330;10;59;32;84;86
-BFA;Burkina Faso;1875;29;84;42;87;90
-CMR;Cameroon;3542;25;82;43;81;90
-SLE;Sierra Leone;1629;27;83;44;82;89
-ZWE;Zimbabwe;2233;22;72;42;56;67
-CRI;Costa Rica;18819;25;81;44;95;95
-ALB;Albania;11991;13;71;44;87;93
-DZA;Algeria;11512;24;55;40;80;90
-ARG;Argentina;23580;15;62;38;92;93
-ARM;Armenia;11384;8;75;41;83;84
-AUT;Austria;53567;8;73;38;87;84
-BOL;Bolivia;7616;21;85;44;96;98
-BIH;Bosnia Herzegovina;12310;11;82;41;86;91
-BGR;Bulgaria;20155;12;70;33;88;91
-CHL;Chile;23873;10;65;36;97;98
-COL;Colombia;13676;25;77;50;95;97
-COG;Congo Brazzaville;4652;25;77;38;77;84
-HRV;Croatia;25736;12;70;37;85;83
-CYP;Cyprus;36998;19;76;38;94;96
-DOM;Dominican Republic;14985;25;83;43;87;93
-ECU;Ecuador;11482;22;78;44;95;96
-SLV;El Salvador;8220;25;73;43;92;92
-EST;Estonia;31103;7;54;36;79;70
-FIN;Finland;46444;3;55;36;87;62
-GAB;Gabon;14452;25;81;41;88;89
-GTM;Guatemala;7990;24;72;41;90;90
-GIN;Guinea;2145;26;84;39;88;94
-HND;Honduras;5183;25;59;41;89;89
-ISL;Iceland;52089;2;72;44;92;81
-IRQ;Iraq;9467;23;65;38;69;73
-IRL;Ireland;66389;10;65;37;89;88
-CIV;Ivory Coast;4244;27;83;44;86;91
-JAM;Jamaica;9880;26;70;34;84;93
-LVA;Latvia;26130;7;54;31;77;77
-LTU;Lithuania;30475;8;41;26;86;89
-MKD;North Macedonia;14910;11;76;41;89;94
-MYS;Malaysia;23790;27;67;40;92;96
-MLT;Malta;38624;20;68;41;92;93
-MUS;Mauritius;20359;24;85;54;95;97
-MNG;Mongolia;10554;1;90;64;92;93
-NAM;Namibia;10102;21;63;37;86;90
-NPL;Nepal;3211;14;83;42;87;91
-NIC;Nicaragua;5323;26;81;46;93;96
-NOR;Norway;62764;2;67;42;91;77
-PAN;Panama;27536;26;72;39;90;93
-PRY;Paraguay;12607;24;86;47;95;96
-PER;Peru;11723;20;77;40;93;96
-PRT;Portugal;31874;16;58;41;97;96
-SRB;Serbia;15912;12;76;38;88;90
-SVK;Slovakia;28352;9;68;33;92;89
-SVN;Slovenia;34705;10;76;44;93;91
-CHE;Switzerland;68178;7;68;41;91;84
-TJK;Tajikistan;2932;4;78;51;91;95
-TGO;Togo;1843;28;80;39;92;97
-TUN;Tunisia;10689;21;58;36;62;83
-ARE;United Arab Emirates;65295;29;82;54;92;
-URY;Uruguay;21969;18;65;40;90;90
-UZB;Uzbekistan;6181;14;92;63;96;93
-XKX;Kosovo;9304;11;84;48;89;93
+﻿iso3;country;country_prefix;country_de;country_de_prefix;gdp;temperature;gccs_wtp;gccs_wtp_belief;gccs_norm;gccs_government;;iso3;country;country_de;gdp;temperature;gccs_wtp;gccs_wtp_belief;gccs_norm;gccs_government
+USA;United States;In the;Vereinigte Staaten;In den;58018;10;48;33;79;74;;USA;United States;Vereinigte Staaten;58018;10;48;33;79;74
+EGY;Egypt;In;Ägypten;In;10148;24;30;27;63;84;;EGY;Egypt;Ägypten;10148;24;30;27;63;84
+MAR;Morocco;In;Marokko;In;7141;18;83;54;86;93;;MAR;Morocco;Marokko;7141;18;83;54;86;93
+LBN;Lebanon;In;Libanon;Im;17951;16;59;41;67;74;;LBN;Lebanon;Libanon;17951;16;59;41;67;74
+SAU;Saudi Arabia;In;Saudi-Arabien;In;45379;26;77;52;88;;;SAU;Saudi Arabia;Saudi-Arabien;45379;26;77;52;88;
+JOR;Jordan;In;Jordanien;In;10621;20;62;34;77;86;;JOR;Jordan;Jordanien;10621;20;62;34;77;86
+TUR;Turkey;In;Türkei;In der;24792;12;66;40;83;89;;TUR;Turkey;Türkei;24792;12;66;40;83;89
+PAK;Pakistan;In;Pakistan;In;4542;21;47;31;77;81;;PAK;Pakistan;Pakistan;4542;21;47;31;77;81
+IDN;Indonesia;In;Indonesien;In;9984;26;80;44;84;86;;IDN;Indonesia;Indonesien;9984;26;80;44;84;86
+BGD;Bangladesh;In;Bangladesch;In;4312;26;83;49;87;94;;BGD;Bangladesh;Bangladesch;4312;26;83;49;87;94
+GBR;United Kingdom;In the;Vereinigtes Königreich;Im;44594;9;48;37;87;83;;GBR;United Kingdom;Vereinigtes Königreich;44594;9;48;37;87;83
+FRA;France;In;Frankreich;In;43643;12;51;39;88;85;;FRA;France;Frankreich;43643;12;51;39;88;85
+DEU;Germany;In;Deutschland;In;51085;10;68;40;90;86;;DEU;Germany;Deutschland;51085;10;68;40;90;86
+NLD;Netherlands;In;Niederlande;In den;53507;11;66;42;86;82;;NLD;Netherlands;Niederlande;53507;11;66;42;86;82
+BEL;Belgium;In;Belgien;In;49411;11;61;38;91;90;;BEL;Belgium;Belgien;49411;11;61;38;91;90
+ESP;Spain;In;Spanien;In;37763;14;65;41;86;88;;ESP;Spain;Spanien;37763;14;65;41;86;88
+ITA;Italy;In;Italien;In;41468;14;64;39;92;93;;ITA;Italy;Italien;41468;14;64;39;92;93
+POL;Poland;In;Polen;In;27683;9;64;38;47;86;;POL;Poland;Polen;27683;9;64;38;47;86
+HUN;Hungary;In;Ungarn;In;27514;12;73;37;91;88;;HUN;Hungary;Ungarn;27514;12;73;37;91;88
+CZE;Czech Republic;In the;Tschechien;In;36216;9;55;32;87;88;;CZE;Czech Republic;Tschechien;36216;9;55;32;87;88
+ROU;Romania;In;Rumänien;In;24341;11;69;33;89;94;;ROU;Romania;Rumänien;24341;11;69;33;89;94
+SWE;Sweden;In;Schweden;In;50217;3;72;44;91;85;;SWE;Sweden;Schweden;50217;3;72;44;91;85
+GRC;Greece;In;Griechenland;In;29224;14;78;36;88;93;;GRC;Greece;Griechenland;29224;14;78;36;88;93
+DNK;Denmark;In;Dänemark;In;53229;9;72;46;91;73;;DNK;Denmark;Dänemark;53229;9;72;46;91;73
+IRN;Iran;In;Iran;Im;14645;19;76;44;91;95;;IRN;Iran;Iran;14645;19;76;44;91;95
+HKG;Hong Kong;In;Hongkong;In;56600;23;65;31;93;95;;HKG;Hong Kong;Hongkong;56600;23;65;31;93;95
+SGP;Singapore;In;Singapur;In;88743;28;53;35;91;93;;SGP;Singapore;Singapur;88743;28;53;35;91;93
+JPN;Japan;In;Japan;In;40028;12;49;24;88;86;;JPN;Japan;Japan;40028;12;49;24;88;86
+CHN;China;In;China;In;12326;8;81;56;96;97;;CHN;China;China;12326;8;81;56;96;97
+IND;India;In;Indien;In;5335;25;64;36;77;80;;IND;India;Indien;5335;25;64;36;77;80
+VEN;Venezuela;In;Venezuela;In;15938;26;85;45;94;96;;VEN;Venezuela;Venezuela;15938;26;85;45;94;96
+BRA;Brazil;In;Brasilien;In;15017;26;67;43;92;95;;BRA;Brazil;Brasilien;15017;26;67;43;92;95
+MEX;Mexico;In;Mexiko;In;19304;22;75;42;96;96;;MEX;Mexico;Mexiko;19304;22;75;42;96;96
+NGA;Nigeria;In;Nigeria;In;5147;28;67;39;79;89;;NGA;Nigeria;Nigeria;5147;28;67;39;79;89
+KEN;Kenya;In;Kenia;In;4125;25;79;39;82;93;;KEN;Kenya;Kenia;4125;25;79;39;82;93
+TZA;Tanzania;In;Tansania;In;2279;23;64;45;70;82;;TZA;Tanzania;Tansania;2279;23;64;45;70;82
+ISR;Israel;In;Israel;In;37394;21;37;19;76;89;;ISR;Israel;Israel;37394;21;37;19;76;89
+GHA;Ghana;In;Ghana;In;4616;28;72;40;84;89;;GHA;Ghana;Ghana;4616;28;72;40;84;89
+UGA;Uganda;In;Uganda;In;2079;23;75;38;89;94;;UGA;Uganda;Uganda;2079;23;75;38;89;94
+BEN;Benin;In;Benin;In;2847;28;84;44;87;93;;BEN;Benin;Benin;2847;28;84;44;87;93
+MDG;Madagascar;In;Madagaskar;In;1522;23;71;34;77;83;;MDG;Madagascar;Madagaskar;1522;23;71;34;77;83
+MWI;Malawi;In;Malawi;In;1428;23;71;39;64;76;;MWI;Malawi;Malawi;1428;23;71;39;64;76
+ZAF;South Africa;In;Südafrika;In;13859;19;54;34;81;88;;ZAF;South Africa;Südafrika;13859;19;54;34;81;88
+CAN;Canada;In;Kanada;In;47251;-4;49;34;87;82;;CAN;Canada;Kanada;47251;-4;49;34;87;82
+AUS;Australia;In;Australien;In;47323;22;56;39;85;83;;AUS;Australia;Australien;47323;22;56;39;85;83
+PHL;Philippines;In the;Philippinen;In den;7165;26;81;49;90;94;;PHL;Philippines;Philippinen;7165;26;81;49;90;94
+LKA;Sri Lanka;In;Sri Lanka;In;12043;27;80;47;87;95;;LKA;Sri Lanka;Sri Lanka;12043;27;80;47;87;95
+VNM;Vietnam;In;Vietnam;In;8041;25;77;50;93;97;;VNM;Vietnam;Vietnam;8041;25;77;50;93;97
+THA;Thailand;In;Thailand;In;15945;27;58;46;92;93;;THA;Thailand;Thailand;15945;27;58;46;92;93
+KHM;Cambodia;In;Kambodscha;In;3514;28;87;55;96;96;;KHM;Cambodia;Kambodscha;3514;28;87;55;96;96
+LAO;Laos;In;Laos;In;6321;24;85;50;83;87;;LAO;Laos;Laos;6321;24;85;50;83;87
+MMR;Myanmar;In;Myanmar;In;3766;24;93;60;95;;;MMR;Myanmar;Myanmar;3766;24;93;60;95;
+NZL;New Zealand;In;Neuseeland;In;40521;11;46;36;84;74;;NZL;New Zealand;Neuseeland;40521;11;46;36;84;74
+BWA;Botswana;In;Botswana;In;14048;22;71;49;85;91;;BWA;Botswana;Botswana;14048;22;71;49;85;91
+MLI;Mali;In;Mali;In;2064;29;86;42;94;97;;MLI;Mali;Mali;2064;29;86;42;94;97
+MOZ;Mozambique;In;Mosambik;In;1210;25;76;41;65;69;;MOZ;Mozambique;Mosambik;1210;25;76;41;65;69
+SEN;Senegal;In;Senegal;In;3036;29;79;48;91;91;;SEN;Senegal;Senegal;3036;29;79;48;91;91
+ZMB;Zambia;In;Sambia;In;3316;22;81;55;75;86;;ZMB;Zambia;Sambia;3316;22;81;55;75;86
+KOR;South Korea;In;Südkorea;In;38515;12;71;35;92;94;;KOR;South Korea;Südkorea;38515;12;71;35;92;94
+TWN;Taiwan;In;Taiwan;In;45699;20;62;30;93;95;;TWN;Taiwan;Taiwan;45699;20;62;30;93;95
+AFG;Afghanistan;In;Afghanistan;In;2087;14;82;41;90;88;;AFG;Afghanistan;Afghanistan;2087;14;82;41;90;88
+GEO;Georgia;In;Georgien;In;12397;10;83;51;91;96;;GEO;Georgia;Georgien;12397;10;83;51;91;96
+KAZ;Kazakhstan;In;Kasachstan;In;23876;7;45;38;71;79;;KAZ;Kazakhstan;Kasachstan;23876;7;45;38;71;79
+KGZ;Kyrgyzstan;In;Kirgisistan;In;4724;3;73;53;85;87;;KGZ;Kyrgyzstan;Kirgisistan;4724;3;73;53;85;87
+MDA;Moldova;In;Moldawien;In;10506;11;65;40;79;91;;MDA;Moldova;Moldawien;10506;11;65;40;79;91
+RUS;Russia;In;Russland;In;25807;-3;41;29;71;79;;RUS;Russia;Russland;25807;-3;41;29;71;79
+UKR;Ukraine;In the;Ukraine;In der;12330;10;59;32;84;86;;UKR;Ukraine;Ukraine;12330;10;59;32;84;86
+BFA;Burkina Faso;In;Burkina Faso;In;1875;29;84;42;87;90;;BFA;Burkina Faso;Burkina Faso;1875;29;84;42;87;90
+CMR;Cameroon;In;Kamerun;In;3542;25;82;43;81;90;;CMR;Cameroon;Kamerun;3542;25;82;43;81;90
+SLE;Sierra Leone;In;Sierra Leone;In;1629;27;83;44;82;89;;SLE;Sierra Leone;Sierra Leone;1629;27;83;44;82;89
+ZWE;Zimbabwe;In;Simbabwe;In;2233;22;72;42;56;67;;ZWE;Zimbabwe;Simbabwe;2233;22;72;42;56;67
+CRI;Costa Rica;In;Costa Rica;In;18819;25;81;44;95;95;;CRI;Costa Rica;Costa Rica;18819;25;81;44;95;95
+ALB;Albania;In;Albanien;In;11991;13;71;44;87;93;;ALB;Albania;Albanien;11991;13;71;44;87;93
+DZA;Algeria;In;Algerien;In;11512;24;55;40;80;90;;DZA;Algeria;Algerien;11512;24;55;40;80;90
+ARG;Argentina;In;Argentinien;In;23580;15;62;38;92;93;;ARG;Argentina;Argentinien;23580;15;62;38;92;93
+ARM;Armenia;In;Armenien;In;11384;8;75;41;83;84;;ARM;Armenia;Armenien;11384;8;75;41;83;84
+AUT;Austria;In;Österreich;In;53567;8;73;38;87;84;;AUT;Austria;Österreich;53567;8;73;38;87;84
+BOL;Bolivia;In;Bolivien;In;7616;21;85;44;96;98;;BOL;Bolivia;Bolivien;7616;21;85;44;96;98
+BIH;Bosnia Herzegovina;In;Bosnien und Herzegowina;In;12310;11;82;41;86;91;;BIH;Bosnia Herzegovina;Bosnien und Herzegowina;12310;11;82;41;86;91
+BGR;Bulgaria;In;Bulgarien;In;20155;12;70;33;88;91;;BGR;Bulgaria;Bulgarien;20155;12;70;33;88;91
+CHL;Chile;In;Chile;In;23873;10;65;36;97;98;;CHL;Chile;Chile;23873;10;65;36;97;98
+COL;Colombia;In;Kolumbien;In;13676;25;77;50;95;97;;COL;Colombia;Kolumbien;13676;25;77;50;95;97
+COG;Congo Brazzaville;In;Kongo Brazzaville;In;4652;25;77;38;77;84;;COG;Congo Brazzaville;Kongo Brazzaville;4652;25;77;38;77;84
+HRV;Croatia;In;Kroatien;In;25736;12;70;37;85;83;;HRV;Croatia;Kroatien;25736;12;70;37;85;83
+CYP;Cyprus;In;Zypern;In;36998;19;76;38;94;96;;CYP;Cyprus;Zypern;36998;19;76;38;94;96
+DOM;Dominican Republic;In;Dominikanische Republik;In der;14985;25;83;43;87;93;;DOM;Dominican Republic;Dominikanische Republik;14985;25;83;43;87;93
+ECU;Ecuador;In;Ecuador;In;11482;22;78;44;95;96;;ECU;Ecuador;Ecuador;11482;22;78;44;95;96
+SLV;El Salvador;In;El Salvador;In;8220;25;73;43;92;92;;SLV;El Salvador;El Salvador;8220;25;73;43;92;92
+EST;Estonia;In;Estland;In;31103;7;54;36;79;70;;EST;Estonia;Estland;31103;7;54;36;79;70
+FIN;Finland;In;Finnland;In;46444;3;55;36;87;62;;FIN;Finland;Finnland;46444;3;55;36;87;62
+GAB;Gabon;In;Gabun;In;14452;25;81;41;88;89;;GAB;Gabon;Gabun;14452;25;81;41;88;89
+GTM;Guatemala;In;Guatemala;In;7990;24;72;41;90;90;;GTM;Guatemala;Guatemala;7990;24;72;41;90;90
+GIN;Guinea;In;Guinea;In;2145;26;84;39;88;94;;GIN;Guinea;Guinea;2145;26;84;39;88;94
+HND;Honduras;In;Honduras;In;5183;25;59;41;89;89;;HND;Honduras;Honduras;5183;25;59;41;89;89
+ISL;Iceland;In;Island;In;52089;2;72;44;92;81;;ISL;Iceland;Island;52089;2;72;44;92;81
+IRQ;Iraq;In;Irak;Im;9467;23;65;38;69;73;;IRQ;Iraq;Irak;9467;23;65;38;69;73
+IRL;Ireland;In;Irland;In;66389;10;65;37;89;88;;IRL;Ireland;Irland;66389;10;65;37;89;88
+CIV;Ivory Coast;In;Elfenbeinküste;In der;4244;27;83;44;86;91;;CIV;Ivory Coast;Elfenbeinküste;4244;27;83;44;86;91
+JAM;Jamaica;In;Jamaika;In;9880;26;70;34;84;93;;JAM;Jamaica;Jamaika;9880;26;70;34;84;93
+LVA;Latvia;In;Lettland;In;26130;7;54;31;77;77;;LVA;Latvia;Lettland;26130;7;54;31;77;77
+LTU;Lithuania;In;Litauen;In;30475;8;41;26;86;89;;LTU;Lithuania;Litauen;30475;8;41;26;86;89
+MKD;North Macedonia;In;Nordmazedonien;In;14910;11;76;41;89;94;;MKD;North Macedonia;Nordmazedonien;14910;11;76;41;89;94
+MYS;Malaysia;In;Malaysia;In;23790;27;67;40;92;96;;MYS;Malaysia;Malaysia;23790;27;67;40;92;96
+MLT;Malta;In;Malta;In;38624;20;68;41;92;93;;MLT;Malta;Malta;38624;20;68;41;92;93
+MUS;Mauritius;In;Mauritius;In;20359;24;85;54;95;97;;MUS;Mauritius;Mauritius;20359;24;85;54;95;97
+MNG;Mongolia;In;Mongolei;In der;10554;1;90;64;92;93;;MNG;Mongolia;Mongolei;10554;1;90;64;92;93
+NAM;Namibia;In;Namibia;In;10102;21;63;37;86;90;;NAM;Namibia;Namibia;10102;21;63;37;86;90
+NPL;Nepal;In;Nepal;In;3211;14;83;42;87;91;;NPL;Nepal;Nepal;3211;14;83;42;87;91
+NIC;Nicaragua;In;Nicaragua;In;5323;26;81;46;93;96;;NIC;Nicaragua;Nicaragua;5323;26;81;46;93;96
+NOR;Norway;In;Norwegen;In;62764;2;67;42;91;77;;NOR;Norway;Norwegen;62764;2;67;42;91;77
+PAN;Panama;In;Panama;In;27536;26;72;39;90;93;;PAN;Panama;Panama;27536;26;72;39;90;93
+PRY;Paraguay;In;Paraguay;In;12607;24;86;47;95;96;;PRY;Paraguay;Paraguay;12607;24;86;47;95;96
+PER;Peru;In;Peru;In;11723;20;77;40;93;96;;PER;Peru;Peru;11723;20;77;40;93;96
+PRT;Portugal;In;Portugal;In;31874;16;58;41;97;96;;PRT;Portugal;Portugal;31874;16;58;41;97;96
+SRB;Serbia;In;Serbien;In;15912;12;76;38;88;90;;SRB;Serbia;Serbien;15912;12;76;38;88;90
+SVK;Slovakia;In;Slowakei;In der;28352;9;68;33;92;89;;SVK;Slovakia;Slowakei;28352;9;68;33;92;89
+SVN;Slovenia;In;Slowenien;In;34705;10;76;44;93;91;;SVN;Slovenia;Slowenien;34705;10;76;44;93;91
+CHE;Switzerland;In;Schweiz;In der;68178;7;68;41;91;84;;CHE;Switzerland;Schweiz;68178;7;68;41;91;84
+TJK;Tajikistan;In;Tadschikistan;In;2932;4;78;51;91;95;;TJK;Tajikistan;Tadschikistan;2932;4;78;51;91;95
+TGO;Togo;In;Togo;In;1843;28;80;39;92;97;;TGO;Togo;Togo;1843;28;80;39;92;97
+TUN;Tunisia;In;Tunesien;In;10689;21;58;36;62;83;;TUN;Tunisia;Tunesien;10689;21;58;36;62;83
+ARE;United Arab Emirates;In the;Vereinigte Arabische Emirate;In den;65295;29;82;54;92;;;ARE;United Arab Emirates;Vereinigte Arabische Emirate;65295;29;82;54;92;
+URY;Uruguay;In;Uruguay;In;21969;18;65;40;90;90;;URY;Uruguay;Uruguay;21969;18;65;40;90;90
+UZB;Uzbekistan;In;Usbekistan;In;6181;14;92;63;96;93;;UZB;Uzbekistan;Usbekistan;6181;14;92;63;96;93
+XKX;Kosovo;In;Kosovo;Im;9304;11;84;48;89;93;;XKX;Kosovo;Kosovo;9304;11;84;48;89;93
+;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;What changed;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;A new column country_de was added right after the original country column.;;;;;;;;
+;;;;;;;;;;;;Each row now contains the English name (unchanged) and its German translation.;;;;;;;;
+;;;;;;;;;;;;All other fields (gdp, temperature, …) remain exactly as in the original file.;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;1 file;;;;;;;;
