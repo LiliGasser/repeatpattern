@@ -575,8 +575,10 @@ function drawMotif(p) {
     openCirclesMotif(p, '3/4');
   } else if (motifSelect.value() === 'anglecircles') {
     openCirclesMotif(p, 'angle');
-  } else if (motifSelect.value() === 'interlockingcircles') {
-    openCirclesMotif2(p);
+  } else if (motifSelect.value() === 'interlockingcirclesclose') {
+    interlockingCirclesMotif(p, 'close');
+  } else if (motifSelect.value() === 'interlockingcirclesregular') {
+    interlockingCirclesMotif(p, 'regular');
   } else if (motifSelect.value() === 'arc2') {
     arcMotif2(p);
   } else if (motifSelect.value() === 'circles') {
@@ -654,13 +656,13 @@ function addLegendText(p) {
   );
   p.fill(colors['gccs_norm']);
   p.text(
-    `${selData[0]['gccs_norm']}% think that others should try to fight global warming.`,
+    `${selData[0]['gccs_norm']}%: others should try to fight global warming.`,
     xPos,
     330,
   )
   p.fill(colors['gccs_government']);
   p.text(
-    `${selData[0]['gccs_government']}% think that their national government should do more.`,
+    `${selData[0]['gccs_government']}%: national government should do more.`,
     xPos,
     350,
   )
@@ -894,37 +896,64 @@ function openCirclesMotif(p, shape) {
   }
 }
 
-function openCirclesMotif2(p) {
+function interlockingCirclesMotif(p, type='close') {
   
-  p.fill(0);
-  p.stroke(255);
+  p.noStroke();
 
   // wtp
   if (selData[0].gccs_wtp) {
-    //h = hScale(selData[0].gccs_wtp);
-    //p.fill(colors['gccs_wtp']);
-    p.arc(-cellWidth/6, -cellWidth/6, cellWidth*0.75, cellWidth*0.75, 0, 3*p.PI/2);
+    r = rScaleHalfCell(selData[0].gccs_wtp);
+    //p.stroke(colors['gccs_wtp']);
+    p.fill(colors['gccs_wtp']);
+    if (type == 'close') {
+      p.arc(-3*cellWidth/8, -cellHeight/4, r, r, p.PI, p.PI/2);
+      //p.arc(-3*cellWidth/8, -cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
+    } else if (type == 'regular') {
+      p.arc(-cellWidth/4, -cellHeight/4, r, r, p.PI, p.PI/2);
+      //p.arc(-cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
+    }
   }
 
   // wtp_belief
   if (selData[0].gccs_wtp_belief) {
-    //h = hScale(selData[0].gccs_wtp_belief);
-    //p.fill(colors['gccs_wtp_belief']);
-    p.arc(cellWidth/6, -cellWidth/6, cellWidth*0.75, cellWidth*0.75, p.PI, p.PI/2);
+    r = rScaleHalfCell(selData[0].gccs_wtp_belief);
+    //p.stroke(colors['gccs_wtp_belief']);
+    p.fill(colors['gccs_wtp_belief']);
+    if (type == 'close') {
+      p.arc(3*cellWidth/8, -cellHeight/4, r, r, 0, 3*p.PI/2);
+      //p.arc(3*cellWidth/8, -cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
+    } else if (type == 'regular') {
+      p.arc(cellWidth/4, -cellHeight/4, r, r, 0, 3*p.PI/2);
+      //p.arc(cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
+    }
   }
 
   // norm
   if (selData[0].gccs_norm) {
-    //h = hScale(selData[0].gccs_norm);
-    //p.fill(colors['gccs_norm']);
-    p.arc(cellWidth/6, cellWidth/6, cellWidth*0.75, cellWidth*0.75, 0, 3*p.PI/2);
+    r = rScaleHalfCell(selData[0].gccs_norm);
+    //p.stroke(colors['gccs_norm']);
+    p.fill(colors['gccs_norm']);
+    if (type == 'close') {
+      p.arc(-cellWidth/8, cellHeight/4, r, r, 0, 3*p.PI/2);
+      //p.arc(-cellWidth/8, cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
+    } else if (type == 'regular') {
+      p.arc(-cellWidth/4, cellHeight/4, r, r, 0, 3*p.PI/2);
+      //p.arc(-cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
+    }
   }
 
   // government
   if (selData[0].gccs_government) {
-    //h = hScale(selData[0].gccs_government);
-    //p.fill(colors['gccs_government']);
-    p.arc(cellWidth/2, cellWidth/6, cellWidth*0.75, cellWidth*0.75, p.PI, p.PI/2);
+    r = rScaleHalfCell(selData[0].gccs_government);
+    //p.stroke(colors['gccs_government']);
+    p.fill(colors['gccs_government']);
+    if (type == 'close') {
+      p.arc(cellWidth/8, cellHeight/4, r, r, p.PI, p.PI/2);
+      //p.arc(cellWidth/8, cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
+    } else if (type == 'regular') {
+      p.arc(cellWidth/4, cellHeight/4, r, r, p.PI, p.PI/2);
+      //p.arc(cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
+    }
   }
 
 }
