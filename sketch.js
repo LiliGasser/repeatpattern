@@ -83,6 +83,10 @@ let hScale = d3.scaleLinear(); // height of rectangle
 let h;
 let angleScale = d3.scaleLinear(); // angle of circle completion
 let angle;
+let elScaleHalfCell = d3.scaleLinear(); // ellipse size (length of main axis)
+let elScaleHalfCellDiagonal = d3.scaleLinear(); // ellipse size (length of main axis)
+let el;
+let elStartPos = 1;
 
 // define canvas size for motif
 let mWidth = 200;
@@ -347,6 +351,8 @@ function sketch2(p) {
           cellWidth, 
           cellHeight
         );
+        p.line(-cellWidth/2, 0, cellWidth/2, 0);
+        p.line(0, -cellHeight/2, 0, cellHeight/2);
       }
       p.pop();
 
@@ -467,6 +473,12 @@ function updateScales(p) {
   angleScale
     .domain([0, 100])
     .range([0, p.PI]);
+  elScaleHalfCell
+    .domain([0, 100])
+    .range([elStartPos, cellHeight/2]);
+  elScaleHalfCellDiagonal
+    .domain([0, 100])
+    .range([elStartPos, cellHeight/2*p.sqrt(2)]);
 
 }
 
@@ -584,7 +596,9 @@ function drawMotif(p) {
   } else if (motifSelect.value() === 'circles') {
     circlesMotif(p);
   } else if (motifSelect.value() === 'flower') {
-    flowerMotif(p);
+    flowerMotif(p, 0);
+  } else if (motifSelect.value() === 'flower45') {
+    flowerMotif(p, p.PI/4);
   } else if (motifSelect.value() === 'circles2') {
     circlesMotif2(p);
   } else if (motifSelect.value() === 'alphaRect') {
@@ -745,59 +759,47 @@ function windwheelMotif(p, addRotation) {
 }
 
 
-// TODO how to make petal size dependant on values?
-function flowerMotif(p) {
+function flowerMotif(p, addRotation) {
 
-  // TODO test with stroke
   p.noStroke();
 
   let selVar;
-  let initialRotation = 0;
+  let initialRotation = p.PI + addRotation;
+  let ellipseWidth = 15;
+  let ellipseX = 0;
+  let ellipseY;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
-    //selVar = Object.keys(colors)[i];
-    //console.log('selVar', selVar);
     if (selData[0][selVar]) {
+      if (addRotation == 0) {
+        el = elScaleHalfCell(selData[0][selVar]);
+      } else if (addRotation == p.PI/4) {
+        el = elScaleHalfCellDiagonal(selData[0][selVar]);
+      }
+      ellipseY = elStartPos + el/2;
       p.fill(colors[selVar]);
       p.push();
-      p.rotate(initialRotation + p.PI/4+ i*p.PI/2);
-      p.ellipse(cellWidth*0, cellWidth*0.25, 20, 30);
+      p.rotate(initialRotation + i*p.PI/2);
+      p.ellipse(ellipseX, ellipseY, ellipseWidth, el);
       p.pop();
 
     }
   }
-}
 
-function flowerMotifCurve(p) {
-
-  p.stroke(0);
-  p.strokeWeight(0);
-
-  let factorCW = 5;
-  let factorCH = 4.15;
-  let selVar;
-  let initialRotation = 0;
-
-  for (let i=0; i<4; i++) {
-    selVar = order[i];
-    //selVar = Object.keys(colors)[i];
-    //console.log('selVar', selVar);
-    if (selData[0][selVar]) {
-      p.fill(colors[selVar]);
-      area = areaScale(selData[0][selVar]);
-      adjustedHypotenuse = 4*area / cellWidth;
-      p.push();
-      p.rotate(initialRotation + i*p.PI/2);
-      p.curve(
-        -factorCW*cellWidth, factorCH*cellHeight, 
-        0, 0,
-        0, 0,
-        factorCW*cellWidth, factorCH*cellHeight
-      )
-      p.pop();
-
+  selVar = order[0];
+  if (selData[0][selVar]) {
+    if (addRotation == 0) {
+      el = elScaleHalfCell(selData[0][selVar]);
+    } else if (addRotation == p.PI/4) {
+      el = elScaleHalfCellDiagonal(selData[0][selVar]);
     }
+    ellipseY = elStartPos + el/2;
+    p.fill(colors[selVar]);
+    p.push();
+    p.rotate(initialRotation);
+    p.arc(ellipseX, ellipseY, ellipseWidth, el, -p.PI/2, p.PI/2);
+    p.pop();
   }
 }
 
