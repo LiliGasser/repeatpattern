@@ -4,6 +4,7 @@ let sketch2Instance;
 let sketch3Instance;
 let canvas;
 let countrySelect;
+let layoutSelect;
 let nCellsXInput;
 let relMotifSizeInput;
 let rowIndentInput;
@@ -31,8 +32,7 @@ let pcHeightMM = 105; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
-let bWidth = pcWidth/2;
-let bHeight = pcHeight;
+let layout = 'landscape'; // portrait or landscape
 // To set appropriate size for export, Felix would do it as I did already.
 // For printing, pdf is better than svg.
 
@@ -40,7 +40,6 @@ let bHeight = pcHeight;
 // TODO as input in app
 let frame = {
   'top': 0.05,
-  'bottom': 0.05,
 }
 
 // Scaling: https://p5js.org/tutorials/coordinates-and-transformations/
@@ -72,21 +71,14 @@ let order = [];
   //'gccs_wtp', 
 //];
 // initialize scales
-let rScale = d3.scaleSqrt(); // radius
+let rScale = d3.scaleSqrt(); // radius in complete cell
 let rScaleHalfCell = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell)
-let r;
-let alphaScale = d3.scaleLinear(); // transparency
-let alpha;
-let areaScale = d3.scaleLinear(); // area of triangle
-let area;
+let areaScale = d3.scaleLinear(); // area of isoceles triangle
 let hScale = d3.scaleLinear(); // height of rectangle
-let h;
 let angleScale = d3.scaleLinear(); // angle of circle completion
-let angle;
 let elScaleHalfCell = d3.scaleLinear(); // ellipse size (length of main axis)
 let elScaleHalfCellDiagonal = d3.scaleLinear(); // ellipse size (length of main axis)
-let el;
-let elStartPos = 1;
+let elStartPos;
 
 // define canvas size for motif
 let mWidth = 200;
@@ -128,6 +120,8 @@ function initializeSelects(p) {
   // It is better to define button in html and select in p5
   let countrySelectHTML = document.getElementById('country');
   countrySelect = p.select('#country');
+  let layoutSelectHTML = document.getElementById('layout');
+  layoutSelect = p.select('#layout');
   let nCellsXInputHTML = document.getElementById('ncellsx');
   nCellsXInput = p.select('#ncellsx')
   let relMotifSizeInputHTML = document.getElementById('relmotifsize');
@@ -165,6 +159,9 @@ function initializeSelects(p) {
   countrySelectHTML.addEventListener('change', function(event) {
     selectCountry(p);
   });
+  layoutSelectHTML.addEventListener('change', function(event) {
+    updateCanvasSize(p);
+  })
   nCellsXInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   })
@@ -325,9 +322,9 @@ function sketch2(p) {
     p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
-    let xMotif = bWidth*0.2;
-    let yMotif = bHeight*0.4;
-    let bScale = p.min(bWidth/cellWidth, bHeight/cellHeight)*0.3
+    let xMotif = pcWidth*0.1;
+    let yMotif = pcHeight*0.4;
+    let bScale = p.min((pcWidth/2)/cellWidth, pcHeight/cellHeight)*0.3
 
     // draw scaled motif, without symmetry operations
     if (selData.length > 0) {
@@ -384,10 +381,10 @@ function sketch2(p) {
     p.noFill();
     p.stroke(200);
     p.strokeWeight(0.8);
-    p.line(bWidth*1.08 + 60, bHeight*0.50, pcWidth - 70, bHeight*0.50);
-    p.line(bWidth*1.08 + 60, bHeight*0.58, pcWidth - 70, bHeight*0.58);
-    p.line(bWidth*1.08 + 60, bHeight*0.66, pcWidth - 70, bHeight*0.66);
-    p.line(bWidth*1.08 + 60, bHeight*0.74, pcWidth - 70, bHeight*0.74);
+    p.line(pcWidth*0.54 + 60, pcHeight*0.50, pcWidth - 70, pcHeight*0.50);
+    p.line(pcWidth*0.54 + 60, pcHeight*0.58, pcWidth - 70, pcHeight*0.58);
+    p.line(pcWidth*0.54 + 60, pcHeight*0.66, pcWidth - 70, pcHeight*0.66);
+    p.line(pcWidth*0.54 + 60, pcHeight*0.74, pcWidth - 70, pcHeight*0.74);
     p.pop();
 
   }
@@ -453,26 +450,46 @@ updateColors(sketch1Instance);
 loadData(sketch1Instance);
 
 
+function updateCanvasSize(p) {
+  if (layoutSelect.value() === 'landscape') {
+    p.resizeCanvas(pcWidth, pcHeight);
+  } else if (layoutSelect.value() === 'portrait') {
+    p.resizeCanvas(pcHeight, pcWidth);
+  }
+
+  p.redraw();
+}
+
 function updateScales(p) {
 
+  // for the arcs and circular motifs spanning the entire cell
   rScale
     .domain([0, 100])
     .range([1, Math.min(cellWidth, cellHeight)]);
+
+  // for arcs and circular motifs spanning a quarter of the cell
   rScaleHalfCell
     .domain([0, 100])
     .range([1, Math.min(cellWidth/2, cellHeight/2)]);
-  alphaScale
-    .domain([0, 100])
-    .range([0, 255]);
+
+  // for the isoceles triangles in windwheel motif
+  // max area = 1/2 * hypotenuse * height = 1/2 * cellWidth * cellWidth/2 = cellWidth*cellWidth/4
   areaScale
     .domain([0, 100])
-    .range([0, cellWidth*cellWidth/4]) // gleichschenkliges Dreieck, Hypothenuse = cellWidth, cellWidth=cellHeight
+    .range([0, cellWidth*cellWidth/4])
+
+  // for the rectangles in arc motif
   hScale
     .domain([0, 100])
     .range([0, cellWidth/2]);
+
+  // for the open circles motif
   angleScale
     .domain([0, 100])
     .range([0, p.PI]);
+
+  // for the flower motif
+  elStartPos = 1;
   elScaleHalfCell
     .domain([0, 100])
     .range([elStartPos, cellHeight/2]);
@@ -512,7 +529,6 @@ function updateOrder(p) {
 
   getDropdownOrder();
 
-  console.log('order change', order);
   p.redraw();
 
 }
@@ -601,10 +617,6 @@ function drawMotif(p) {
     flowerMotif(p, p.PI/4);
   } else if (motifSelect.value() === 'circles2') {
     circlesMotif2(p);
-  } else if (motifSelect.value() === 'alphaRect') {
-    alphaMotif(p, 'rect');
-  } else if (motifSelect.value() === 'alphaEllipse') {
-    alphaMotif(p, 'ellipse');
   }
 
 }
@@ -731,12 +743,16 @@ function exportCanvases() {
 
 function windwheelMotif(p, addRotation) {
   // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
+  // all triangles have the same height, i.e., cellWidth/2
+  // Area = 1/2 * hypotenuse * height = 1/2 * hypotenuse * cellWidth/2
+  // --> hypotenuse = 4*Area / cellWidth
 
   p.noStroke();
 
   let adjustedHypotenuse;
   let selVar;
   let initialRotation = -p.PI/2 + addRotation;
+  let area;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
@@ -768,6 +784,7 @@ function flowerMotif(p, addRotation) {
   let ellipseWidth = 15;
   let ellipseX = 0;
   let ellipseY;
+  let el;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
@@ -808,6 +825,8 @@ function arcMotif(p, shape) {
   p.noStroke();
   let selVar;
   let initialRotation = p.PI;
+  let r;
+  let h;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
@@ -819,8 +838,6 @@ function arcMotif(p, shape) {
       if (shape == 'arc') {
         r = rScale(selData[0][selVar]);
         p.arc(0, 0, r, r, 0, p.PI/2);
-      } else if (shape == 'triangle') {
-        // TODO maybe?
       } else if (shape == 'squares') {
         r = rScaleHalfCell(selData[0][selVar]);
         p.rect(0, 0, r, r);
@@ -840,6 +857,8 @@ function arcMotif(p, shape) {
 function rectMotif(p) {
 
   p.noStroke();
+
+  let h;
 
   // wtp
   // TODO unclear why -h is needed for this one....
@@ -876,6 +895,8 @@ function openCirclesMotif(p, shape) {
   p.noStroke();
   let selVar;
   let initialRotation = p.PI;
+  let r;
+  let angle;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
@@ -901,6 +922,8 @@ function openCirclesMotif(p, shape) {
 function interlockingCirclesMotif(p, type='close') {
   
   p.noStroke();
+
+  let r;
 
   // wtp
   if (selData[0].gccs_wtp) {
@@ -966,6 +989,8 @@ function arcMotif2(p) {
 
   p.noStroke();
 
+  let r;
+
   // wtp
   if (selData[0].gccs_wtp) {
     r = rScale(selData[0].gccs_wtp);
@@ -1001,6 +1026,7 @@ function circlesMotif(p) {
   p.noStroke();
   let selVar;
   let initialRotation = p.PI;
+  let r;
 
   for (let i=0; i<4; i++) {
     selVar = order[i];
@@ -1023,6 +1049,8 @@ function circlesMotif2(p) {
   p.noFill();
   p.strokeWeight(2);
   let selVar;
+  let r;
+  let alpha;
   let c = [];
 
   for (let i=0; i<4; i++) {
@@ -1039,67 +1067,5 @@ function circlesMotif2(p) {
       p.pop();
 
     }
-  }
-}
-
-function alphaMotif(p, shape='ellipse') {
-
-  p.noStroke();
-  let c = [];
-
-  // wtp
-  if (selData[0].gccs_wtp) {
-    alpha = alphaScale(selData[0].gccs_wtp);
-    c = [...colors['gccs_wtp'].levels.slice(0,3), p.round(alpha,0)];
-    p.fill(p.color(c));
-    p.push();
-    if (shape == 'rect') {
-      p.rect(0, -cellHeight/2, cellWidth/2, cellHeight/2);
-    } else if (shape == 'ellipse') {
-      p.ellipse(-cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2);
-    }
-    p.pop();
-  }
-
-  // wtp_belief
-  if (selData[0].gccs_wtp_belief) {
-    alpha = alphaScale(selData[0].gccs_wtp_belief);
-    c = [...colors['gccs_wtp_belief'].levels.slice(0,3), p.round(alpha,0)];
-    p.fill(p.color(c));
-    p.push();
-    if (shape == 'rect') {
-      p.rect(0, 0, cellWidth/2, cellHeight/2);
-    } else if (shape == 'ellipse') {
-      p.ellipse(cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2);
-    }
-    p.pop();
-  }
-
-  // norm
-  if (selData[0].gccs_norm) {
-    alpha = alphaScale(selData[0].gccs_norm);
-    c = [...colors['gccs_norm'].levels.slice(0,3), p.round(alpha,0)];
-    p.fill(p.color(c));
-    p.push();
-    if (shape == 'rect') {
-      p.rect(-cellWidth/2, 0, cellWidth/2, cellHeight/2);
-    } else if (shape == 'ellipse') {
-      p.ellipse(-cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2);
-    }
-    p.pop();
-  }
-
-  // government
-  if (selData[0].gccs_government) {
-    alpha = alphaScale(selData[0].gccs_government);
-    c = [...colors['gccs_government'].levels.slice(0,3), p.round(alpha,0)];
-    p.fill(p.color(c));
-    p.push();
-    if (shape == 'rect') {
-      p.rect(-cellWidth/2, -cellHeight/2, cellWidth/2, cellHeight/2);
-    } else if (shape == 'ellipse') {
-      p.ellipse(cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2);
-    }
-    p.pop();
   }
 }
