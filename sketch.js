@@ -5,6 +5,7 @@ let sketch3Instance;
 let canvas;
 let countrySelect;
 let layoutSelect;
+let frameMarginSelect;
 let nCellsXInput;
 let relMotifSizeInput;
 let rowIndentInput;
@@ -32,15 +33,9 @@ let pcHeightMM = 105; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
-let layout = 'landscape'; // portrait or landscape
+let portraitLayouts = ['portrait', 'portraitsquared'];
 // To set appropriate size for export, Felix would do it as I did already.
 // For printing, pdf is better than svg.
-
-// define frame
-// TODO as input in app
-let frame = {
-  'top': 0.05,
-}
 
 // Scaling: https://p5js.org/tutorials/coordinates-and-transformations/
 
@@ -120,8 +115,6 @@ function initializeSelects(p) {
   // It is better to define button in html and select in p5
   let countrySelectHTML = document.getElementById('country');
   countrySelect = p.select('#country');
-  let layoutSelectHTML = document.getElementById('layout');
-  layoutSelect = p.select('#layout');
   let nCellsXInputHTML = document.getElementById('ncellsx');
   nCellsXInput = p.select('#ncellsx')
   let relMotifSizeInputHTML = document.getElementById('relmotifsize');
@@ -159,9 +152,6 @@ function initializeSelects(p) {
   countrySelectHTML.addEventListener('change', function(event) {
     selectCountry(p);
   });
-  layoutSelectHTML.addEventListener('change', function(event) {
-    updateCanvasSize(p);
-  })
   nCellsXInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   })
@@ -213,10 +203,20 @@ function initializeSelects(p) {
 
 }
 
-function initializeButtons() {
+function initializeButtons(p) {
+  let layoutSelectHTML = document.getElementById('layout');
+  layoutSelect = p.select('#layout');
+  let frameMarginSelectHTML = document.getElementById('framemargin');
+  frameMarginSelect = p.select('#framemargin');
   exportButton = document.getElementById('exportButton');
             
   // Add event listeners
+  layoutSelectHTML.addEventListener('change', function(event) {
+    updateCanvasSize(p);
+  })
+  frameMarginSelectHTML.addEventListener('change', function(event) {
+    updateGrid(p);
+  })
   exportButton.addEventListener('click', function(event) {
     exportCanvases();
   });
@@ -257,11 +257,15 @@ function sketch1(p) {
     p.noFill()
     p.stroke('black');
     p.strokeWeight(1);
-    p.rect(0, 0, pcWidth, pcHeight);
+    if (layoutSelect.value() === 'landscape') {
+      p.rect(0, 0, pcWidth, pcHeight);
+    } else if (portraitLayouts.includes(layoutSelect.value())) {
+      p.rect(0, 0, pcHeight, pcWidth);
+    }
 
     // initialize
     x = initialCellPositionX;
-    y = initialCellPositionY;
+    y = initialCellPositionY
     cellCount = 1;
     rowCount = 1;
     rowIndent = parseFloat(rowIndentInput.value());
@@ -444,20 +448,21 @@ initializeSelects(sketch1Instance);
 initializeSelects(sketch2Instance);
 initializeSelects(sketch3Instance);
 initializeButtons(sketch1Instance);
+updateCanvasSize(sketch1Instance);
 updateGrid(sketch1Instance);
 updateOrder(sketch1Instance);
 updateColors(sketch1Instance);
 loadData(sketch1Instance);
 
-
+// TODO initial drawing of front as portrait
 function updateCanvasSize(p) {
   if (layoutSelect.value() === 'landscape') {
     p.resizeCanvas(pcWidth, pcHeight);
-  } else if (layoutSelect.value() === 'portrait') {
+  } else if (portraitLayouts.includes(layoutSelect.value())) {
     p.resizeCanvas(pcHeight, pcWidth);
   }
 
-  p.redraw();
+  updateGrid(p);
 }
 
 function updateScales(p) {
@@ -502,16 +507,29 @@ function updateScales(p) {
 function updateGrid(p) {
 
   // Set initial cell positions (same distance from top and left)
-  initialCellPositionY = frame['top']*pcHeight;
-  initialCellPositionX = initialCellPositionY;
-  let distanceX = pcWidth - 2*initialCellPositionX;
-  let distanceY = pcHeight - 2*initialCellPositionY;
+  let distanceX;
+  let distanceY;
+  let frameMargin = parseFloat(frameMarginSelect.value());
+  if (layoutSelect.value() === 'landscape') {
+    initialCellPositionY = frameMargin*pcHeight;
+    initialCellPositionX = initialCellPositionY;
+    distanceX = pcWidth - 2*initialCellPositionX;
+    distanceY = pcHeight - 2*initialCellPositionY;
+  } else if (portraitLayouts.includes(layoutSelect.value())) {
+    initialCellPositionY = frameMargin*pcWidth;
+    initialCellPositionX = initialCellPositionY;
+    distanceX = pcHeight - 2*initialCellPositionX;
+    distanceY = pcWidth - 2*initialCellPositionY;
+  }
 
   // Calculate number of cells
   nCellsX = parseInt(nCellsXInput.value());
   cellWidth = distanceX / nCellsX;
   cellHeight = cellWidth / cellsAspectratio;  // aspectratio = width / height
   let nCellsY = Math.floor(distanceY / cellHeight);
+  if (layoutSelect.value() === 'portraitsquared') {
+    nCellsY = nCellsX + 2;
+  }
   nCells = nCellsX * nCellsY;
   console.log('nCells: ' + nCells, nCellsX, nCellsY, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
 
@@ -543,7 +561,7 @@ function updateColors(p) {
     'background': p.color(colorbg.value()),
   }
 
-  console.log('color change', colors);
+  //console.log('color change', colors);
   p.redraw();
 
 }
@@ -630,15 +648,24 @@ function addCountryText(p) {
   let txtHeight = p.textAscent() + p.textDescent();
   //let paddingX = 40;
   let paddingY = 10;
+  let txtX;
+  let txtY;
+  if (layoutSelect.value() === 'landscape') {
+    txtX = pcWidth / 2;  // centered
+    //txtX = pcWidth - (txtWidth + 2*paddingX)/2,  // add right ending
+    txtY = pcHeight - (txtHeight + 2*paddingY)/2 
+  } else if (portraitLayouts.includes(layoutSelect.value())) {
+    txtX = pcHeight / 2;
+    txtY = pcWidth - (txtHeight + 2*paddingY)/2 
+  }
 
   // text
   p.noStroke();
   p.fill(150);
   p.text(
     selCountry, 
-    pcWidth / 2, 
-    //pcWidth - (txtWidth + 2*paddingX)/2, 
-    pcHeight - (txtHeight + 2*paddingY)/2, 
+    txtX,
+    txtY,
   );
 }
 
