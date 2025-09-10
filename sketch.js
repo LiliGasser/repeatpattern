@@ -68,6 +68,9 @@ let order = [];
 // initialize scales
 let rScale = d3.scaleSqrt(); // radius in complete cell
 let rScaleHalfCell = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell)
+let rScaleDonut = d3.scaleSqrt(); // radius in complete cell for donut
+let rScaleHalfCellDonut = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell) for donut
+let rmin;
 let areaScale = d3.scaleLinear(); // area of isoceles triangle
 let hScale = d3.scaleLinear(); // height of rectangle
 let angleScale = d3.scaleLinear(); // angle of circle completion
@@ -470,12 +473,20 @@ function updateScales(p) {
   // for the arcs and circular motifs spanning the entire cell
   rScale
     .domain([0, 100])
-    .range([1, Math.min(cellWidth, cellHeight)]);
+    .range([0, Math.min(cellWidth, cellHeight)]);
+  rmin = 10;
+  rScaleDonut
+    .domain([0, 100])
+    .range([rmin, Math.min(cellWidth, cellHeight)]);
+  
 
   // for arcs and circular motifs spanning a quarter of the cell
   rScaleHalfCell
     .domain([0, 100])
-    .range([1, Math.min(cellWidth/2, cellHeight/2)]);
+    .range([0, Math.min(cellWidth/2, cellHeight/2)]);
+  rScaleHalfCellDonut
+    .domain([0, 100])
+    .range([rmin, Math.min(cellWidth/2, cellHeight/2)]);
 
   // for the isoceles triangles in windwheel motif
   // max area = 1/2 * hypotenuse * height = 1/2 * cellWidth * cellWidth/2 = cellWidth*cellWidth/4
@@ -609,6 +620,8 @@ function drawMotif(p) {
     windwheelMotif(p, p.PI/4);
   } else if (motifSelect.value() === 'arc') {
     arcMotif(p, 'arc');
+  } else if (motifSelect.value() === 'arcdonut') {
+    arcMotif(p, 'arcdonut');
   } else if (motifSelect.value() === 'squares') {
     arcMotif(p, 'squares');
   } else if (motifSelect.value() === 'rectangles') {
@@ -626,7 +639,9 @@ function drawMotif(p) {
   } else if (motifSelect.value() === 'interlockingcirclesregular') {
     interlockingCirclesMotif(p, 'regular');
   } else if (motifSelect.value() === 'arc2') {
-    arcMotif2(p);
+    arcMotif2(p, 'arc');
+  } else if (motifSelect.value() === 'arc2donut') {
+    arcMotif2(p, 'arcdonut');
   } else if (motifSelect.value() === 'circles') {
     circlesMotif(p);
   } else if (motifSelect.value() === 'flower') {
@@ -758,8 +773,8 @@ function exportCanvases() {
     colors['gccs_government']];
   let filename = parts.join('_');
   sketch1Instance.save(filename + '_postcardfront', 'svg');
-  sketch2Instance.save(filename + '_postcardback', 'svg');
-  sketch3Instance.save(filename + '_motif', 'svg');
+  //sketch2Instance.save(filename + '_postcardback', 'svg');
+  //sketch3Instance.save(filename + '_motif', 'svg');
 }
 
 
@@ -865,6 +880,11 @@ function arcMotif(p, shape) {
       if (shape == 'arc') {
         r = rScale(selData[0][selVar]);
         p.arc(0, 0, r, r, 0, p.PI/2);
+      } else if (shape == 'arcdonut') {
+        r = rScaleDonut(selData[0][selVar]);
+        p.arc(0, 0, r, r, 0, p.PI/2);
+        p.fill(colors['background']);
+        p.arc(0, 0, rmin, rmin, 0, p.PI/2);
       } else if (shape == 'squares') {
         r = rScaleHalfCell(selData[0][selVar]);
         p.rect(0, 0, r, r);
@@ -1012,7 +1032,7 @@ function interlockingCirclesMotif(p, type='close') {
 
 
 
-function arcMotif2(p) {
+function arcMotif2(p, shape = 'arc') {
 
   p.noStroke();
 
@@ -1020,30 +1040,58 @@ function arcMotif2(p) {
 
   // wtp
   if (selData[0].gccs_wtp) {
-    r = rScale(selData[0].gccs_wtp);
     p.fill(colors['gccs_wtp']);
-    p.arc(0, 0, r, r, -p.PI/2, 0);
+    if (shape == 'arc') {
+      r = rScale(selData[0].gccs_wtp);
+      p.arc(0, 0, r, r, -p.PI/2, 0);
+    } else if (shape == 'arcdonut') {
+      r = rScaleDonut(selData[0].gccs_wtp);
+      p.arc(0, 0, r, r, -p.PI/2, 0);
+      p.fill(colors['background']);
+      p.arc(0, 0, rmin, rmin, -p.PI/2, 0);
+    }
   }
 
   // wtp_belief
   if (selData[0].gccs_wtp_belief) {
-    r = rScale(selData[0].gccs_wtp_belief);
     p.fill(colors['gccs_wtp_belief']);
-    p.arc(cellWidth/2, 0, r, r, p.PI/2, p.PI);
+    if (shape == 'arc') {
+      r = rScale(selData[0].gccs_wtp_belief);
+      p.arc(cellWidth/2, 0, r, r, p.PI/2, p.PI);
+    } else if (shape == 'arcdonut') {
+      r = rScaleDonut(selData[0].gccs_wtp_belief);
+      p.arc(cellWidth/2, 0, r, r, p.PI/2, p.PI);
+      p.fill(colors['background']);
+      p.arc(cellWidth/2, 0, rmin, rmin, p.PI/2, p.PI);
+    }
   }
 
   // norm
   if (selData[0].gccs_norm) {
-    r = rScale(selData[0].gccs_norm);
     p.fill(colors['gccs_norm']);
-    p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
+    if (shape == 'arc') {
+      r = rScale(selData[0].gccs_norm);
+      p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
+    } else if (shape == 'arcdonut') {
+      r = rScaleDonut(selData[0].gccs_norm);
+      p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
+      p.fill(colors['background']);
+      p.arc(-cellWidth/2, cellHeight/2, rmin, rmin, -p.PI/2, 0);
+    }
   }
 
   // government
   if (selData[0].gccs_government) {
-    r = rScale(selData[0].gccs_government);
     p.fill(colors['gccs_government']);
-    p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
+    if (shape == 'arc') {
+      r = rScale(selData[0].gccs_government);
+      p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
+    } else if (shape == 'arcdonut') {
+      r = rScaleDonut(selData[0].gccs_government);
+      p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
+      p.fill(colors['background']);
+      p.arc(0, -cellHeight/2, rmin, rmin, p.PI/2, p.PI);
+    }
   }
 }
 
