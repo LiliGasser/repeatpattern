@@ -93,7 +93,24 @@ function loadData(p) {
     // Get unique countries and add to select
     countries = data.map(d=>d.country);
     countries = [...new Set(countries)]; // remove duplicates
-    let firstCountries = ['Switzerland', 'Germany'];
+    let firstCountries = [
+      'Switzerland', 
+      'Germany', 
+      'France', 
+      'Italy',
+      'United Kingdom',
+      'United States',
+      'Canada',
+      'Brazil',
+      'China',
+      'India',
+      'Iran',
+      'Japan',
+      'Thailand',
+      'South Africa',
+      'Nigeria',
+      'Tanzania',
+    ];
     for (let i = firstCountries.length - 1; i >= 0; i--) {
       let country = firstCountries[i];
       let index = countries.indexOf(country);
