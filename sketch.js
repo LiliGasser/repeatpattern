@@ -385,9 +385,6 @@ function sketch2(p) {
     }
 
     // add source as separating line
-    // TODO add link to my scrollytelling website
-    // TODO add my name and contact
-    // TODO add HKB CAS GDD
     p.textAlign(p.CENTER, p.CENTER);
     p.textSize(12);
     p.noStroke();
@@ -401,6 +398,19 @@ function sketch2(p) {
       0,
     )
     p.pop();
+
+    // add more info block
+    // TODO add link or QR code to my scrollytelling website
+    // TODO add contact
+    p.textAlign(p.LEFT, p.CENTER);
+    p.textSize(12);
+    p.noStroke();
+    p.fill(100);
+    p.text(
+      "Lilian Gasser / Projekt für CAS Generative Data Design / Hochschule der Künste Bern / 2025",
+      20,
+      pcHeight - 20,
+    )
 
 
     // address block
@@ -727,7 +737,9 @@ function addLegendText(p) {
     legendText = 'Share the good news'
   }
   p.fill(50);
-  p.textSize(20);
+  p.textSize(30);
+  //p.textFont("filmotype-keynote");
+  p.textFont("gelato-luxe");
   p.text(
     legendText,
     xPos,
@@ -742,6 +754,7 @@ function addLegendText(p) {
   }
   p.textSize(14);
   p.fill(colors['gccs_wtp']);
+  p.textFont(typefaceSelect.value());
   p.text(
     legendText, 
     xPos,
