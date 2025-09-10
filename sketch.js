@@ -82,6 +82,9 @@ let elStartPos;
 let mWidth = 200;
 let mHeight = 200;
 
+// language
+let language = 'de'; // 'en' or 'de'
+
 
 
 function loadData(p) {
@@ -673,10 +676,17 @@ function drawMotif(p) {
 
 function addCountryText(p) {
 
+  let countryText;
+  if (language === 'en') {
+    countryText = selCountry;
+  } else if (language === 'de') {
+    countryText = selData[0]['country_de'];
+  }
+
   // text properties
   p.textAlign(p.CENTER, p.CENTER);
   p.textSize(20);
-  //let txtWidth = p.textWidth(selCountry);
+  //let txtWidth = p.textWidth(countryText);
   let txtHeight = p.textAscent() + p.textDescent();
   //let paddingX = 40;
   let paddingY = 10;
@@ -695,7 +705,7 @@ function addCountryText(p) {
   p.noStroke();
   p.fill(150);
   p.text(
-    selCountry, 
+    countryText, 
     txtX,
     txtY,
   );
@@ -705,65 +715,130 @@ function addLegendText(p) {
   // TODO add around motif?
   // TODO short sentence for WTP, statements for rest?
 
-  // legend text
+  let legendText;
   let xPos = 20;
   p.textAlign(p.TOP, p.LEFT);
   p.noStroke();
+  
+  // title
+  if (language === 'en') {
+    legendText = 'Share the good news'
+  } else if (language === 'de') {
+    legendText = 'Share the good news'
+  }
   p.fill(50);
   p.textSize(20);
   p.text(
-    'Share the good news',
+    legendText,
     xPos,
     60,
   )
+
+  // wtp
+  if (language === 'en') {
+    legendText = `${selData[0]['gccs_wtp']}% of the people ${selData[0]['country_prefix'].toLowerCase()} ${selCountry} are willing to give 1% of their income`
+  } else if (language === 'de') {
+    legendText = `${selData[0]['gccs_wtp']}% der Menschen ${selData[0]['country_prefix'].toLowerCase()} ${selCountry} sind bereit 1% ihres Einkommens`
+  }
   p.textSize(14);
   p.fill(colors['gccs_wtp']);
   p.text(
-    `${selData[0]['gccs_wtp']}% of the people ${selData[0]['country_prefix'].toLowerCase()} ${selCountry} are willing to give 1% of their income`, 
+    legendText, 
     xPos,
     90,
   );
+  if (language === 'en') {
+    legendText = "to fight global warming."
+  } else if (language === 'de') {
+    legendText = "zu geben, um den Klimawandel zu bekämpfen." 
+  }
   p.text(
-    "to fight global warming.", 
+    legendText, 
     xPos,
     110,
   );
+
+  // wtp belief
+  if (language === 'en') {
+    legendText = `They think that only ${selData[0]['gccs_wtp_belief']}% of the others are also willing to do so, `
+  } else if (language === 'de') {
+    legendText = `Sie denken, dass nur ${selData[0]['gccs_wtp_belief']}% auch dazu bereit sind, `
+  }
   p.fill(colors['gccs_wtp_belief']);
   p.text(
-    `They think that only ${selData[0]['gccs_wtp_belief']}% of the others are also willing to do so, `, 
+    legendText, 
     xPos,
     130,
   );
+
+  // gap
+  if (language === 'en') {
+    legendText = `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`
+  } else if (language === 'de') {
+    legendText = `ein Unterschied von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.`
+  }
   p.text(
-    `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`, 
+    legendText, 
     xPos,
     150,
   );
+
+  // social norm
+  if (language === 'en') {
+    legendText = `${selData[0]['gccs_norm']}%: others should try to fight global warming.`
+  } else if (language === 'de') {
+    legendText = `${selData[0]['gccs_norm']}%: andere sollen gegen den Klimawandel kämpfen.`
+  }
   p.fill(colors['gccs_norm']);
   p.text(
-    `${selData[0]['gccs_norm']}%: others should try to fight global warming.`,
+    legendText,
     xPos,
     330,
   )
+
+  // government
+  if (language === 'en') {
+    if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+      legendText = "Question not asked in this country."
+    } else {
+      legendText = `${selData[0]['gccs_government']}%: national government should do more.`
+    }
+  } else if (language === 'de') {
+    if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+      legendText = "In diesem Land wurde die Frage nicht gestellt."
+    } else {
+      legendText = `${selData[0]['gccs_government']}%: nationale Regierung soll mehr tun.`
+    }
+  }
   p.fill(colors['gccs_government']);
   p.text(
-    `${selData[0]['gccs_government']}%: national government should do more.`,
+    legendText,
     xPos,
     350,
   )
 
+  // final sentences
+  if (language === 'en') {
+    legendText = "This difference in perception is reported in 125 countries,"
+  } else if (language === 'de') {
+    legendText = "Dieser Unterschied wurde in 125 Ländern gefunden,"
+  }
   p.fill(100);
   p.text(
-    "This difference in perception is reported in 125 countries,",
+    legendText,
     xPos,
     370,
   )
+  if (language === 'en') {
+    legendText = "in every country partcipating in the survey."
+  } else if (language === 'de') {
+    legendText = "in jedem Land, das an der Umfrage teilgenommen hat."
+  }
   p.text(
-    "in every country partcipating in the survey.",
+    legendText,
     xPos,
     390,
   )
-
 }
 
 function doTranslation() {
