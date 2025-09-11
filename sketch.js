@@ -1157,24 +1157,24 @@ function rectMotif(p) {
   let h;
 
   // wtp
-  // TODO unclear why -h is needed for this one....
+  // (unclear why -h is needed for this pattern...)
   if (selData[0].gccs_wtp) {
     h = hScale(selData[0].gccs_wtp);
     p.fill(colors['gccs_wtp']);
     p.rect(-cellWidth/2, 0, cellWidth/2, -h);
   }
 
-  // wtp_belief
-  if (selData[0].gccs_wtp_belief) {
-    h = hScale(selData[0].gccs_wtp_belief);
-    p.fill(colors['gccs_wtp_belief']);
-    p.rect(0, 0, cellWidth/2, -h);
-  }
-
   // norm
   if (selData[0].gccs_norm) {
     h = hScale(selData[0].gccs_norm);
     p.fill(colors['gccs_norm']);
+    p.rect(0, 0, cellWidth/2, -h);
+  }
+
+  // wtp belief
+  if (selData[0].gccs_wtp_belief) {
+    h = hScale(selData[0].gccs_wtp_belief);
+    p.fill(colors['gccs_wtp_belief']);
     p.rect(0, 0, cellWidth/2, h);
   }
 
