@@ -1224,56 +1224,44 @@ function interlockingCirclesMotif(p, type='close') {
   // wtp
   if (selData[0].gccs_wtp) {
     r = rScaleHalfCell(selData[0].gccs_wtp);
-    //p.stroke(colors['gccs_wtp']);
     p.fill(colors['gccs_wtp']);
     if (type == 'close') {
       p.arc(-3*cellWidth/8, -cellHeight/4, r, r, p.PI, p.PI/2);
-      //p.arc(-3*cellWidth/8, -cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
     } else if (type == 'regular') {
       p.arc(-cellWidth/4, -cellHeight/4, r, r, p.PI, p.PI/2);
-      //p.arc(-cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
     }
   }
 
-  // wtp_belief
-  if (selData[0].gccs_wtp_belief) {
-    r = rScaleHalfCell(selData[0].gccs_wtp_belief);
-    //p.stroke(colors['gccs_wtp_belief']);
-    p.fill(colors['gccs_wtp_belief']);
-    if (type == 'close') {
-      p.arc(3*cellWidth/8, -cellHeight/4, r, r, 0, 3*p.PI/2);
-      //p.arc(3*cellWidth/8, -cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
-    } else if (type == 'regular') {
-      p.arc(cellWidth/4, -cellHeight/4, r, r, 0, 3*p.PI/2);
-      //p.arc(cellWidth/4, -cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
-    }
-  }
-
-  // norm
+  // norm 
   if (selData[0].gccs_norm) {
     r = rScaleHalfCell(selData[0].gccs_norm);
-    //p.stroke(colors['gccs_norm']);
     p.fill(colors['gccs_norm']);
     if (type == 'close') {
-      p.arc(-cellWidth/8, cellHeight/4, r, r, 0, 3*p.PI/2);
-      //p.arc(-cellWidth/8, cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
+      p.arc(3*cellWidth/8, -cellHeight/4, r, r, 0, 3*p.PI/2);
     } else if (type == 'regular') {
-      p.arc(-cellWidth/4, cellHeight/4, r, r, 0, 3*p.PI/2);
-      //p.arc(-cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2, 0, 3*p.PI/2);
+      p.arc(cellWidth/4, -cellHeight/4, r, r, 0, 3*p.PI/2);
+    }
+  }
+
+  // wtp belief
+  if (selData[0].gccs_wtp_belief) {
+    r = rScaleHalfCell(selData[0].gccs_wtp_belief);
+    p.fill(colors['gccs_wtp_belief']);
+    if (type == 'close') {
+      p.arc(cellWidth/8, cellHeight/4, r, r, p.PI, p.PI/2);
+    } else if (type == 'regular') {
+      p.arc(cellWidth/4, cellHeight/4, r, r, p.PI, p.PI/2);
     }
   }
 
   // government
   if (selData[0].gccs_government) {
     r = rScaleHalfCell(selData[0].gccs_government);
-    //p.stroke(colors['gccs_government']);
     p.fill(colors['gccs_government']);
     if (type == 'close') {
-      p.arc(cellWidth/8, cellHeight/4, r, r, p.PI, p.PI/2);
-      //p.arc(cellWidth/8, cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
+      p.arc(-cellWidth/8, cellHeight/4, r, r, 0, 3*p.PI/2);
     } else if (type == 'regular') {
-      p.arc(cellWidth/4, cellHeight/4, r, r, p.PI, p.PI/2);
-      //p.arc(cellWidth/4, cellHeight/4, cellWidth/2, cellHeight/2, p.PI, p.PI/2);
+      p.arc(-cellWidth/4, cellHeight/4, r, r, 0, 3*p.PI/2);
     }
   }
 
@@ -1281,7 +1269,7 @@ function interlockingCirclesMotif(p, type='close') {
 
 
 
-function arcMotif2(p, shape = 'arc') {
+function arcMotif2(p, shape='arc') {
 
   p.noStroke();
 
