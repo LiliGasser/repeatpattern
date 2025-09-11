@@ -1292,9 +1292,23 @@ function arcMotif2(p, shape = 'arc') {
     p.fill(colors['gccs_wtp']);
     if (shape == 'arc') {
       r = rScale(selData[0].gccs_wtp);
-      p.arc(0, 0, r, r, -p.PI/2, 0);
+      p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
     } else if (shape == 'arcdonut') {
       r = rScaleDonut(selData[0].gccs_wtp);
+      p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
+      p.fill(colors['background']);
+      p.arc(0, -cellHeight/2, rmin, rmin, p.PI/2, p.PI);
+    }
+  }
+
+  // norm
+  if (selData[0].gccs_norm) {
+    p.fill(colors['gccs_norm']);
+    if (shape == 'arc') {
+      r = rScale(selData[0].gccs_norm);
+      p.arc(0, 0, r, r, -p.PI/2, 0);
+    } else if (shape == 'arcdonut') {
+      r = rScaleDonut(selData[0].gccs_norm);
       p.arc(0, 0, r, r, -p.PI/2, 0);
       p.fill(colors['background']);
       p.arc(0, 0, rmin, rmin, -p.PI/2, 0);
@@ -1315,31 +1329,17 @@ function arcMotif2(p, shape = 'arc') {
     }
   }
 
-  // norm
-  if (selData[0].gccs_norm) {
-    p.fill(colors['gccs_norm']);
-    if (shape == 'arc') {
-      r = rScale(selData[0].gccs_norm);
-      p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
-    } else if (shape == 'arcdonut') {
-      r = rScaleDonut(selData[0].gccs_norm);
-      p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
-      p.fill(colors['background']);
-      p.arc(-cellWidth/2, cellHeight/2, rmin, rmin, -p.PI/2, 0);
-    }
-  }
-
   // government
   if (selData[0].gccs_government) {
     p.fill(colors['gccs_government']);
     if (shape == 'arc') {
       r = rScale(selData[0].gccs_government);
-      p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
+      p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
     } else if (shape == 'arcdonut') {
       r = rScaleDonut(selData[0].gccs_government);
-      p.arc(0, -cellHeight/2, r, r, p.PI/2, p.PI);
+      p.arc(-cellWidth/2, cellHeight/2, r, r, -p.PI/2, 0);
       p.fill(colors['background']);
-      p.arc(0, -cellHeight/2, rmin, rmin, p.PI/2, p.PI);
+      p.arc(-cellWidth/2, cellHeight/2, rmin, rmin, -p.PI/2, 0);
     }
   }
 }
