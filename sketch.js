@@ -58,6 +58,7 @@ let y;
 // motif
 let colors;
 // order of variables in UI
+// TODO gleiche Reihenfolge für alle Muster!! Reihenfolge vorgeben?
 let order = [];
 //let order = [
   //'gccs_government',
@@ -349,8 +350,8 @@ function sketch2(p) {
     p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
-    let xMotif = pcWidth*0.1;
-    let yMotif = pcHeight*0.4;
+    let xMotif = pcWidth*0.25;
+    let yMotif = pcHeight*0.33;
     let bScale = p.min((pcWidth/2)/cellWidth, pcHeight/cellHeight)*0.3
 
     // draw scaled motif, without symmetry operations
@@ -386,28 +387,28 @@ function sketch2(p) {
 
     // add source as separating line
     p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(12);
+    p.textSize(7);
     p.noStroke();
-    p.fill(150);
+    p.fill(0);
     p.push();
     p.translate(pcWidth*0.55, pcHeight/2);
     p.rotate(-p.PI/2);
     p.text(
-      'Data from the global climate change survey. https://gccs.iza.org/',
+      "Lilian Gasser . CAS Generative Data Design . Hochschule der Künste Bern . 2025",
       0,
       0,
     )
-    p.pop();
+    p.pop()
 
     // add more info block
     // TODO add link or QR code to my scrollytelling website
     // TODO add contact
     p.textAlign(p.LEFT, p.CENTER);
-    p.textSize(12);
+    p.textSize(7);
     p.noStroke();
-    p.fill(100);
+    p.fill(0);
     p.text(
-      "Lilian Gasser / Projekt für CAS Generative Data Design / Hochschule der Künste Bern / 2025",
+      "Datenquelle: global climate change survey. https://gccs.iza.org/",
       20,
       pcHeight - 20,
     )
@@ -569,7 +570,7 @@ function updateGrid(p) {
   cellHeight = cellWidth / cellsAspectratio;  // aspectratio = width / height
   let nCellsY = Math.floor(distanceY / cellHeight);
   if (layoutSelect.value() === 'portraitsquared') {
-    nCellsY = nCellsX + 2;
+    nCellsY = nCellsX + 1;
   }
   nCells = nCellsX * nCellsY;
   console.log('nCells: ' + nCells, nCellsX, nCellsY, 'pcWidth: ' + pcWidth + ', pcHeight: ' + pcHeight);
@@ -713,7 +714,7 @@ function addCountryText(p) {
 
   // text
   p.noStroke();
-  p.fill(150);
+  p.fill(0);
   p.text(
     countryText, 
     txtX,
@@ -727,7 +728,8 @@ function addLegendText(p) {
 
   let legendText;
   let xPos = 20;
-  p.textAlign(p.TOP, p.LEFT);
+  let xPosMiddle = pcWidth*0.22;
+  let xPosRight = pcWidth*0.53;
   p.noStroke();
   
   // title
@@ -736,121 +738,214 @@ function addLegendText(p) {
   } else if (language === 'de') {
     legendText = 'Share the good news'
   }
-  p.fill(50);
-  p.textSize(30);
-  //p.textFont("filmotype-keynote");
+  p.textAlign(p.LEFT);
+  p.fill(0);
+  p.textSize(40);
   p.textFont("gelato-luxe");
+  p.textFont("amandine");
+  //p.textFont("filmotype-keynote");  // "filmotype-keynote"
   p.text(
     legendText,
     xPos,
-    60,
+    50,
   )
 
   // wtp
-  if (language === 'en') {
-    legendText = `${selData[0]['gccs_wtp']}% of the people ${selData[0]['country_prefix'].toLowerCase()} ${selCountry} are willing to give 1% of their income`
-  } else if (language === 'de') {
-    legendText = `${selData[0]['gccs_wtp']}% der Menschen ${selData[0]['country_prefix'].toLowerCase()} ${selCountry} sind bereit 1% ihres Einkommens`
-  }
-  p.textSize(14);
+  p.textAlign(p.RIGHT);
+  p.textSize(11);
   p.fill(colors['gccs_wtp']);
   p.textFont(typefaceSelect.value());
+  if (language === 'en') {
+    legendText = `${selData[0]['gccs_wtp']}% of the people ${selData[0]['country_prefix'].toLowerCase()} ${selCountry} are `
+  } else if (language === 'de') {
+    legendText = `${selData[0]['gccs_wtp']}% der Menschen ${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de']} `
+  }
   p.text(
     legendText, 
-    xPos,
+    xPosMiddle,
     90,
+  );
+  if (language === 'en') {
+    legendText = "willing to give 1% of their income"
+  } else if (language === 'de') {
+    legendText = "sind bereit, 1% ihres Einkommens" 
+  }
+  p.text(
+    legendText, 
+    xPosMiddle,
+    105,
   );
   if (language === 'en') {
     legendText = "to fight global warming."
   } else if (language === 'de') {
-    legendText = "zu geben, um den Klimawandel zu bekämpfen." 
+    legendText = "für den Klimaschutz zu spenden." 
   }
   p.text(
     legendText, 
-    xPos,
-    110,
+    xPosMiddle,
+    120,
   );
 
   // wtp belief
-  if (language === 'en') {
-    legendText = `They think that only ${selData[0]['gccs_wtp_belief']}% of the others are also willing to do so, `
-  } else if (language === 'de') {
-    legendText = `Sie denken, dass nur ${selData[0]['gccs_wtp_belief']}% auch dazu bereit sind, `
-  }
+  p.textAlign(p.RIGHT);
   p.fill(colors['gccs_wtp_belief']);
+  if (language === 'en') {
+    legendText = `They think that only ${selData[0]['gccs_wtp_belief']}% `
+  } else if (language === 'de') {
+    legendText = `Sie denken, dass nur ${selData[0]['gccs_wtp_belief']}% `
+  }
   p.text(
     legendText, 
-    xPos,
-    130,
+    xPosRight,
+    220,
+  );
+  if (language === 'en') {
+    legendText = `of the others are also willing to do so, `
+  } else if (language === 'de') {
+    legendText = `der anderen auch dazu bereit`
+  }
+  p.text(
+    legendText, 
+    xPosRight,
+    240,
   );
 
   // gap
   if (language === 'en') {
     legendText = `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`
   } else if (language === 'de') {
-    legendText = `ein Unterschied von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.`
+    legendText = `sind, ein Unterschied von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.*`
   }
   p.text(
     legendText, 
-    xPos,
-    150,
+    xPosRight,
+    260,
   );
 
   // social norm
+  p.textAlign(p.RIGHT);
+  p.fill(colors['gccs_norm']);
   if (language === 'en') {
     legendText = `${selData[0]['gccs_norm']}%: others should try to fight global warming.`
   } else if (language === 'de') {
-    legendText = `${selData[0]['gccs_norm']}%: andere sollen gegen den Klimawandel kämpfen.`
+    legendText = `${selData[0]['gccs_norm']}% finden, dass die Menschen`
   }
-  p.fill(colors['gccs_norm']);
   p.text(
     legendText,
-    xPos,
-    330,
+    xPosRight,
+    125,
+  )
+  if (language === 'en') {
+    legendText = `${selData[0]['gccs_norm']}%: others should try to fight global warming.`
+  } else if (language === 'de') {
+    legendText = `${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de']} mehr für`
+  }
+  p.text(
+    legendText,
+    xPosRight,
+    145,
+  )
+  if (language === 'en') {
+    legendText = `${selData[0]['gccs_norm']}%: others should try to fight global warming.`
+  } else if (language === 'de') {
+    legendText = "den Klimaschutz tun sollte."
+  }
+  p.text(
+    legendText,
+    xPosRight,
+    165,
   )
 
   // government
+  p.textAlign(p.LEFT);
+  p.fill(colors['gccs_government']);
   if (language === 'en') {
     if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
-      legendText = "Question not asked in this country."
+      legendText = "Question not asked"
     } else {
-      legendText = `${selData[0]['gccs_government']}%: national government should do more.`
+      legendText = `${selData[0]['gccs_government']}%: national government`
     }
   } else if (language === 'de') {
     if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
-      legendText = "In diesem Land wurde die Frage nicht gestellt."
+      legendText = "In diesem Land wurde "
     } else {
-      legendText = `${selData[0]['gccs_government']}%: nationale Regierung soll mehr tun.`
+      legendText = `${selData[0]['gccs_government']}% verlangen mehr `
     }
   }
-  p.fill(colors['gccs_government']);
   p.text(
     legendText,
     xPos,
-    350,
+    255,
+  )
+  if (language === 'en') {
+    if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+      legendText = "in this country."
+    } else {
+      legendText = `should do more.`
+    }
+  } else if (language === 'de') {
+    if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+      legendText = "die Frage nicht gestellt."
+    } else {
+      legendText = `politisches Handeln`
+    }
+  }
+  p.text(
+    legendText,
+    xPos,
+    270,
+  )
+  if (language === 'en') {
+    if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+      legendText = ""
+    } else {
+      legendText = ``
+    }
+  } else if (language === 'de') {
+    if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+      legendText = ""
+    } else {
+      legendText = `von der Regierung.`
+    }
+  }
+  p.text(
+    legendText,
+    xPos,
+    285,
   )
 
   // final sentences
+  p.textAlign(p.LEFT);
+  p.fill(0);
   if (language === 'en') {
-    legendText = "This difference in perception is reported in 125 countries,"
+    legendText = "*This difference in perception is"
   } else if (language === 'de') {
-    legendText = "Dieser Unterschied wurde in 125 Ländern gefunden,"
+    legendText = "Dieses Muster wurde in allen 125 Ländern gefunden, die Teil der Studie waren."
   }
-  p.fill(100);
   p.text(
     legendText,
     xPos,
-    370,
+    340,
   )
   if (language === 'en') {
-    legendText = "in every country partcipating in the survey."
+    legendText = "reported in all the 125 countries"
   } else if (language === 'de') {
-    legendText = "in jedem Land, das an der Umfrage teilgenommen hat."
+    legendText = ""
   }
   p.text(
     legendText,
-    xPos,
-    390,
+    xPosRight,
+    360,
+  )
+  if (language === 'en') {
+    legendText = "partcipating in the survey."
+  } else if (language === 'de') {
+    legendText = ""
+  }
+  p.text(
+    legendText,
+    xPosRight,
+    380,
   )
 }
 
@@ -878,7 +973,7 @@ function exportCanvases() {
     colors['gccs_government']];
   let filename = parts.join('_');
   sketch1Instance.save(filename + '_postcardfront', 'svg');
-  //sketch2Instance.save(filename + '_postcardback', 'svg');
+  sketch2Instance.save(filename + '_postcardback', 'svg');
   //sketch3Instance.save(filename + '_motif', 'svg');
 }
 
