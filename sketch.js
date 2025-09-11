@@ -58,15 +58,13 @@ let y;
 
 // motif
 let colors;
-// order of variables in UI
 // TODO gleiche Reihenfolge für alle Muster!! Reihenfolge vorgeben?
-let order = [];
-//let order = [
-  //'gccs_government',
-  //'gccs_wtp_belief', 
-  //'gccs_norm', 
-  //'gccs_wtp', 
-//];
+let order = [
+  'gccs_wtp', 
+  'gccs_norm', 
+  'gccs_wtp_belief', 
+  'gccs_government',
+];
 // initialize scales
 let rScale = d3.scaleSqrt(); // radius in complete cell
 let rScaleHalfCell = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell)
@@ -179,11 +177,6 @@ function initializeSelects(p) {
   let colorbgHTML = document.getElementById('colorbg');
   colorbg = p.select('#colorbg');
 
-  let pos1HTML = document.getElementById('pos1');
-  let pos2HTML = document.getElementById('pos2');
-  let pos3HTML = document.getElementById('pos3');
-  let pos4HTML = document.getElementById('pos4');
-
   let typefaceTitleSelectHTML = document.getElementById('typefacetitle');
   typefaceTitleSelect = p.select('#typefacetitle');
   let typefaceTextSelectHTML = document.getElementById('typefacetext');
@@ -226,18 +219,6 @@ function initializeSelects(p) {
   colorbgHTML.addEventListener('change', function(event) {
     updateColors(p);
   });
-  pos1HTML.addEventListener('change', function(event) {
-    updateOrder(p);
-  });
-  pos2HTML.addEventListener('change', function(event) {
-    updateOrder(p);
-  });
-  pos3HTML.addEventListener('change', function(event) {
-    updateOrder(p);
-  });
-  pos4HTML.addEventListener('change', function(event) {
-    updateOrder(p);
-  });
   typefaceTitleSelectHTML.addEventListener('change', function(event) {
     updatePostcard(p);
   });
@@ -266,16 +247,6 @@ function initializeButtons(p) {
   });
 
 }
-
-function getDropdownOrder() {
-  order = [
-    document.getElementById('pos1').value,
-    document.getElementById('pos2').value,
-    document.getElementById('pos3').value,
-    document.getElementById('pos4').value
-  ].filter(val => val !== ''); // Remove empty selections
-}
-
 
 function sketch1(p) {
   p.setup = function () {
@@ -497,7 +468,6 @@ initializeSelects(sketch3Instance);
 initializeButtons(sketch1Instance);
 updateCanvasSize(sketch1Instance);
 updateGrid(sketch1Instance);
-updateOrder(sketch1Instance);
 updateColors(sketch1Instance);
 loadData(sketch1Instance);
 
@@ -593,14 +563,6 @@ function updateGrid(p) {
 
   // Motif properties
   updateScales(p);
-
-  p.redraw();
-
-}
-
-function updateOrder(p) {
-
-  getDropdownOrder();
 
   p.redraw();
 
