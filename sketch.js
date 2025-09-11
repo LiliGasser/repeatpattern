@@ -8,7 +8,7 @@ let layoutSelect;
 let frameMarginSelect;
 let nCellsXInput;
 let relMotifSizeInput;
-let rowIndentInput;
+//let rowIndentInput;
 let showGrid;
 let symmetrySelect;
 let motifSelect;
@@ -156,8 +156,8 @@ function initializeSelects(p) {
   nCellsXInput = p.select('#ncellsx')
   let relMotifSizeInputHTML = document.getElementById('relmotifsize');
   relMotifSizeInput = p.select('#relmotifsize');
-  let rowIndentInputHTML = document.getElementById('rowindent');
-  rowIndentInput = p.select('#rowindent');
+  //let rowIndentInputHTML = document.getElementById('rowindent');
+  //rowIndentInput = p.select('#rowindent');
   let showGridHTML = document.getElementById('showgrid');
   showGrid = p.select('#showgrid');
 
@@ -192,9 +192,9 @@ function initializeSelects(p) {
   relMotifSizeInputHTML.addEventListener('change', function(event) {
     updateGrid(p);
   });
-  rowIndentInputHTML.addEventListener('change', function(event) {
-    updatePostcard(p);
-  });
+  //rowIndentInputHTML.addEventListener('change', function(event) {
+    //updatePostcard(p);
+  //});
   showGridHTML.addEventListener('change', function(event) {
     updatePostcard(p);
   });
@@ -277,7 +277,8 @@ function sketch1(p) {
     y = initialCellPositionY
     cellCount = 1;
     rowCount = 1;
-    rowIndent = parseFloat(rowIndentInput.value());
+    rowIndent = 0;
+    //rowIndent = parseFloat(rowIndentInput.value());
 
     // draw pattern
     for (let i = 0; i < nCells; i++) {
@@ -644,10 +645,6 @@ function drawMotif(p) {
     arcMotif(p, 'arcdonut');
   } else if (motifSelect.value() === 'arc2') {
     arcMotif2(p);
-  } else if (motifSelect.value() === 'flower') {
-    flowerMotif(p, 0);
-  } else if (motifSelect.value() === 'flower45') {
-    flowerMotif(p, p.PI/4);
   } else if (motifSelect.value() === 'squares') {
     arcMotif(p, 'squares');
   } else if (motifSelect.value() === 'rectangles') {
