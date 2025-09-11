@@ -4,14 +4,15 @@ let sketch2Instance;
 let sketch3Instance;
 let canvas;
 let countrySelect;
+let motifSelect;
+let symmetrySelect;
+let showGrid;
 let layoutSelect;
 let frameMarginSelect;
 let nCellsXInput;
 let relMotifSizeInput;
 //let rowIndentInput;
-let showGrid;
-let symmetrySelect;
-let motifSelect;
+let colorPaletteSelect;
 let color1;
 let color2;
 let color3;
@@ -58,13 +59,27 @@ let y;
 
 // motif
 let colors;
-// TODO gleiche Reihenfolge für alle Muster!! Reihenfolge vorgeben?
+let colors_icecream = [
+  '#ffc33e',
+  '#50514f',
+  '#f28d92',
+  '#426c8e',
+  '#ffffff',
+];
+let colors_retro = [
+  '#f37124',
+  '#2f4c43',
+  '#96b27e',
+  '#67897f',
+  '#ffffff',
+];
 let order = [
   'gccs_wtp', 
   'gccs_norm', 
   'gccs_wtp_belief', 
   'gccs_government',
 ];
+
 // initialize scales
 let rScale = d3.scaleSqrt(); // radius in complete cell
 let rScaleHalfCell = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell)
@@ -149,23 +164,25 @@ function loadData(p) {
 
 function initializeSelects(p) {
 
-  // It is better to define button in html and select in p5
+  // It is better to define buttons in html and select in p5
   let countrySelectHTML = document.getElementById('country');
   countrySelect = p.select('#country');
+  let motifSelectHTML = document.getElementById('motif');
+  motifSelect = p.select('#motif');
+  let symmetrySelectHTML = document.getElementById('symmetry');
+  symmetrySelect = p.select('#symmetry');
+  let showGridHTML = document.getElementById('showgrid');
+  showGrid = p.select('#showgrid');
+
   let nCellsXInputHTML = document.getElementById('ncellsx');
   nCellsXInput = p.select('#ncellsx')
   let relMotifSizeInputHTML = document.getElementById('relmotifsize');
   relMotifSizeInput = p.select('#relmotifsize');
   //let rowIndentInputHTML = document.getElementById('rowindent');
   //rowIndentInput = p.select('#rowindent');
-  let showGridHTML = document.getElementById('showgrid');
-  showGrid = p.select('#showgrid');
 
-  let symmetrySelectHTML = document.getElementById('symmetry');
-  symmetrySelect = p.select('#symmetry');
-
-  let motifSelectHTML = document.getElementById('motif');
-  motifSelect = p.select('#motif');
+  let colorPaletteSelectHTML = document.getElementById('colorpalette');
+  colorPaletteSelect = p.select('#colorpalette');
   let color1HTML = document.getElementById('color1');
   color1 = p.select('#color1');
   let color2HTML = document.getElementById('color2');
@@ -203,6 +220,9 @@ function initializeSelects(p) {
   });
   motifSelectHTML.addEventListener('change', function(event) {
     updatePostcard(p);
+  });
+  colorPaletteSelectHTML.addEventListener('change', function(event) {
+    updateColorPalette(p);
   });
   color1HTML.addEventListener('change', function(event) {
     updateColors(p);
@@ -475,7 +495,8 @@ initializeSelects(sketch3Instance);
 initializeButtons(sketch1Instance);
 updateCanvasSize(sketch1Instance);
 updateGrid(sketch1Instance);
-updateColors(sketch1Instance);
+updateColorPalette(sketch1Instance);
+//updateColors(sketch1Instance);
 loadData(sketch1Instance);
 
 // TODO initial drawing of front as portrait
@@ -575,6 +596,33 @@ function updateGrid(p) {
 
 }
 
+function updateColorPalette(p) {
+
+  let palette;
+  if (colorPaletteSelect.value() === 'icecream') {
+    palette = colors_icecream;
+  } else if (colorPaletteSelect.value() === 'retro') {
+    palette = colors_retro;
+  }
+
+  colors = {
+    'gccs_wtp': p.color(palette[0]),
+    'gccs_wtp_belief': p.color(palette[1]),
+    'gccs_norm': p.color(palette[2]),
+    'gccs_government': p.color(palette[3]),
+    'background': p.color(palette[4]),
+  }
+
+  color1.value(palette[0]);
+  color2.value(palette[1]);
+  color3.value(palette[2]);
+  color4.value(palette[3]);
+  colorbg.value(palette[4]);
+
+  //console.log('color change', colors);
+  p.redraw();
+
+}
 function updateColors(p) {
 
   colors = {
