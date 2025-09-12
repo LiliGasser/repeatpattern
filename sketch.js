@@ -1,7 +1,10 @@
+// global variables
+// ------------------------------------------------
+
 // initialize canvas, selects and buttons
-let sketch1Instance;
-let sketch2Instance;
-let sketch3Instance;
+let sketchFrontInstance;
+let sketchBackInstance;
+let sketchMotifInstance;
 let canvas;
 let countrySelect;
 let motifSelect;
@@ -13,11 +16,11 @@ let nCellsXInput;
 let relMotifSizeInput;
 //let rowIndentInput;
 let colorPaletteSelect;
-let color1;
-let color2;
-let color3;
-let color4;
-let colorbg;
+let color1; // WTP
+let color2; // WTP Belief
+let color3; // Norm
+let color4; // Government
+let colorbg; // Background
 let typefaceTitleSelect;
 let typefaceTextSelect;
 let exportButton;
@@ -30,16 +33,12 @@ let countries = [];
 // define postcard size (A5 postcard: 148mm x 105mm)
 // calculation: https://imageonline.co/mm-to-px.php
 // laptop screen: 1920 x 1200, 14'' diagonal --> 162 ppi; 60Hz
-let pcWidthMM = 148; // mm
-let pcHeightMM = 105; // mm
+const pcWidthMM = 148; // mm
+const pcHeightMM = 105; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
 let portraitLayouts = ['portrait', 'portraitsquared'];
-// To set appropriate size for export, Felix would do it as I did already.
-// For printing, pdf is better than svg.
-
-// Scaling: https://p5js.org/tutorials/coordinates-and-transformations/
 
 // define cell
 let cellWidth;
@@ -59,14 +58,14 @@ let y;
 
 // motif
 let colors;
-let colors_icecream = [
+const colors_icecream = [
   '#ffc33e',
   '#50514f',
   '#f28d92',
   '#426c8e',
   '#ffffff',
 ];
-let colors_retro = [
+const colors_retro = [
   '#f37124',
   '#2f4c43',
   '#96b27e',
@@ -84,21 +83,20 @@ let order = [
 let rScale = d3.scaleSqrt(); // radius in complete cell
 let rScaleHalfCell = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell)
 let rScaleDonut = d3.scaleSqrt(); // radius in complete cell for donut
-let rScaleHalfCellDonut = d3.scaleSqrt(); // radius in halfcell (actually it's a quarter cell) for donut
-let rmin;
+let rmin; // minimum radius for donut
 let areaScale = d3.scaleLinear(); // area of isoceles triangle
 let hScale = d3.scaleLinear(); // height of rectangle
 let angleScale = d3.scaleLinear(); // angle of circle completion
 let elScaleHalfCell = d3.scaleLinear(); // ellipse size (length of main axis)
 let elScaleHalfCellDiagonal = d3.scaleLinear(); // ellipse size (length of main axis)
-let elStartPos;
+let elStartPos; // initial position in one direction of ellipse for flower motif
 
 // define canvas size for motif
 let mWidth = 200;
 let mHeight = 200;
 
 // language
-let language = 'en'; // 'en' or 'de'
+let language = 'de'; // 'en' or 'de'
 
 // text positions and font sizes
 let countryTextX;
@@ -116,6 +114,214 @@ let legendTextYStart = 95;
 let legendTextYStart2 = 210;
 
 
+
+// initialize app
+// ------------------------------------------------
+// TODO good positioning of canvases
+sketchFrontInstance = new p5(sketchFront);
+sketchBackInstance = new p5(sketchBack);
+sketchMotifInstance = new p5(sketchMotif);
+initializeSelects(sketchFrontInstance);
+initializeSelects(sketchBackInstance);
+initializeSelects(sketchMotifInstance);
+initializeButtons(sketchFrontInstance);
+updateCanvasSize(sketchFrontInstance);
+updateGrid(sketchFrontInstance);
+updateColorPalette(sketchFrontInstance);
+loadData(sketchFrontInstance);
+
+
+
+// p5 sketches 
+// ------------------------------------------------
+function sketchFront(p) {
+  p.setup = function () {
+    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
+    canvas.parent(document.querySelector('.canvas-container'));
+    p.noLoop();
+
+  };
+
+  p.draw = function () {
+    p.background(colors['background']);
+
+    // select font
+    p.textFont(typefaceTextSelect.value());
+
+    // rectangle around card
+    p.noFill()
+    p.stroke('black');
+    p.strokeWeight(1);
+    if (layoutSelect.value() === 'landscape') {
+      p.rect(0, 0, pcWidth, pcHeight);
+    } else if (portraitLayouts.includes(layoutSelect.value())) {
+      p.rect(0, 0, pcHeight, pcWidth);
+    }
+
+    // initialize
+    x = initialCellPositionX;
+    y = initialCellPositionY
+    cellCount = 1;
+    rowCount = 1;
+    rowIndent = 0;  // parseFloat(rowIndentInput.value());
+
+    // draw pattern
+    for (let i = 0; i < nCells; i++) {
+
+      // draw grid cell
+      if (showGrid.checked()) {
+        drawGridCell(p);
+      }
+
+      // draw motif
+      if (selData.length > 0) {
+        p.push();
+        p.translate(x + cellWidth/2, y + cellHeight/2);
+        p.scale(relMotifSize, relMotifSize);
+        if (symmetrySelect.value() === '180degreeRotations') {
+          p.rotate(initialCellRotation + i*p.PI);
+        } else if (symmetrySelect.value() === '90degreeRotations') {
+          p.rotate(initialCellRotation + i*p.PI/2);
+        }
+        drawMotif(p);
+        p.pop();
+      }
+
+      // move to next cell: translation from left to right, top to bottom
+      doTranslation();
+
+    }
+
+    // add text for country
+    if (selData.length > 0) {
+      addCountryText(p);
+
+    }
+  }
+}
+
+
+function sketchBack(p) {
+  p.setup = function () {
+    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
+    canvas.parent(document.querySelector('.canvas-container'));
+    p.noLoop();
+
+  };
+
+  p.draw = function () {
+    p.background(255);
+
+    p.textFont(typefaceTextSelect.value());
+
+    // rectangle around card
+    p.noFill()
+    p.stroke('black');
+    p.strokeWeight(1);
+    p.rect(0, 0, pcWidth, pcHeight);
+
+    // initialize
+    let xMotif = pcWidth*0.28;
+    let yMotif = pcHeight*0.32;
+    let bScale;
+    if (['interlockingcirclesclose', 'windwheel45'].includes(motifSelect.value())) {
+      bScale = p.min((pcWidth*0.56)/cellWidth, pcHeight/cellHeight)*0.26
+    } else {
+      bScale = p.min((pcWidth*0.56)/cellWidth, pcHeight/cellHeight)*0.30
+    }
+
+
+    // draw scaled motif, without symmetry operations
+    if (selData.length > 0) {
+      p.push();
+      p.translate(xMotif, yMotif);
+      p.scale(bScale, bScale);
+      p.push();
+      drawMotif(p);
+      p.pop();
+
+      // draw grid cell 
+      // TODO move to function again
+      if (showGrid.checked()) {
+        p.noFill();
+        p.stroke(100);
+        p.strokeWeight(0.2);
+        p.rect(
+          -cellWidth/2, 
+          -cellHeight/2, 
+          cellWidth, 
+          cellHeight
+        );
+        p.line(-cellWidth/2, 0, cellWidth/2, 0);
+        p.line(0, -cellHeight/2, 0, cellHeight/2);
+      }
+      p.pop();
+
+      // add text of legend to motif
+      addLegendText(p);
+    }
+
+    // add author and project info as separating line
+    addAuthorText(p);
+
+    // add more info block
+    // TODO add link to my scrollytelling website
+    addInfoText(p);
+
+    // address block
+    addAddressBlock(p);
+
+  }
+}
+
+function sketchMotif(p) {
+  p.setup = function() {
+    canvas = p.createCanvas(mWidth, mHeight, p.SVG);
+    canvas.parent(document.querySelector('.canvas-container-motif'));
+    p.noLoop();
+
+  }
+
+  p.draw = function () {
+    p.background(255);
+
+    // initialize
+    let xMotif = mWidth/2;
+    let yMotif = mHeight/2;
+    let mScale = p.min(mWidth/cellWidth, mHeight/cellHeight)*0.8
+
+    // draw scaled motif, without symmetry operations
+    if (selData.length > 0) {
+      p.push();
+      p.translate(xMotif, yMotif);
+      p.scale(mScale, mScale);
+      p.push();
+      drawMotif(p);
+      p.pop();
+
+      // draw grid cell 
+      // TODO move to function again
+      if (showGrid.checked()) {
+        p.noFill();
+        p.stroke(100);
+        p.strokeWeight(0.2);
+        p.rect(
+          -cellWidth/2, 
+          -cellHeight/2, 
+          cellWidth, 
+          cellHeight
+        );
+      }
+      p.pop();
+    }
+
+  }
+}
+
+
+
+// helper functions
+// ------------------------------------------------
 function loadData(p) {
   // Load data
   d3.dsv(";", "data/gccs_country_with_temperature_and_gdp.csv", d3.autoType).then(function(csv) {
@@ -225,19 +431,19 @@ function initializeSelects(p) {
     updateColorPalette(p);
   });
   color1HTML.addEventListener('change', function(event) {
-    updateColors(p);
+    updateColorsObject(p);
   });
   color2HTML.addEventListener('change', function(event) {
-    updateColors(p);
+    updateColorsObject(p);
   });
   color3HTML.addEventListener('change', function(event) {
-    updateColors(p);
+    updateColorsObject(p);
   });
   color4HTML.addEventListener('change', function(event) {
-    updateColors(p);
+    updateColorsObject(p);
   });
   colorbgHTML.addEventListener('change', function(event) {
-    updateColors(p);
+    updateColorsObject(p);
   });
   typefaceTitleSelectHTML.addEventListener('change', function(event) {
     updatePostcard(p);
@@ -268,237 +474,6 @@ function initializeButtons(p) {
 
 }
 
-function sketch1(p) {
-  p.setup = function () {
-    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
-    canvas.parent(document.querySelector('.canvas-container'));
-    p.noLoop();
-
-  };
-
-  p.draw = function () {
-    p.background(colors['background']);
-
-    // select font
-    p.textFont(typefaceTextSelect.value());
-
-    // rectangle around card
-    p.noFill()
-    p.stroke('black');
-    p.strokeWeight(1);
-    if (layoutSelect.value() === 'landscape') {
-      p.rect(0, 0, pcWidth, pcHeight);
-    } else if (portraitLayouts.includes(layoutSelect.value())) {
-      p.rect(0, 0, pcHeight, pcWidth);
-    }
-
-    // initialize
-    x = initialCellPositionX;
-    y = initialCellPositionY
-    cellCount = 1;
-    rowCount = 1;
-    rowIndent = 0;
-    //rowIndent = parseFloat(rowIndentInput.value());
-
-    // draw pattern
-    for (let i = 0; i < nCells; i++) {
-
-      // draw grid cell
-      if (showGrid.checked()) {
-        drawGridCell(p);
-      }
-
-      // draw motif
-      if (selData.length > 0) {
-        p.push();
-        p.translate(x + cellWidth/2, y + cellHeight/2);
-        p.scale(relMotifSize, relMotifSize);
-        if (symmetrySelect.value() === '180degreeRotations') {
-          p.rotate(initialCellRotation + i*p.PI);
-        } else if (symmetrySelect.value() === '90degreeRotations') {
-          p.rotate(initialCellRotation + i*p.PI/2);
-        }
-        drawMotif(p);
-        p.pop();
-      }
-
-      // move to next cell: translation from left to right, top to bottom
-      doTranslation();
-
-    }
-
-    // add text for country
-    if (selData.length > 0) {
-      addCountryText(p);
-
-    }
-  }
-}
-
-
-function sketch2(p) {
-  p.setup = function () {
-    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
-    canvas.parent(document.querySelector('.canvas-container'));
-    p.noLoop();
-
-  };
-
-  p.draw = function () {
-    p.background(255);
-
-    p.textFont(typefaceTextSelect.value());
-
-    // rectangle around card
-    p.noFill()
-    p.stroke('black');
-    p.strokeWeight(1);
-    p.rect(0, 0, pcWidth, pcHeight);
-
-    // initialize
-    let xMotif = pcWidth*0.28;
-    let yMotif = pcHeight*0.32;
-    let bScale;
-    if (['interlockingcirclesclose', 'windwheel45'].includes(motifSelect.value())) {
-      bScale = p.min((pcWidth*0.56)/cellWidth, pcHeight/cellHeight)*0.26
-    } else {
-      bScale = p.min((pcWidth*0.56)/cellWidth, pcHeight/cellHeight)*0.30
-    }
-
-
-    // draw scaled motif, without symmetry operations
-    if (selData.length > 0) {
-      //console.log("in sketch2 draw")
-      p.push();
-      p.translate(xMotif, yMotif);
-      p.scale(bScale, bScale);
-      p.push();
-      drawMotif(p);
-      p.pop();
-
-      // draw grid cell 
-      // TODO move to function again
-      if (showGrid.checked()) {
-        p.noFill();
-        p.stroke(100);
-        p.strokeWeight(0.2);
-        p.rect(
-          -cellWidth/2, 
-          -cellHeight/2, 
-          cellWidth, 
-          cellHeight
-        );
-        p.line(-cellWidth/2, 0, cellWidth/2, 0);
-        p.line(0, -cellHeight/2, 0, cellHeight/2);
-      }
-      p.pop();
-
-      // add legend text
-      addLegendText(p);
-    }
-
-    // add source as separating line
-    p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(fontSizeSource);
-    p.noStroke();
-    p.fill(0);
-    p.push();
-    p.translate(pcWidth*0.56, pcHeight/2);
-    p.rotate(-p.PI/2);
-    p.text(
-      "Lilian Gasser . CAS Generative Data Design . Hochschule der Künste Bern . 2025",
-      0,
-      0,
-    )
-    p.pop()
-
-    // add more info block
-    // TODO add link to my scrollytelling website
-    p.textAlign(p.LEFT, p.BOTTOM);
-    p.textSize(fontSizeSource);
-    p.noStroke();
-    p.fill(0);
-    p.text(
-      "Datenquelle: global climate change survey. https://gccs.iza.org/",
-      titleTextX,
-      countryTextY,
-    )
-
-
-    // address block
-    p.push();
-    p.noFill();
-    p.stroke(200);
-    p.strokeWeight(0.8);
-    p.line(pcWidth*0.54 + 60, pcHeight*0.50, pcWidth - 70, pcHeight*0.50);
-    p.line(pcWidth*0.54 + 60, pcHeight*0.58, pcWidth - 70, pcHeight*0.58);
-    p.line(pcWidth*0.54 + 60, pcHeight*0.66, pcWidth - 70, pcHeight*0.66);
-    p.line(pcWidth*0.54 + 60, pcHeight*0.74, pcWidth - 70, pcHeight*0.74);
-    p.pop();
-
-  }
-}
-
-function sketch3(p) {
-  p.setup = function() {
-    canvas = p.createCanvas(mWidth, mHeight, p.SVG);
-    canvas.parent(document.querySelector('.canvas-container-motif'));
-    p.noLoop();
-
-  }
-
-  p.draw = function () {
-    p.background(255);
-
-    // initialize
-    let xMotif = mWidth/2;
-    let yMotif = mHeight/2;
-    let mScale = p.min(mWidth/cellWidth, mHeight/cellHeight)*0.8
-
-    // draw scaled motif, without symmetry operations
-    if (selData.length > 0) {
-      //console.log("in sketch3 draw")
-      p.push();
-      p.translate(xMotif, yMotif);
-      p.scale(mScale, mScale);
-      p.push();
-      drawMotif(p);
-      p.pop();
-
-      // draw grid cell 
-      // TODO move to function again
-      if (showGrid.checked()) {
-        p.noFill();
-        p.stroke(100);
-        p.strokeWeight(0.2);
-        p.rect(
-          -cellWidth/2, 
-          -cellHeight/2, 
-          cellWidth, 
-          cellHeight
-        );
-      }
-      p.pop();
-    }
-
-  }
-}
-
-
-// TODO good positioning of canvases
-sketch1Instance = new p5(sketch1);
-sketch2Instance = new p5(sketch2);
-sketch3Instance = new p5(sketch3);
-initializeSelects(sketch1Instance);
-initializeSelects(sketch2Instance);
-initializeSelects(sketch3Instance);
-initializeButtons(sketch1Instance);
-updateCanvasSize(sketch1Instance);
-updateGrid(sketch1Instance);
-updateColorPalette(sketch1Instance);
-//updateColors(sketch1Instance);
-loadData(sketch1Instance);
-
 // TODO initial drawing of front as portrait
 function updateCanvasSize(p) {
   if (layoutSelect.value() === 'landscape') {
@@ -521,14 +496,10 @@ function updateScales(p) {
     .domain([0, 100])
     .range([rmin, Math.min(cellWidth, cellHeight)]);
   
-
   // for arcs and circular motifs spanning a quarter of the cell
   rScaleHalfCell
     .domain([0, 100])
     .range([0, Math.min(cellWidth/2, cellHeight/2)]);
-  rScaleHalfCellDonut
-    .domain([0, 100])
-    .range([rmin, Math.min(cellWidth/2, cellHeight/2)]);
 
   // for the isoceles triangles in windwheel motif
   // max area = 1/2 * hypotenuse * height = 1/2 * cellWidth * cellWidth/2 = cellWidth*cellWidth/4
@@ -598,6 +569,7 @@ function updateGrid(p) {
 
 function updateColorPalette(p) {
 
+  // select palette
   let palette;
   if (colorPaletteSelect.value() === 'icecream') {
     palette = colors_icecream;
@@ -605,6 +577,7 @@ function updateColorPalette(p) {
     palette = colors_retro;
   }
 
+  // update colors object
   colors = {
     'gccs_wtp': p.color(palette[0]),
     'gccs_wtp_belief': p.color(palette[1]),
@@ -613,6 +586,7 @@ function updateColorPalette(p) {
     'background': p.color(palette[4]),
   }
 
+  // update color inputs
   color1.value(palette[0]);
   color2.value(palette[1]);
   color3.value(palette[2]);
@@ -623,8 +597,10 @@ function updateColorPalette(p) {
   p.redraw();
 
 }
-function updateColors(p) {
 
+function updateColorsObject(p) {
+
+  // update colors object
   colors = {
     'gccs_wtp': p.color(color1.value()),
     'gccs_wtp_belief': p.color(color2.value()),
@@ -633,7 +609,9 @@ function updateColors(p) {
     'background': p.color(colorbg.value()),
   }
 
-  //console.log('color change', colors);
+  // set color palette select to custom if colors changed manually
+  colorPaletteSelect.value('custom');
+
   p.redraw();
 
 }
@@ -645,8 +623,8 @@ function selectCountry(p) {
   console.log("Filtered data for", selCountry, selData);
 
   p.redraw();
-  sketch2Instance.redraw();  // for initial drawing of back
-  sketch3Instance.redraw();  // for initial drawing of motif
+  sketchBackInstance.redraw();  // for initial drawing of back
+  sketchMotifInstance.redraw();  // for initial drawing of motif
 
 }
 
@@ -1047,6 +1025,55 @@ function addLegendText(p) {
   )
 }
 
+function addAuthorText(p) {
+  // add author text as separating line
+
+  p.textAlign(p.CENTER, p.CENTER);
+  p.textSize(fontSizeSource);
+  p.noStroke();
+  p.fill(0);
+  p.push();
+  p.translate(pcWidth*0.56, pcHeight/2);
+  p.rotate(-p.PI/2);
+  p.text(
+    "Lilian Gasser . CAS Generative Data Design . Hochschule der Künste Bern . 2025",
+    0,
+    0,
+  )
+  p.pop()
+
+}
+
+function addInfoText(p) {
+  // add more info block
+
+  p.textAlign(p.LEFT, p.BOTTOM);
+  p.textSize(fontSizeSource);
+  p.noStroke();
+  p.fill(0);
+  p.text(
+    "Datenquelle: global climate change survey. https://gccs.iza.org/",
+    titleTextX,
+    countryTextY,
+  )
+
+}
+
+function addAddressBlock(p) {
+  // address block
+
+  p.push();
+  p.noFill();
+  p.stroke(200);
+  p.strokeWeight(0.8);
+  p.line(pcWidth*0.54 + 60, pcHeight*0.50, pcWidth - 70, pcHeight*0.50);
+  p.line(pcWidth*0.54 + 60, pcHeight*0.58, pcWidth - 70, pcHeight*0.58);
+  p.line(pcWidth*0.54 + 60, pcHeight*0.66, pcWidth - 70, pcHeight*0.66);
+  p.line(pcWidth*0.54 + 60, pcHeight*0.74, pcWidth - 70, pcHeight*0.74);
+  p.pop();
+
+}
+
 function doTranslation() {
 
   // move to next cell: translation from left to right, top to bottom
@@ -1070,16 +1097,16 @@ function exportCanvases() {
     colors['gccs_norm'],
     colors['gccs_government']];
   let filename = parts.join('_');
-  sketch1Instance.save(filename + '_postcardfront', 'svg');
-  sketch2Instance.save(filename + '_postcardback', 'svg');
-  //sketch3Instance.save(filename + '_motif', 'svg');
+  sketchFrontInstance.save(filename + '_postcardfront', 'svg');
+  sketchBackInstance.save(filename + '_postcardback', 'svg');
+  //sketchMotifInstance.save(filename + '_motif', 'svg');
 }
 
 
 
 
-// -----------------------------------------------------------------
-// Motifs
+// motifs
+// ------------------------------------------------
 
 function windwheelMotif(p, addRotation) {
   // isosceles (gleichschenklige) triangles adjusting length of hypotenuse
