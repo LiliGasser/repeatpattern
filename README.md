@@ -4,9 +4,14 @@ Project of CAS Generative Data Design HKB 2025
 
 ## Project description
 
+The global climate change survey discovered that the majority of people in Switzerland and across the world are in favour of more climate action. 
+
 TODO
 
 ## Purpose & goal
+
+- Make the results from the survery accessible and shareable
+- Provide an explanation for it
 
 TODO
 
@@ -14,7 +19,9 @@ TODO
 
 Global climate change survey 
 
-TODO link
+summary data per country, provided by study authors
+
+[link](https://gccs.iza.org/)
 
 TODO csv file in data folder
 
@@ -72,9 +79,15 @@ For each setting, the front and back of a postcard are created. The front contai
 
 View the demo at TODO link to netlify
 
+## References
+
+1. Andre, P., Boneva, T., Chopra, F., Falk, A. (2024). Globally Representative Evidence on the Actual and Perceived Support for Climate Action. *Nature Climate Change.* [link](https://www.nature.com/articles/s41558-024-01925-3)
+2. Jackson, P. (2018). *How to make repeat patterns: a guide for designers, architects and artists.* Laurence King Publishing. 
 
 ## Project status
 
 Status: TODO
+
 Last updated: September 2025
+
 Version: 0.1
