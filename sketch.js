@@ -634,8 +634,8 @@ function updatePostcard(p) {
   
 }
         
-// TODO fix for rowIndent
 function drawGridCell(p) {
+  // would need to be fixed for rowIndent > 0
 
   p.noFill();
   p.stroke(100);
@@ -650,7 +650,6 @@ function drawGridCell(p) {
 
 }
 
-// TODO select from html
 function drawMotif(p) {
 
   if (motifSelect.value() === 'anglecircles') {
@@ -685,6 +684,19 @@ function drawMotif(p) {
     circlesMotif2(p);
   }
 
+}
+
+function doTranslation() {
+
+  // move to next cell: translation from left to right, top to bottom
+    x = x + cellWidth;
+    cellCount +=1;
+    if (cellCount > nCellsX) {
+      x = initialCellPositionX + ((rowCount*rowIndent) % 1)*cellWidth;
+      y += cellHeight;
+      cellCount = 1;
+      rowCount +=1;
+    }
 }
 
 function addCountryText(p) {
@@ -1072,19 +1084,6 @@ function addAddressBlock(p) {
   p.line(pcWidth*0.54 + 60, pcHeight*0.74, pcWidth - 70, pcHeight*0.74);
   p.pop();
 
-}
-
-function doTranslation() {
-
-  // move to next cell: translation from left to right, top to bottom
-    x = x + cellWidth;
-    cellCount +=1;
-    if (cellCount > nCellsX) {
-      x = initialCellPositionX + ((rowCount*rowIndent) % 1)*cellWidth;
-      y += cellHeight;
-      cellCount = 1;
-      rowCount +=1;
-    }
 }
 
 function exportCanvases() {
