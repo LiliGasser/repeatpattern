@@ -6,24 +6,29 @@ Project of CAS Generative Data Design HKB 2025
 
 The global climate change survey discovered that the majority of people in Switzerland and across the world are in favour of more climate action. 
 
-TODO
+In this project, the main results from the survey are visually summarized in a simple data-dependant motif, which is then repeated across a canvas using simple geometrical transformations.
 
 ## Purpose & goal
 
-- Make the results from the survery accessible and shareable
-- Provide an explanation for it
+- Inform people about the survey and the results
+- Translate the main results from the survey to a visual motif, from which a repeat pattern is generated
+- Provide a tool to create several motifs and repeat patterns using simple geometrical transformations
+- Make the resulting repeat patterns shareable, e.g., as a post card
+- Provide an explanation for survey results and the derived motif and repeat patterns
 
-TODO
 
 ## Data sources & information
 
-Global climate change survey 
+The [global climate change survey](https://gccs.iza.org/) was published in 2024 [1]. In 125 countries across the world, 130'000 people were asked four questions:
+1. **WTP, willingness to particispate:** Would you be willing to contribute 1% of your household income every month to fight global warming? (WTP, willingness to participate)
+2. **WTP Belief:** We are asking this question to 100 other respondents in [Switzerland]. How many do you think are willing to contribute at least 1% of their household income every month to fight global warming?
+3. **Social Norm:** Do you think that people in [Switzerland] should try to fight global warming? 
+4. **Government:** Do you think the national government should do more to fight global warming?
 
-summary data per country, provided by study authors
+For detailed information, check the (survey website)[https://gccs.iza.org/] and the (publication)[https://www.nature.com/articles/s41558-024-01925-3].
 
-[link](https://gccs.iza.org/)
+Here, summary data per country is used (see `data/gccs_country_with_temperature_and_gdp.csv`). From the four questions, the amount of approval is calculated as percentage value.
 
-TODO csv file in data folder
 
 ## How it works
 
