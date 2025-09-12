@@ -4,9 +4,11 @@ Project of CAS Generative Data Design HKB 2025
 
 ## Project description
 
+TODO
 
 ## Purpose & goal
 
+TODO
 
 ## Data sources & information
 
@@ -18,11 +20,11 @@ TODO csv file in data folder
 
 ## How it works
 
-Using the data from the global climate change survey, A6 post cards (148mm x 105mm) for countries with different repeat patterns can be generated.
+The app can be used to create A6 post cards (148mm x 105mm) for single countries with repeat patterns from the global climate change survery data.
 
 There are several options in the app:
 - Country
-- Pattern
+- Pattern:
     - Motif
     - Symmetry
     - Show grid
@@ -66,10 +68,13 @@ For each setting, the front and back of a postcard are created. The front contai
 - Click "Go Live" button in the VS Code status bar
 - The project will open in your browser at http://localhost:5500
 
-## Live demo
+## Demo
 
-TODO link to netlify
+View the demo at TODO link to netlify
+
 
 ## Project status
 
-TODO
+Status: TODO
+Last updated: September 2025
+Version: 0.1
