@@ -743,7 +743,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = 'Share the good news'
   } else if (language === 'de') {
-    legendText = "Sag's weiter"
+    legendText = "Sag’s weiter"
   }
   p.textAlign(p.LEFT, p.TOP);
   p.fill(0);
@@ -1023,7 +1023,7 @@ function addLegendText(p) {
 
   // final sentences
   p.textAlign(p.LEFT, p.CENTER);
-  p.fill(0);
+  p.fill(0); // TODO grey?
   p.textSize(fontSizeText);
   if (language === 'en') {
     legendText = "This pattern repeats in all 125 countries part of the study."
