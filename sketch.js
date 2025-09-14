@@ -60,9 +60,9 @@ let y;
 let colors;
 const colors_icecream = [
   '#ffc33e',
-  '#50514f',
-  '#f28d92',
-  '#426c8e',
+  '#646563',
+  '#fb747b',
+  '#5c7d99',
   '#ffffff',
 ];
 const colors_retro = [
@@ -110,8 +110,10 @@ let fontSizeText = 12;
 let fontSizeSource = 7;
 let lineHeightLegend = 1.2 * fontSizeLegend;
 let lineHeightPercent = 1.2 * fontSizePercent;
-let legendTextYStart = 95;
+let lineHeightText = 1.2 * fontSizeText;
+let legendTextYStart = 115;
 let legendTextYStart2 = 210;
+let legendTextYStart3 = pcHeight/2 - 5;
 
 
 
@@ -149,14 +151,14 @@ function sketchFront(p) {
     p.textFont(typefaceTextSelect.value());
 
     // rectangle around card
-    p.noFill()
-    p.stroke('black');
-    p.strokeWeight(1);
-    if (layoutSelect.value() === 'landscape') {
-      p.rect(0, 0, pcWidth, pcHeight);
-    } else if (portraitLayouts.includes(layoutSelect.value())) {
-      p.rect(0, 0, pcHeight, pcWidth);
-    }
+    //p.noFill()
+    //p.stroke('black');
+    //p.strokeWeight(1);
+    //if (layoutSelect.value() === 'landscape') {
+      //p.rect(0, 0, pcWidth, pcHeight);
+    //} else if (portraitLayouts.includes(layoutSelect.value())) {
+      //p.rect(0, 0, pcHeight, pcWidth);
+    //}
 
     // initialize
     x = initialCellPositionX;
@@ -215,14 +217,14 @@ function sketchBack(p) {
     p.textFont(typefaceTextSelect.value());
 
     // rectangle around card
-    p.noFill()
-    p.stroke('black');
-    p.strokeWeight(1);
-    p.rect(0, 0, pcWidth, pcHeight);
+    //p.noFill()
+    //p.stroke('black');
+    //p.strokeWeight(1);
+    //p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
     let xMotif = pcWidth*0.28;
-    let yMotif = pcHeight*0.32;
+    let yMotif = pcHeight*0.28;
     let bScale;
     if (['interlockingcirclesclose', 'windwheel45'].includes(motifSelect.value())) {
       bScale = p.min((pcWidth*0.56)/cellWidth, pcHeight/cellHeight)*0.26
@@ -733,6 +735,7 @@ function addCountryText(p) {
 }
 
 function addLegendText(p) {
+  // TODO positioning for United Arab Emirates
 
   let legendText;
   let xPosLeft = pcWidth*0.18;
@@ -745,18 +748,18 @@ function addLegendText(p) {
   } else if (language === 'de') {
     legendText = "Sag’s weiter"
   }
-  p.textAlign(p.LEFT, p.TOP);
-  p.fill(0);
+  p.textAlign(p.LEFT, p.BOTTOM);
   p.textSize(fontSizeTitle);
+  p.fill(0);
   p.textFont(typefaceTitleSelect.value());
   p.text(
     legendText,
     titleTextX,
-    initialCellPositionY, // same initial Y position as for pattern on front
+    initialCellPositionY + p.textAscent(), // same initial Y position as for pattern on front
   )
 
   // wtp
-  p.textAlign(p.RIGHT, p.TOP);
+  p.textAlign(p.RIGHT, p.BOTTOM);
   p.textSize(fontSizePercent);
   p.fill(colors['gccs_wtp']);
   p.textFont(typefaceTextSelect.value());
@@ -771,79 +774,65 @@ function addLegendText(p) {
     legendTextYStart,
   );
   if (language === 'en') {
-    legendText = "of the people"
+    legendText = `of the people ${selData[0]['country_prefix'].toLowerCase()}`
   } else if (language === 'de') {
-    legendText = `der Menschen`
+    legendText = `der Menschen ${selData[0]['country_de_prefix'].toLowerCase()} `
   }
   p.textSize(fontSizeLegend);
   p.text(
     legendText, 
     xPosLeft,
-    legendTextYStart + lineHeightPercent,
+    legendTextYStart + 1*lineHeightLegend,
   );
   if (language === 'en') {
-    legendText = `${selData[0]['country_prefix'].toLowerCase()} ${selCountry}`
+    legendText = `${selCountry} are willing`
   } else if (language === 'de') {
-    legendText = `${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de_decl']}`
+    legendText = `${selData[0]['country_de_decl']} sind bereit,`
   }
   p.text(
     legendText, 
     xPosLeft,
-    legendTextYStart + lineHeightPercent + 1*lineHeightLegend,
+    legendTextYStart + 2*lineHeightLegend,
   );
   if (language === 'en') {
-    legendText = `are willing to give`
+    legendText = `to give 1% of their income`
   } else if (language === 'de') {
-    legendText = "sind bereit, 1% ihres"
+    legendText = "1% ihres Einkommens für"
   }
   p.text(
     legendText, 
     xPosLeft,
-    legendTextYStart + lineHeightPercent + 2*lineHeightLegend,
+    legendTextYStart + 3*lineHeightLegend,
   );
   if (language === 'en') {
-    legendText = "1% of their income"
+    legendText = "to fight global warming."
   } else if (language === 'de') {
-    legendText = "Einkommens für" 
+    legendText = "Klimaschutz zu spenden." 
   }
   p.text(
     legendText, 
     xPosLeft,
-    legendTextYStart + lineHeightPercent + 3*lineHeightLegend,
-  );
-  if (language === 'en') {
-    legendText = "to fight"
-  } else if (language === 'de') {
-    legendText = "den Klimaschutz" 
-  }
-  p.text(
-    legendText, 
-    xPosLeft,
-    legendTextYStart + lineHeightPercent + 4*lineHeightLegend,
-  );
-  if (language === 'en') {
-    legendText = "global warming."
-  } else if (language === 'de') {
-    legendText = "zu spenden." 
-  }
-  p.text(
-    legendText, 
-    xPosLeft,
-    legendTextYStart + lineHeightPercent + 5*lineHeightLegend,
+    legendTextYStart + 4*lineHeightLegend,
   );
 
   // wtp belief
-  p.textAlign(p.LEFT, p.TOP);
+  p.textAlign(p.LEFT, p.BOTTOM);
+  p.textSize(fontSizeLegend)
+  let txtHeightLegend = p.textAscent() + p.textDescent();
+  p.textSize(fontSizePercent)
+  let txtHeightPercent = p.textAscent() + p.textDescent();
+  let txtHeightDifference = txtHeightPercent - txtHeightLegend;
+  p.textSize(fontSizeLegend)
   p.fill(colors['gccs_wtp_belief']);
   if (language === 'en') {
-    legendText = "They think that only"
+    legendText = "They assume that only"
   } else if (language === 'de') {
     legendText = "Sie denken, dass nur"
   }
   p.text(
     legendText, 
     xPosRight,
-    legendTextYStart2,
+    legendTextYStart2 - txtHeightDifference,
   );
   if (language === 'en') {
     legendText = `${selData[0]['gccs_wtp_belief']}%`
@@ -854,54 +843,54 @@ function addLegendText(p) {
   p.text(
     legendText, 
     xPosRight,
-    legendTextYStart2 + 1*lineHeightLegend,
+    legendTextYStart2 - txtHeightDifference + lineHeightPercent,
   );
   if (language === 'en') {
-    legendText = "of the others are"
+    legendText = "of the others are willing"
   } else if (language === 'de') {
-    legendText = "der anderen auch"
+    legendText = "der anderen dazu bereit"
   }
   p.textSize(fontSizeLegend);
   p.text(
     legendText, 
     xPosRight,
-    legendTextYStart2 + lineHeightPercent + 1*lineHeightLegend,
+    legendTextYStart2 - txtHeightDifference + lineHeightPercent + 1*lineHeightLegend,
   );
   if (language === 'en') {
-    legendText = "also willing to do so,"
+    legendText = "to give 1% of their income,"
   } else if (language === 'de') {
-    legendText = "dazu bereit sind,"
+    legendText = "sind, 1% ihres Einkommens"
   }
   p.text(
     legendText, 
     xPosRight,
-    legendTextYStart2 + lineHeightPercent + 2*lineHeightLegend,
+    legendTextYStart2 - txtHeightDifference + lineHeightPercent + 2*lineHeightLegend,
   );
 
   // gap
   if (language === 'en') {
     legendText = `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`
   } else if (language === 'de') {
-    legendText = "ein Unterschied"
+    legendText = "zu spenden, ein"
   }
   p.text(
     legendText, 
     xPosRight,
-    legendTextYStart2 + lineHeightPercent + 3*lineHeightLegend,
+    legendTextYStart2 - txtHeightDifference + lineHeightPercent + 3*lineHeightLegend,
   );
   if (language === 'en') {
-    legendText = `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`
+    legendText = ""
   } else if (language === 'de') {
-    legendText = `von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.`
+    legendText = `Unterschied von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.`
   }
   p.text(
     legendText, 
     xPosRight,
-    legendTextYStart2 + lineHeightPercent + 4*lineHeightLegend,
+    legendTextYStart2 - txtHeightDifference + lineHeightPercent + 4*lineHeightLegend,
   );
 
   // social norm
-  p.textAlign(p.LEFT, p.TOP);
+  p.textAlign(p.LEFT, p.BOTTOM);
   p.fill(colors['gccs_norm']);
   p.textSize(fontSizePercent);
   if (language === 'en') {
@@ -915,7 +904,7 @@ function addLegendText(p) {
     legendTextYStart,
   )
   if (language === 'en') {
-    legendText = "think that the people"
+    legendText = "state that the other"
   } else if (language === 'de') {
     legendText = "finden, dass die"
   }
@@ -923,64 +912,44 @@ function addLegendText(p) {
   p.text(
     legendText,
     xPosRight,
-    legendTextYStart + lineHeightPercent,
+    legendTextYStart + 1*lineHeightLegend,
   )
   if (language === 'en') {
-    legendText = `${selData[0]['country_prefix'].toLowerCase()} ${selData[0]['country']}`
+    legendText = `people ${selData[0]['country_prefix'].toLowerCase()} ${selData[0]['country']}`
   } else if (language === 'de') {
-    legendText = `anderen Menschen `
+    legendText = `anderen Menschen ${selData[0]['country_de_prefix'].toLowerCase()} `
   }
   p.text(
     legendText,
     xPosRight,
-    legendTextYStart + lineHeightPercent + 1*lineHeightLegend,
+    legendTextYStart + 2*lineHeightLegend,
   )
   if (language === 'en') {
-    legendText = "should do more"
+    legendText = "should do more to"
   } else if (language === 'de') {
-    legendText = `${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de_decl']}`
+    legendText = `${selData[0]['country_de_decl']} mehr für `
   }
   p.text(
     legendText,
     xPosRight,
-    legendTextYStart + lineHeightPercent + 2*lineHeightLegend,
+    legendTextYStart + 3*lineHeightLegend,
   )
   if (language === 'en') {
-    legendText = "to fight global warming."
+    legendText = "fight global warming."
   } else if (language === 'de') {
-    legendText = "mehr für den"
+    legendText = "Klimaschutz tun sollten."
   }
   p.text(
     legendText,
     xPosRight,
-    legendTextYStart + lineHeightPercent + 3*lineHeightLegend,
-  )
-  if (language === 'en') {
-    legendText = "to fight global warming."
-  } else if (language === 'de') {
-    legendText = "Klimaschutz"
-  }
-  p.text(
-    legendText,
-    xPosRight,
-    legendTextYStart + lineHeightPercent + 4*lineHeightLegend,
-  )
-  if (language === 'en') {
-    legendText = "to fight global warming."
-  } else if (language === 'de') {
-    legendText = "tun sollten."
-  }
-  p.text(
-    legendText,
-    xPosRight,
-    legendTextYStart + lineHeightPercent + 5*lineHeightLegend,
+    legendTextYStart + 4*lineHeightLegend,
   )
 
   // government
-  p.textAlign(p.RIGHT, p.TOP);
+  p.textAlign(p.RIGHT, p.BOTTOM);
   p.fill(colors['gccs_government']);
   let lineHeightGov;
-  if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+  if (['Saudi Arabia', 'Myanmar', 'United Arab Emirates'].includes(selCountry)) {
     p.textSize(fontSizeLegend);
     lineHeightGov = lineHeightLegend;
     if (language === 'en') {
@@ -990,7 +959,7 @@ function addLegendText(p) {
     }
   } else {
     p.textSize(fontSizePercent);
-    lineHeightGov = lineHeightPercent;
+    lineHeightGov = lineHeightLegend;
     if (language === 'en') {
       legendText = `${selData[0]['gccs_government']}%`
     } else if (language === 'de') {
@@ -1003,7 +972,7 @@ function addLegendText(p) {
     legendTextYStart2,
   )
 
-  if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+  if (['Saudi Arabia', 'Myanmar', 'United Arab Emirates'].includes(selCountry)) {
     if (language === 'en') {
       legendText = "people were not asked"
     } else if (language === 'de') {
@@ -1011,7 +980,7 @@ function addLegendText(p) {
     }
   } else {
     if (language === 'en') {
-      legendText = "ask for more"
+      legendText = "demand more"
     } else if (language === 'de') {
       legendText = "verlangen mehr"
     }
@@ -1023,7 +992,7 @@ function addLegendText(p) {
     legendTextYStart2 + lineHeightGov,
   )
 
-  if (['Saudi Arabia', 'Myanmar'].includes(selCountry)) {
+  if (['Saudi Arabia', 'Myanmar', 'United Arab Emirates'].includes(selCountry)) {
     if (language === 'en') {
       legendText = "whether the government"
     } else if (language === 'de') {
@@ -1031,7 +1000,7 @@ function addLegendText(p) {
     }
   } else {
     if (language === 'en') {
-      legendText = "political action"
+      legendText = "political action from"
     } else if (language === 'de') {
       legendText = "politisches Handeln"
     }
@@ -1050,7 +1019,7 @@ function addLegendText(p) {
     }
   } else {
     if (language === 'en') {
-      legendText = "from the government"
+      legendText = "the government."
     } else if (language === 'de') {
       legendText = `von der Regierung.`
     }
@@ -1062,18 +1031,38 @@ function addLegendText(p) {
   )
 
   // final sentences
-  p.textAlign(p.LEFT, p.CENTER);
+  p.textAlign(p.LEFT, p.BOTTOM);
   p.fill(0); // TODO grey?
   p.textSize(fontSizeText);
   if (language === 'en') {
-    legendText = "This pattern repeats in all 125 countries part of the study."
+    legendText = "This pattern repeats in all 125 countries that were part of the study. Globally, 86%"
   } else if (language === 'de') {
-    legendText = "Dieses Muster wiederholt sich in allen 125 Ländern, die Teil der Studie waren."
+    legendText = "Dieses Muster wiederholt sich in allen 125 Ländern aus der Studie. Global wollen"
   }
   p.text(
     legendText,
     titleTextX,
-    pcHeight/2 + 20,
+    legendTextYStart3,
+  )
+  if (language === 'en') {
+    legendText = "want that people and 89% want that politics do more to fight global warming."
+  } else if (language === 'de') {
+    legendText = "86% dass die Bevölkerung und 89% dass die Politik mehr Klimaschutz macht."
+  }
+  p.text(
+    legendText,
+    titleTextX,
+    legendTextYStart3 + 1*lineHeightText,
+  )
+  if (language === 'en') {
+    legendText = "With whom will you share this?"
+  } else if (language === 'de') {
+    legendText = "Wem sagst du dies weiter?"
+  }
+  p.text(
+    legendText,
+    titleTextX,
+    legendTextYStart3 + 2*lineHeightText,
   )
 }
 
@@ -1101,10 +1090,15 @@ function addInfoText(p) {
 
   p.textAlign(p.LEFT, p.BOTTOM);
   p.textSize(fontSizeSource);
-  p.noStroke();
+  p.noStroke(); 
   p.fill(0);
+  if (language === 'en') {
+    infoText = "Continue reading: https://rcap.netlify.app . Data source: Global Climate Change Survey https://gccs.iza.org/"
+  } else if (language === 'de') {
+    infoText = "Weiterlesen: https://rcap.netlify.app . Datenquelle: Global Climate Change Survey https://gccs.iza.org/"
+  }
   p.text(
-    "Datenquelle: global climate change survey. https://gccs.iza.org/",
+    infoText,
     titleTextX,
     countryTextY,
   )
