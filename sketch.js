@@ -151,14 +151,14 @@ function sketchFront(p) {
     p.textFont(typefaceTextSelect.value());
 
     // rectangle around card
-    //p.noFill()
-    //p.stroke('black');
-    //p.strokeWeight(1);
-    //if (layoutSelect.value() === 'landscape') {
-      //p.rect(0, 0, pcWidth, pcHeight);
-    //} else if (portraitLayouts.includes(layoutSelect.value())) {
-      //p.rect(0, 0, pcHeight, pcWidth);
-    //}
+    p.noFill()
+    p.stroke('black');
+    p.strokeWeight(1);
+    if (layoutSelect.value() === 'landscape') {
+      p.rect(0, 0, pcWidth, pcHeight);
+    } else if (portraitLayouts.includes(layoutSelect.value())) {
+      p.rect(0, 0, pcHeight, pcWidth);
+    }
 
     // initialize
     x = initialCellPositionX;
@@ -206,7 +206,7 @@ function sketchFront(p) {
 function sketchBack(p) {
   p.setup = function () {
     canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
-    canvas.parent(document.querySelector('.canvas-container'));
+    canvas.parent(document.querySelector('.canvas-container-back'));
     p.noLoop();
 
   };
@@ -217,10 +217,10 @@ function sketchBack(p) {
     p.textFont(typefaceTextSelect.value());
 
     // rectangle around card
-    //p.noFill()
-    //p.stroke('black');
-    //p.strokeWeight(1);
-    //p.rect(0, 0, pcWidth, pcHeight);
+    p.noFill()
+    p.stroke('black');
+    p.strokeWeight(1);
+    p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
     let xMotif = pcWidth*0.28;
