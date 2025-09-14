@@ -784,7 +784,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = `${selData[0]['country_prefix'].toLowerCase()} ${selCountry}`
   } else if (language === 'de') {
-    legendText = `${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de']}`
+    legendText = `${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de_decl']}`
   }
   p.text(
     legendText, 
@@ -804,7 +804,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = "1% of their income"
   } else if (language === 'de') {
-    legendText = "Einkommens für den" 
+    legendText = "Einkommens für" 
   }
   p.text(
     legendText, 
@@ -812,14 +812,24 @@ function addLegendText(p) {
     legendTextYStart + lineHeightPercent + 3*lineHeightLegend,
   );
   if (language === 'en') {
-    legendText = "to fight global warming."
+    legendText = "to fight"
   } else if (language === 'de') {
-    legendText = "Klimaschutz zu spenden." 
+    legendText = "den Klimaschutz" 
   }
   p.text(
     legendText, 
     xPosLeft,
     legendTextYStart + lineHeightPercent + 4*lineHeightLegend,
+  );
+  if (language === 'en') {
+    legendText = "global warming."
+  } else if (language === 'de') {
+    legendText = "zu spenden." 
+  }
+  p.text(
+    legendText, 
+    xPosLeft,
+    legendTextYStart + lineHeightPercent + 5*lineHeightLegend,
   );
 
   // wtp belief
@@ -872,12 +882,22 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`
   } else if (language === 'de') {
-    legendText = `ein Unterschied von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.`
+    legendText = "ein Unterschied"
   }
   p.text(
     legendText, 
     xPosRight,
     legendTextYStart2 + lineHeightPercent + 3*lineHeightLegend,
+  );
+  if (language === 'en') {
+    legendText = `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`
+  } else if (language === 'de') {
+    legendText = `von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.`
+  }
+  p.text(
+    legendText, 
+    xPosRight,
+    legendTextYStart2 + lineHeightPercent + 4*lineHeightLegend,
   );
 
   // social norm
@@ -897,7 +917,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = "think that the people"
   } else if (language === 'de') {
-    legendText = "finden, dass die Menschen"
+    legendText = "finden, dass die"
   }
   p.textSize(fontSizeLegend);
   p.text(
@@ -908,7 +928,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = `${selData[0]['country_prefix'].toLowerCase()} ${selData[0]['country']}`
   } else if (language === 'de') {
-    legendText = `${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de']}`
+    legendText = `anderen Menschen `
   }
   p.text(
     legendText,
@@ -918,7 +938,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = "should do more"
   } else if (language === 'de') {
-    legendText = "mehr für den"
+    legendText = `${selData[0]['country_de_prefix'].toLowerCase()} ${selData[0]['country_de_decl']}`
   }
   p.text(
     legendText,
@@ -928,12 +948,32 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = "to fight global warming."
   } else if (language === 'de') {
-    legendText = "Klimaschutz tun sollten."
+    legendText = "mehr für den"
   }
   p.text(
     legendText,
     xPosRight,
     legendTextYStart + lineHeightPercent + 3*lineHeightLegend,
+  )
+  if (language === 'en') {
+    legendText = "to fight global warming."
+  } else if (language === 'de') {
+    legendText = "Klimaschutz"
+  }
+  p.text(
+    legendText,
+    xPosRight,
+    legendTextYStart + lineHeightPercent + 4*lineHeightLegend,
+  )
+  if (language === 'en') {
+    legendText = "to fight global warming."
+  } else if (language === 'de') {
+    legendText = "tun sollten."
+  }
+  p.text(
+    legendText,
+    xPosRight,
+    legendTextYStart + lineHeightPercent + 5*lineHeightLegend,
   )
 
   // government
@@ -946,7 +986,7 @@ function addLegendText(p) {
     if (language === 'en') {
       legendText = `${selData[0]['country_prefix']} ${selData[0]['country']},`
     } else if (language === 'de') {
-      legendText = `${selData[0]['country_de_prefix']} ${selData[0]['country_de']}`
+      legendText = `${selData[0]['country_de_prefix']} ${selData[0]['country_de_decl']}`
     }
   } else {
     p.textSize(fontSizePercent);
