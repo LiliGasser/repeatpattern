@@ -100,19 +100,19 @@ let language = 'de'; // 'en' or 'de'
 // text positions and font sizes
 let countryTextX;
 let countryTextY;
-let titleTextX = 20;
-let fontSizeCountry = 20;
-let fontSizeTitle = 40;
-let fontSizePercent = 20;
-let fontSizeLegend = 11;
-let fontSizeText = 12;
-let fontSizeSource = 7;
+let titleTextX = 20 * dpi / 150;
+let fontSizeCountry = 20 * dpi / 150;
+let fontSizeTitle = 40 * dpi / 150;
+let fontSizePercent = 20 * dpi / 150;
+let fontSizeLegend = 11 * dpi / 150;
+let fontSizeText = 12 * dpi / 150;
+let fontSizeSource = 7 * dpi / 150;
 let lineHeightLegend = 1.2 * fontSizeLegend;
 let lineHeightPercent = 1.2 * fontSizePercent;
 let lineHeightText = 1.2 * fontSizeText;
-let legendTextYStart = 115;
-let legendTextYStart2 = 210;
-let legendTextYStart3 = pcHeight/2 - 5;
+let legendTextYStart = 115 * dpi / 150;
+let legendTextYStart2 = 210 * dpi / 150;
+let legendTextYStart3 = pcHeight/2 - 15 * dpi / 150;
 
 
 
@@ -832,9 +832,9 @@ function addLegendText(p) {
   p.textSize(fontSizeLegend)
   p.fill(colors['gccs_wtp_belief']);
   if (language === 'en') {
-    legendText = "They assume that only"
+    legendText = "The people assume that"
   } else if (language === 'de') {
-    legendText = "Sie denken, dass nur"
+    legendText = "Die Menschen denken, dass"
   }
   p.text(
     legendText, 
@@ -855,7 +855,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = "of the others are willing"
   } else if (language === 'de') {
-    legendText = "der anderen dazu bereit"
+    legendText = "der anderen bereit sind, 1%"
   }
   p.textSize(fontSizeLegend);
   p.text(
@@ -864,36 +864,14 @@ function addLegendText(p) {
     legendTextYStart2 - txtHeightDifference + lineHeightPercent + 1*lineHeightLegend,
   );
   if (language === 'en') {
-    legendText = "to give 1% of their income,"
+    legendText = "to give 1% of their income."
   } else if (language === 'de') {
-    legendText = "sind, 1% ihres Einkommens"
+    legendText = "ihres Einkommens zu spenden."
   }
   p.text(
     legendText, 
     xPosRight,
     legendTextYStart2 - txtHeightDifference + lineHeightPercent + 2*lineHeightLegend,
-  );
-
-  // gap
-  if (language === 'en') {
-    legendText = `a ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}% gap.`
-  } else if (language === 'de') {
-    legendText = "zu spenden, ein"
-  }
-  p.text(
-    legendText, 
-    xPosRight,
-    legendTextYStart2 - txtHeightDifference + lineHeightPercent + 3*lineHeightLegend,
-  );
-  if (language === 'en') {
-    legendText = ""
-  } else if (language === 'de') {
-    legendText = `Unterschied von ${selData[0]['gccs_wtp'] - selData[0]['gccs_wtp_belief']}%.`
-  }
-  p.text(
-    legendText, 
-    xPosRight,
-    legendTextYStart2 - txtHeightDifference + lineHeightPercent + 4*lineHeightLegend,
   );
 
   // social norm
@@ -1042,9 +1020,9 @@ function addLegendText(p) {
   p.fill(0); // TODO grey?
   p.textSize(fontSizeText);
   if (language === 'en') {
-    legendText = "This pattern repeats in all 125 countries that were part of the study. Globally, 86%"
+    legendText = "This pattern repeats in all 125 countries that were part of the study."
   } else if (language === 'de') {
-    legendText = "Dieses Muster wiederholt sich in allen 125 Ländern aus der Studie. Global wollen"
+    legendText = "Dieses Muster wiederholt sich in allen 125 Ländern aus der Studie."
   }
   p.text(
     legendText,
@@ -1052,14 +1030,24 @@ function addLegendText(p) {
     legendTextYStart3,
   )
   if (language === 'en') {
-    legendText = "want that people and 89% want that politics do more to fight global warming."
+    legendText = "Globally, 86% of people want more climate action from the population, "
   } else if (language === 'de') {
-    legendText = "86% dass die Bevölkerung und 89% dass die Politik mehr Klimaschutz macht."
+    legendText = "Global wollen 86% der Menschen mehr Klimaschutz von der Bevölkerung, "
   }
   p.text(
     legendText,
     titleTextX,
     legendTextYStart3 + 1*lineHeightText,
+  )
+  if (language === 'en') {
+    legendText = "while 89% demand more climate action from the government."
+  } else if (language === 'de') {
+    legendText = "während 89% mehr Klimaschutz von der Politik verlangen."
+  }
+  p.text(
+    legendText,
+    titleTextX,
+    legendTextYStart3 + 2*lineHeightText,
   )
   if (language === 'en') {
     legendText = "With whom will you share this?"
@@ -1069,7 +1057,7 @@ function addLegendText(p) {
   p.text(
     legendText,
     titleTextX,
-    legendTextYStart3 + 2*lineHeightText,
+    legendTextYStart3 + 3*lineHeightText,
   )
 }
 
@@ -1081,7 +1069,7 @@ function addAuthorText(p) {
   p.noStroke();
   p.fill(0);
   p.push();
-  p.translate(pcWidth*0.56, pcHeight/2);
+  p.translate(pcWidth*0.575, pcHeight/2);
   p.rotate(-p.PI/2);
   p.text(
     "Lilian Gasser . CAS Generative Data Design . Hochschule der Künste Bern . 2025",
@@ -1140,7 +1128,7 @@ function exportCanvases() {
   let filename = parts.join('_');
   sketchFrontInstance.save(filename + '_postcardfront', 'svg');
   sketchBackInstance.save(filename + '_postcardback', 'svg');
-  sketchMotifInstance.save(filename + '_motif', 'svg');
+  //sketchMotifInstance.save(filename + '_motif', 'svg');
 }
 
 
