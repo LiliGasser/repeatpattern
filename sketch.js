@@ -38,7 +38,6 @@ const pcHeightMM = 105; // mm
 let dpi = 150; // dots per inch
 let pcWidth = Math.floor(pcWidthMM * dpi / 25.4);
 let pcHeight = Math.floor(pcHeightMM * dpi / 25.4);
-let portraitLayouts = ['portrait', 'portraitsquared'];
 
 // define cell
 let cellWidth;
@@ -127,7 +126,7 @@ initializeSelects(sketchFrontInstance);
 initializeSelects(sketchBackInstance);
 initializeSelects(sketchMotifInstance);
 initializeButtons(sketchFrontInstance);
-updateCanvasSize(sketchFrontInstance);
+//updateCanvasSize(sketchFrontInstance);
 updateGrid(sketchFrontInstance);
 updateColorPalette(sketchFrontInstance);
 loadData(sketchFrontInstance);
@@ -138,7 +137,13 @@ loadData(sketchFrontInstance);
 // ------------------------------------------------
 function sketchFront(p) {
   p.setup = function () {
-    canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
+    if (layoutSelect.value() === 'landscape') {
+      canvas = p.createCanvas(pcWidth, pcHeight, p.SVG);
+      console.log('landscape initial')
+    } else if (layoutSelect.value() === 'portrait') {
+      canvas = p.createCanvas(pcHeight, pcWidth, p.SVG);
+      console.log('portrait initial')
+    }
     canvas.parent(document.querySelector('.canvas-container'));
     p.noLoop();
 
@@ -156,7 +161,7 @@ function sketchFront(p) {
     p.strokeWeight(1);
     if (layoutSelect.value() === 'landscape') {
       p.rect(0, 0, pcWidth, pcHeight);
-    } else if (portraitLayouts.includes(layoutSelect.value())) {
+    } else if (layoutSelect.value() === 'portrait') {
       p.rect(0, 0, pcHeight, pcWidth);
     }
 
@@ -267,7 +272,6 @@ function sketchBack(p) {
     addAuthorText(p);
 
     // add more info block
-    // TODO add link to my scrollytelling website
     addInfoText(p);
 
     // address block
@@ -476,11 +480,12 @@ function initializeButtons(p) {
 
 }
 
-// TODO initial drawing of front as portrait
 function updateCanvasSize(p) {
   if (layoutSelect.value() === 'landscape') {
+    console.log('landscape')
     p.resizeCanvas(pcWidth, pcHeight);
-  } else if (portraitLayouts.includes(layoutSelect.value())) {
+  } else if (layoutSelect.value() === 'portrait') {
+    console.log('portrait')
     p.resizeCanvas(pcHeight, pcWidth);
   }
 
@@ -541,7 +546,7 @@ function updateGrid(p) {
     initialCellPositionX = initialCellPositionY;
     distanceX = pcWidth - 2*initialCellPositionX;
     distanceY = pcHeight - 2*initialCellPositionY;
-  } else if (portraitLayouts.includes(layoutSelect.value())) {
+  } else if (layoutSelect.value() === 'portrait') {
     initialCellPositionY = frameMargin*pcWidth;
     initialCellPositionX = initialCellPositionY;
     distanceX = pcHeight - 2*initialCellPositionX;
@@ -553,7 +558,7 @@ function updateGrid(p) {
   cellWidth = distanceX / nCellsX;
   cellHeight = cellWidth / cellsAspectratio;  // aspectratio = width / height
   let nCellsY = Math.floor(distanceY / cellHeight);
-  if (layoutSelect.value() === 'portraitsquared') {
+  if (layoutSelect.value() === 'portrait') {
     nCellsY = nCellsX + 1;
   }
   nCells = nCellsX * nCellsY;
@@ -718,9 +723,11 @@ function addCountryText(p) {
   if (layoutSelect.value() === 'landscape') {
     countryTextX = pcWidth / 2;  // centered
     countryTextY = pcHeight - (txtHeight + 2*paddingY)/2 
-  } else if (portraitLayouts.includes(layoutSelect.value())) {
+    infoTextY = pcHeight - (txtHeight + 2*paddingY)/2 
+  } else if (layoutSelect.value() === 'portrait') {
     countryTextX = pcHeight / 2;
-    countryTextY = pcWidth - (txtHeight + 2*paddingY)/2 
+    countryTextY = pcWidth - initialCellPositionY;  // same distance as from the top
+    infoTextY = pcHeight - (txtHeight + 2*paddingY)/2 
   }
 
   // text
@@ -1100,7 +1107,7 @@ function addInfoText(p) {
   p.text(
     infoText,
     titleTextX,
-    countryTextY,
+    infoTextY,
   )
 
 }
@@ -1125,6 +1132,7 @@ function exportCanvases() {
     selCountry, 
     motifSelect.value(),
     nCellsX, 
+    layoutSelect.value(),
     colors['gccs_wtp'], 
     colors['gccs_wtp_belief'],
     colors['gccs_norm'],
@@ -1132,7 +1140,7 @@ function exportCanvases() {
   let filename = parts.join('_');
   sketchFrontInstance.save(filename + '_postcardfront', 'svg');
   sketchBackInstance.save(filename + '_postcardback', 'svg');
-  //sketchMotifInstance.save(filename + '_motif', 'svg');
+  sketchMotifInstance.save(filename + '_motif', 'svg');
 }
 
 
