@@ -10,11 +10,13 @@ body {
   background-color: #f5f5f5;
 }
 
+/** TODO necessary?
 canvas {
     display: block;
     border: 2px solid #333;
     border-radius: 5px;
 }
+*/
 
 h1 {
     text-align: center;
@@ -25,10 +27,10 @@ h1 {
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    background: #ffffff;
+    background: #eeeeee;
 /**    background: rgba(240, 240, 240, 1); */
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 10px;  /** radius of corners of border */
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
         
@@ -37,8 +39,8 @@ h1 {
     gap: 15px;
     margin-bottom: 20px;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: center;  /** left moves it to lhs */
+    flex-wrap: wrap;   /** needed to wrap items to next row */
 }
         
 .control-group {
@@ -51,7 +53,7 @@ h1 {
 .color-group {
     display: flex;
     flex-direction: row;
-    align-items: left;
+    align-items: center;
     gap: 5px;
 }
         
@@ -59,9 +61,15 @@ label {
     font-size: 12px;
     color: #000000;
     font-weight: bold;
-    width: 80px;
+    width: 120px;
 }
         
+.color-label {
+    font-size: 12px;
+    color: #000000;
+    font-weight: bold;
+    width: 80px;
+}
 select {
     padding: 8px 12px;
     border: 2px solid #ddd;

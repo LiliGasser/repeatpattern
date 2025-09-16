@@ -60,13 +60,13 @@ let colors;
 const colors_icecream = [
   '#ffc33e',
   '#646563',
-  '#fb747b',
+  '#f17e84',
   '#5c7d99',
   '#ffffff',
 ];
 const colors_retro = [
   '#f37124',
-  '#2f4c43',
+  '#566c67',
   '#96b27e',
   '#67897f',
   '#ffffff',
@@ -156,14 +156,14 @@ function sketchFront(p) {
     p.textFont(typefaceTextSelect.value());
 
     // rectangle around card
-    p.noFill()
-    p.stroke('black');
-    p.strokeWeight(1);
-    if (layoutSelect.value() === 'landscape') {
-      p.rect(0, 0, pcWidth, pcHeight);
-    } else if (layoutSelect.value() === 'portrait') {
-      p.rect(0, 0, pcHeight, pcWidth);
-    }
+    //p.noFill()
+    //p.stroke('black');
+    //p.strokeWeight(1);
+    //if (layoutSelect.value() === 'landscape') {
+      //p.rect(0, 0, pcWidth, pcHeight);
+    //} else if (layoutSelect.value() === 'portrait') {
+      //p.rect(0, 0, pcHeight, pcWidth);
+    //}
 
     // initialize
     x = initialCellPositionX;
@@ -222,10 +222,10 @@ function sketchBack(p) {
     p.textFont(typefaceTextSelect.value());
 
     // rectangle around card
-    p.noFill()
-    p.stroke('black');
-    p.strokeWeight(1);
-    p.rect(0, 0, pcWidth, pcHeight);
+    //p.noFill()
+    //p.stroke('black');
+    //p.strokeWeight(1);
+    //p.rect(0, 0, pcWidth, pcHeight);
 
     // initialize
     let xMotif = pcWidth*0.28;
@@ -834,7 +834,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = "The people assume that"
   } else if (language === 'de') {
-    legendText = "Die Menschen denken, dass"
+    legendText = "Die Menschen denken, dass nur"
   }
   p.text(
     legendText, 
@@ -1052,7 +1052,7 @@ function addLegendText(p) {
   if (language === 'en') {
     legendText = "With whom will you share this?"
   } else if (language === 'de') {
-    legendText = "Wem sagst du dies weiter?"
+    legendText = "Wem sagst du das weiter?"
   }
   p.text(
     legendText,
@@ -1105,12 +1105,12 @@ function addAddressBlock(p) {
 
   p.push();
   p.noFill();
-  p.stroke(200);
-  p.strokeWeight(0.8);
-  p.line(pcWidth*0.54 + 60, pcHeight*0.50, pcWidth - 70, pcHeight*0.50);
-  p.line(pcWidth*0.54 + 60, pcHeight*0.58, pcWidth - 70, pcHeight*0.58);
-  p.line(pcWidth*0.54 + 60, pcHeight*0.66, pcWidth - 70, pcHeight*0.66);
-  p.line(pcWidth*0.54 + 60, pcHeight*0.74, pcWidth - 70, pcHeight*0.74);
+  p.stroke(0);
+  p.strokeWeight(0.5);
+  p.line(pcWidth*0.54 + 60 * dpi/150, pcHeight*0.50, pcWidth - 70 *dpi/150, pcHeight*0.50);
+  p.line(pcWidth*0.54 + 60 * dpi/150, pcHeight*0.58, pcWidth - 70 *dpi/150, pcHeight*0.58);
+  p.line(pcWidth*0.54 + 60 * dpi/150, pcHeight*0.66, pcWidth - 70 *dpi/150, pcHeight*0.66);
+  p.line(pcWidth*0.54 + 60 * dpi/150, pcHeight*0.74, pcWidth - 70 *dpi/150, pcHeight*0.74);
   p.pop();
 
 }
@@ -1121,14 +1121,15 @@ function exportCanvases() {
     motifSelect.value(),
     nCellsX, 
     layoutSelect.value(),
-    colors['gccs_wtp'], 
-    colors['gccs_wtp_belief'],
-    colors['gccs_norm'],
-    colors['gccs_government']];
+    colors['gccs_wtp'].toString("#rrggbb"), 
+    colors['gccs_wtp_belief'].toString("#rrggbb"),
+    colors['gccs_norm'].toString("#rrggbb"),
+    colors['gccs_government'].toString("#rrggbb"),
+  ];
   let filename = parts.join('_');
-  sketchFrontInstance.save(filename + '_postcardfront', 'svg');
-  sketchBackInstance.save(filename + '_postcardback', 'svg');
-  //sketchMotifInstance.save(filename + '_motif', 'svg');
+  sketchFrontInstance.save(filename + '_front', 'svg');
+  sketchBackInstance.save(filename + '_back', 'svg');
+  sketchMotifInstance.save(filename + '_motif', 'svg');
 }
 
 
