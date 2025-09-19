@@ -679,6 +679,10 @@ function drawMotif(p) {
     arcMotif2(p);
   } else if (motifSelect.value() === 'squares') {
     arcMotif(p, 'squares');
+  } else if (motifSelect.value() === 'flower') {
+    flowerMotif(p, 0);
+  } else if (motifSelect.value() === 'flower45') {
+    flowerMotif(p, p.PI/4);
   } else if (motifSelect.value() === 'rectangles') {
     arcMotif(p, 'rectangles');
   } else if (motifSelect.value() === 'rectangles2') {
