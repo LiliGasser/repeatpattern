@@ -1133,7 +1133,7 @@ function exportCanvases() {
   let filename = parts.join('_');
   sketchFrontInstance.save(filename + '_front', 'svg');
   sketchBackInstance.save(filename + '_back', 'svg');
-  sketchMotifInstance.save(filename + '_motif', 'svg');
+  //sketchMotifInstance.save(filename + '_motif', 'svg');
 }
 
 
