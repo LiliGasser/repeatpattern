@@ -1,7 +1,7 @@
 # Repeat Climate Action Patterns
 
-This project was carried out as an author project during the CAS Generative Data Design at Hochschule für Künste Bern in August and September 2025.
-
+Created during CAS Generative Data Design at Hochschule für Künste Bern, August–September 2025.
+This original JavaScript version is no longer maintained. See the (Vue.js version)[https://github.com/LiliGasser/repeatpattern-app] instead.
 
 ## Project description
 
