@@ -28,7 +28,7 @@ The [global climate change survey](https://gccs.iza.org/) was published in 2024 
 3. **Social Norm:** Do you think that people in your country should try to fight global warming? 
 4. **Government:** Do you think the national government should do more to fight global warming?
 
-For detailed information, check the (survey website)[https://gccs.iza.org/] and the (publication)[https://www.nature.com/articles/s41558-024-01925-3].
+For detailed information, check the [survey website](https://gccs.iza.org/) and the [publication](https://www.nature.com/articles/s41558-024-01925-3).
 
 Here, summary data per country is used (see `data/gccs_country_with_temperature_and_gdp.csv`), which was provided by the study authors. From the four questions, the amount of approval is calculated as percentage value.
 
